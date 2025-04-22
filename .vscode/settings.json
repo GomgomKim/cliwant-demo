@@ -8,6 +8,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "prettier.singleQuote": true,
   "prettier.jsxSingleQuote": true,
+  "npm.packageManager": "pnpm",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
