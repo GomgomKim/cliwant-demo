@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/shared/ui/ThemeProvider";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ["latin"] });
+import './globals.css';
+import { ThemeProvider } from '@/shared/ui/ThemeProvider';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Next.js FSD Application",
-  description: "Next.js application using Feature-Sliced Design architecture",
+  title: 'Next.js FSD Application',
+  description: 'Next.js application using Feature-Sliced Design architecture',
 };
 
 export default function RootLayout({

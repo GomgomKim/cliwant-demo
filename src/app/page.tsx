@@ -1,4 +1,4 @@
-import { HomeWidget } from "@/widgets/HomeWidget";
+import { HomeWidget } from '@/widgets/HomeWidget';
 
 export default function Home() {
   return (
