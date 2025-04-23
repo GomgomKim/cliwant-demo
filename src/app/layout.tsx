@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
-import { Navigation } from '@/shared/ui/navigation';
 import { Sidebar } from '@/shared/ui/sidebar';
 import { ThemeProvider } from '@/shared/ui/ThemeProvider';
 
@@ -22,7 +21,6 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Navigation />
           <div className="flex">
             <Sidebar />
             <main className="flex-1 min-h-screen bg-gray-50">{children}</main>
