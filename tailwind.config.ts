@@ -1,3 +1,4 @@
+import forms from '@tailwindcss/forms';
 import type { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
 
@@ -11,6 +12,7 @@ const config: Config = {
     './src/widgets/**/*.{js,ts,jsx,tsx,mdx}',
     './src/entities/**/*.{js,ts,jsx,tsx,mdx}',
     './src/shared/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/views/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   prefix: '',
   theme: {
@@ -82,7 +84,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, forms],
 };
 
 export default config;
