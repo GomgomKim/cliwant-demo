@@ -6,8 +6,8 @@ import * as React from 'react';
 
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/Button';
-import { Calendar } from '@/shared/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+import { Calendar } from '@/shared/ui/Calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/Popover';
 
 export interface DatePickerProps {
   date?: Date | null;
