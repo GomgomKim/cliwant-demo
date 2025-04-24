@@ -115,13 +115,20 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const addKeywordTag = (rowId: string) => {
     const keywordRow = keywordRows.find(row => row.id === rowId);
     if (keywordRow && keywordRow.keyword.trim()) {
+      // 현재 입력된 키워드 저장
+      const newKeyword = keywordRow.keyword.trim();
+
       // 해당 행에 태그 추가
       setKeywordTagsByRow(prev => ({
         ...prev,
-        [rowId]: [...(prev[rowId] || []), keywordRow.keyword.trim()],
+        [rowId]: [...(prev[rowId] || []), newKeyword],
       }));
+
       // 입력 필드 초기화
       updateKeywordRow(rowId, { keyword: '' });
+
+      // 태그가 추가되면 자동으로 검색 실행 (원하는 경우)
+      // setTimeout(() => handleSearch(), 0);
     }
   };
 
@@ -165,18 +172,36 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   const handleSearch = () => {
+    // 입력 필드의 키워드도 처리
+    const keywordsWithInputField = keywordRows.map(row => {
+      const tags = keywordTagsByRow[row.id] || [];
+      // 이미 태그가 있거나 키워드가 비어있으면 원래 태그만 반환
+      if (tags.length > 0 || !row.keyword.trim()) {
+        return { rowId: row.id, tags, searchField: row.searchField || 'title' };
+      }
+      // 키워드가 있지만 태그가 없는 경우, 현재 입력된 키워드를 임시 태그로 사용
+      return { rowId: row.id, tags: [row.keyword.trim()], searchField: row.searchField || 'title' };
+    });
+
     // 모든 키워드 가져오기
-    const allKeywords = keywordRows
-      .flatMap(row => {
-        const tags = keywordTagsByRow[row.id] || [];
+    const allKeywords = keywordsWithInputField
+      .flatMap(({ rowId, tags, searchField }) => {
+        if (tags.length === 0) return [];
+
+        const row = keywordRows.find(r => r.id === rowId);
+        if (!row) return [];
+
+        // Use the row's conjunction for all keywords so that if it's AND, every keyword is required
         return tags.map(tag => ({
           keyword: tag,
-          searchField: row.searchField,
-          conjunction: row.conjunction,
+          searchField,
+          conjunction: row.conjunction || 'AND',
           rowId: row.id,
         }));
       })
-      .filter(item => item.keyword.trim() !== '');
+      .filter(item => item.keyword && item.keyword.trim() !== '');
+
+    console.log('검색에 사용되는 키워드와 AND/OR 조건:', allKeywords);
 
     const filters = {
       keywords: allKeywords,
@@ -192,6 +217,18 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       filterType,
       selectedKeywordSetId,
     };
+
+    // 필터 조건을 로그로 출력
+    console.log('적용된 필터 조건:', {
+      키워드: allKeywords.map(
+        k => `${k.keyword} (${k.searchField}, ${k.conjunction || '첫 조건'})`
+      ),
+      제외제목키워드: excludeTitleKeywords,
+      제외본문키워드: excludeContentKeywords,
+      금액범위: excludeAmount ? '제한없음' : `${minAmount}~${maxAmount}`,
+      기간: `${startDate || '없음'} ~ ${endDate || '없음'} (${timeFilter})`,
+      마감포함: includeExpired ? 'O' : 'X',
+    });
 
     // 상위 컴포넌트로 필터 상태 전달
     if (onSearch) {

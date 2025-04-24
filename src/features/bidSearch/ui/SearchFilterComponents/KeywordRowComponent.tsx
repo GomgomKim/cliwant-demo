@@ -45,13 +45,13 @@ export function KeywordRowComponent({
 
       {/* 개별 conjunction 선택 컴포넌트 */}
       <Select
-        value={row.conjunction}
+        value={row.conjunction || 'AND'}
         onValueChange={value => updateKeywordRow(row.id, { conjunction: value as any })}
       >
-        <SelectTrigger className="!z-10 !mx-[20px] !h-[30px] !w-[55px] !border-none !text-xs">
-          <SelectValue placeholder="조건" />
+        <SelectTrigger className="!z-10 !mx-[20px] !h-[30px] !w-[55px] !border-none !text-xs !font-medium">
+          <SelectValue placeholder="조건">{row.conjunction === 'AND' ? 'AND' : 'OR'}</SelectValue>
         </SelectTrigger>
-        <SelectContent className="bg-[#505050]!px-2 !py-1">
+        <SelectContent className="bg-[#505050] !px-2 !py-1">
           <SelectItem value="AND">
             <span className="pl-4">AND</span>
           </SelectItem>

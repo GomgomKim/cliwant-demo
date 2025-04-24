@@ -51,13 +51,30 @@ export function BidSearchView() {
   // SearchFilter에서 검색 이벤트 처리
   const handleSearch = (filters: any) => {
     console.log('Search triggered with filters:', filters);
+
+    // 필터에서 전달받은 키워드 목록
+    const keywordFilters = filters.keywords || [];
+
     // 키워드 매칭 함수
     const matchesBid = (bid: BidItem, kw: { keyword: string; searchField?: string }) => {
       const txt = kw.keyword.toLowerCase();
+
+      // 검색 필드에 따라 다른 필드 검색
       if (kw.searchField === 'title') {
         return bid.title.toLowerCase().includes(txt);
+      } else if (kw.searchField === 'content') {
+        // 콘텐츠 검색은 여러 필드에서 수행
+        return (
+          bid.organization.toLowerCase().includes(txt) ||
+          bid.budget.toLowerCase().includes(txt) ||
+          (bid.status && bid.status.toLowerCase().includes(txt)) ||
+          (bid.bidType && bid.bidType.toLowerCase().includes(txt))
+        );
       }
+
+      // 기본값 (모든 필드 검색)
       return (
+        bid.title.toLowerCase().includes(txt) ||
         bid.organization.toLowerCase().includes(txt) ||
         bid.budget.toLowerCase().includes(txt) ||
         (bid.status && bid.status.toLowerCase().includes(txt)) ||
@@ -65,33 +82,99 @@ export function BidSearchView() {
       );
     };
 
-    // 저장된 키워드 세트별로 결과 계산
-    const resultsBySet: Record<string, BidItem[]> = {};
-    searchStore.savedKeywordSets.forEach(set => {
-      const results = set.keywordRows.reduce((acc: BidItem[], row, index) => {
-        if (!row.keyword.trim()) return index === 0 ? [] : acc;
-        const rowMatches = DUMMY_BID_DATA.filter(bid => matchesBid(bid, row));
-        if (index === 0) {
-          return rowMatches;
+    // 새로운 검색 결과 처리 로직
+    if (keywordFilters.length > 0) {
+      // 그룹핑: rowId를 기준으로 그룹화하여 각 그룹의 키워드를 AND/OR 조건으로 결합
+      const groupedKeywords: Record<
+        string,
+        { searchField: string; conjunction: string; keywords: string[] }
+      > = {};
+      const orderedRowIds: string[] = [];
+      keywordFilters.forEach((kw: any) => {
+        if (!groupedKeywords[kw.rowId]) {
+          groupedKeywords[kw.rowId] = {
+            searchField: kw.searchField,
+            conjunction: kw.conjunction && kw.conjunction !== '' ? kw.conjunction : 'AND',
+            keywords: [kw.keyword],
+          };
+          orderedRowIds.push(kw.rowId);
+        } else {
+          groupedKeywords[kw.rowId].keywords.push(kw.keyword);
         }
-        if (row.conjunction === 'OR') {
-          // OR: 이전 결과와 합집합
-          const union = [...acc];
-          rowMatches.forEach(item => {
-            if (!union.includes(item)) union.push(item);
-          });
-          return union;
-        }
-        // AND: 교집합
-        return acc.filter(item => rowMatches.includes(item));
-      }, [] as BidItem[]);
-      resultsBySet[set.id] = results;
-    });
+      });
 
-    setSearchResultsByGroup(resultsBySet);
+      let results: BidItem[] = [];
+      orderedRowIds.forEach((rowId, index) => {
+        const group = groupedKeywords[rowId];
+        let groupMatches: BidItem[] = [];
+        if (group.conjunction === 'AND') {
+          // AND: bid must match every keyword in the group
+          groupMatches = DUMMY_BID_DATA.filter(bid =>
+            group.keywords.every(kw =>
+              matchesBid(bid, { keyword: kw, searchField: group.searchField })
+            )
+          );
+        } else {
+          // OR condition
+          groupMatches = DUMMY_BID_DATA.filter(bid =>
+            group.keywords.some(kw =>
+              matchesBid(bid, { keyword: kw, searchField: group.searchField })
+            )
+          );
+        }
+        if (index === 0) {
+          results = groupMatches;
+        } else {
+          // Combine with previous groups based on this group's conjunction
+          if (group.conjunction === 'AND') {
+            results = results.filter(bid => groupMatches.includes(bid));
+          } else if (group.conjunction === 'OR') {
+            results = Array.from(new Set([...results, ...groupMatches]));
+          }
+        }
+      });
+
+      const resultsBySet: Record<string, BidItem[]> = {};
+      if (selectedKeywordSetId) {
+        resultsBySet[selectedKeywordSetId] = results;
+      } else if (savedKeywordSets.length > 0) {
+        resultsBySet[savedKeywordSets[0].id] = results;
+      }
+      setSearchResultsByGroup(resultsBySet);
+    } else {
+      // 기존 로직: 키워드가 없는 경우 저장된 키워드 세트 기반 처리
+      const resultsBySet: Record<string, BidItem[]> = {};
+      searchStore.savedKeywordSets.forEach(set => {
+        const results = set.keywordRows.reduce((acc: BidItem[], row, index) => {
+          if (!row.keyword.trim()) return index === 0 ? [] : acc;
+          const rowMatches = DUMMY_BID_DATA.filter(bid => matchesBid(bid, row));
+          if (index === 0) {
+            return rowMatches;
+          }
+          if (row.conjunction === 'OR') {
+            // OR: 이전 결과와 합집합
+            const union = [...acc];
+            rowMatches.forEach(item => {
+              if (!union.includes(item)) union.push(item);
+            });
+            return union;
+          }
+          // AND: 교집합
+          return acc.filter(item => rowMatches.includes(item));
+        }, [] as BidItem[]);
+        resultsBySet[set.id] = results;
+      });
+
+      setSearchResultsByGroup(resultsBySet);
+    }
+
     // 검색시 페이지를 첫 페이지로 초기화
     setCurrentPage(1);
     setIsSearched(true);
+
+    // 디버깅을 위한 로그
+    console.log('Applied filters:', filters);
+    console.log('Search results:', searchResultsByGroup);
   };
 
   // 사업 구분 및 입찰 방식 필터 변경 시 결과 업데이트
@@ -134,9 +217,9 @@ export function BidSearchView() {
 
   return (
     <div className="container mx-auto py-4 font-['Pretendard']">
-      <div className="flex items-center gap-6 mb-6">
+      <div className="mb-6 flex items-center gap-6">
         <div className="flex-1">
-          <h1 className="text-xl font-semibold mb-1 font-['Pretendard']">입찰 공고</h1>
+          <h1 className="mb-1 font-['Pretendard'] text-xl font-semibold">입찰 공고</h1>
         </div>
       </div>
 
@@ -144,14 +227,14 @@ export function BidSearchView() {
 
       {/* 선택된 키워드 세트 검색 결과 표시 */}
       {isSearched && currentSet && (
-        <div key={currentSet.id} className="mt-6 bg-white rounded-lg shadow-sm border">
-          <div className="flex justify-between items-center p-4 border-b">
-            <h2 className="text-base font-medium font-['Pretendard'] text-gray-800">
+        <div key={currentSet.id} className="mt-6 rounded-lg border bg-white shadow-sm">
+          <div className="flex items-center justify-between border-b p-4">
+            <h2 className="font-['Pretendard'] text-base font-medium text-gray-800">
               {currentSet.name} ({currentSet.isShared ? '공용' : '개인'} 그룹)
             </h2>
-            <div className="text-sm text-gray-500 font-['Pretendard']">
+            <div className="font-['Pretendard'] text-sm text-gray-500">
               총{' '}
-              <span className="text-[rgb(166,161,219)] font-semibold">{currentResults.length}</span>
+              <span className="font-semibold text-[rgb(166,161,219)]">{currentResults.length}</span>
               개의 입찰 공고
             </div>
           </div>
@@ -167,7 +250,7 @@ export function BidSearchView() {
               </div>
             </>
           ) : (
-            <div className="p-10 text-center text-gray-500 font-['Pretendard']">
+            <div className="p-10 text-center font-['Pretendard'] text-gray-500">
               검색 결과가 없습니다.
             </div>
           )}
