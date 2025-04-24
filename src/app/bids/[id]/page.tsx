@@ -1,5 +1,5 @@
 import { BidDetailView } from '@/views/BidDetail/BidDetailView';
 
-export default function BidDetailPage({ params }: { params: { id: string } }) {
+export default async function BidDetailPage() {
   return <BidDetailView />;
 }

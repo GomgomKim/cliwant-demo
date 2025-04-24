@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, Plus, Search, Settings2, Star, X } from 'lucide-react';
+import { ChevronDown, Plus, Search, Settings2, Star, X, Check } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 
@@ -13,6 +13,7 @@ import { Input } from '@/shared/ui/Input';
 import { Label } from '@/shared/ui/Label';
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/RadioGroup';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/Select';
+import { Toast } from '@/shared/ui/Toast';
 
 interface SearchFilterProps {
   onSearch?: (filters: any) => void;
@@ -44,6 +45,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     selectedKeywordSetId,
     selectKeywordSet,
     setDateRange,
+    saveCurrentSet,
   } = useSearchStore();
 
   const [startDate, setStartDate] = useState('2025-04-16');
@@ -51,6 +53,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [excludeTitleInput, setExcludeTitleInput] = useState('');
   const [excludeContentInput, setExcludeContentInput] = useState('');
+  const [showResetToast, setShowResetToast] = useState(false);
+  const [showCopyToast, setShowCopyToast] = useState(false);
+  const [copyToastMessage, setCopyToastMessage] = useState('');
 
   // 필터된 키워드 세트 배열
   const filteredKeywordSets = savedKeywordSets.filter(set =>
@@ -150,6 +155,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
     // 태그도 모두 초기화
     setKeywordTagsByRow({});
+
+    // Show toast notification
+    setShowResetToast(true);
   };
 
   const handleSearch = () => {
@@ -166,8 +174,6 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       })
       .filter(item => item.keyword.trim() !== '');
 
-    console.log('Search keywords with conjunctions:', allKeywords);
-
     const filters = {
       keywords: allKeywords,
       excludeTitleKeywords,
@@ -182,8 +188,6 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       filterType,
       selectedKeywordSetId,
     };
-
-    console.log('Final search filters:', filters);
 
     // 상위 컴포넌트로 필터 상태 전달
     if (onSearch) {
@@ -231,46 +235,63 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     }
   }, [timeFilter]);
 
+  // 그룹 복사 핸들러
+  const copyGroup = () => {
+    if (!selectedKeywordSetId) return;
+    const currentSet = savedKeywordSets.find(set => set.id === selectedKeywordSetId);
+    if (!currentSet) return;
+    // 같은 이름 사용 (복사 표시 삭제)
+    const newName = currentSet.name;
+    // isShared 반대로 설정하여 복사
+    saveCurrentSet(newName, !currentSet.isShared);
+
+    // Set toast message based on current filter type
+    const toastMessage =
+      filterType === 'shared' ? '개인 그룹으로 복사되었습니다' : '공용 그룹으로 복사되었습니다';
+    setCopyToastMessage(toastMessage);
+    setShowCopyToast(true);
+  };
+
   return (
-    <div className="rounded-lg border shadow bg-white">
-      <div className="p-4 border-b flex justify-end items-center">
-        <span className="text-sm ">검색 결과 개수</span>
-        <select className="border rounded px-2 py-1 w-16 text-sm ml-2 ">
+    <div className="rounded-lg border bg-white shadow">
+      <div className="flex items-center justify-end border-b p-4">
+        <span className="text-sm">검색 결과 개수</span>
+        <select className="ml-2 w-16 rounded border px-2 py-1 text-sm">
           <option value="20">20</option>
           <option value="50">50</option>
           <option value="100">100</option>
         </select>
-        <Button className="bg-[rgb(166,161,219)] hover:bg-[rgb(146,141,199)] text-white ml-2 text-xs rounded-md ">
+        <Button className="ml-2 rounded-md bg-[rgb(166,161,219)] text-xs text-white hover:bg-[rgb(146,141,199)]">
           저장
         </Button>
       </div>
 
       {/* 검색 필터 영역 */}
-      <div className="p-4 bg-white !mb-5">
+      <div className="!mb-5 bg-white p-4">
         {/* 검색 조건 선택 */}
-        <div className="flex items-center gap-2 !mb-6">
+        <div className="!mb-6 flex items-center gap-2">
           <div className="flex">
             <Button
-              variant="ghost"
-              size="sm"
+              variant="unstyled"
+              size="none"
               className={cn(
-                '!h-[30px] !text-xs !font-bold !px-[10px] !rounded-md cursor-pointer',
+                '!h-[30px] !cursor-pointer !rounded-full !px-[10px] !text-xs !font-bold',
                 filterType === 'shared'
-                  ? '!shadow-[0px_2px_4px_0px_rgba(0,0,0,0.2)] !bg-[rgb(166,161,219)] !text-white z-[4]'
-                  : '!shadow-[0px_2px_4px_0px_rgb(255,255,255)] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)] z-[3]'
+                  ? '!z-[4] !bg-[rgb(166,161,219)] !text-white'
+                  : '!z-[3] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)]'
               )}
               onClick={() => handleFilterTypeChange('shared')}
             >
               공유
             </Button>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="unstyled"
+              size="none"
               className={cn(
-                '!h-[30px] !text-xs !font-bold !px-[10px] !rounded-md cursor-pointer !ml-2',
+                '!ml-2 !h-[30px] !cursor-pointer !rounded-full !px-[10px] !text-xs !font-bold',
                 filterType === 'personal'
-                  ? '!shadow-[0px_2px_4px_0px_rgba(0,0,0,0.2)] !bg-[rgb(166,161,219)] !text-white z-[4]'
-                  : '!shadow-[0px_2px_4px_0px_rgb(255,255,255)] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)] z-[3]'
+                  ? '!z-[4] !bg-[rgb(166,161,219)] !text-white'
+                  : '!z-[3] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)]'
               )}
               onClick={() => handleFilterTypeChange('personal')}
             >
@@ -280,26 +301,24 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
           <div className="relative ml-4">
             <div
-              className="flex items-center gap-2 border border-gray-300 rounded-md p-2 bg-white cursor-pointer min-w-[180px]"
+              className="flex min-w-[180px] cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white p-2"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-              <span className="text-sm font-medium ">
-                {selectedSet?.name || '키워드 그룹 선택'}
-              </span>
-              <ChevronDown className="h-4 w-4 text-gray-400 ml-auto" />
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="text-sm font-medium">{selectedSet?.name || '키워드 그룹 선택'}</span>
+              <ChevronDown className="ml-auto h-4 w-4 text-gray-400" />
             </div>
 
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="!absolute !top-full !left-0 !z-50 !mt-1 !w-64 !rounded-md !border !border-gray-200 !bg-white !shadow-lg !backdrop-blur-sm">
                 <div className="py-1">
                   {filteredKeywordSets.length > 0 ? (
                     filteredKeywordSets.map(set => (
                       <div
                         key={set.id}
                         className={cn(
-                          'px-3 py-2 flex items-center gap-2 cursor-pointer hover:bg-gray-100 transition-colors duration-150 font-["Pretendard"]',
-                          selectedKeywordSetId === set.id ? 'bg-gray-50' : ''
+                          '!flex !cursor-pointer !items-center !gap-2 !px-3 !py-2 !font-["Pretendard"] !transition-colors !duration-150 hover:!bg-gray-100',
+                          selectedKeywordSetId === set.id ? '!bg-gray-50' : ''
                         )}
                         onClick={() => {
                           selectKeywordSet(set.id);
@@ -308,9 +327,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                       >
                         <Star
                           className={cn(
-                            'h-4 w-4',
+                            '!h-4 !w-4',
                             selectedKeywordSetId === set.id
-                              ? 'text-yellow-400 fill-yellow-400'
+                              ? 'fill-yellow-400 text-yellow-400'
                               : 'text-gray-300'
                           )}
                         />
@@ -318,7 +337,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                       </div>
                     ))
                   ) : (
-                    <div className="px-3 py-2 text-sm text-gray-500 ">
+                    <div className="px-3 py-2 text-sm text-gray-500">
                       {filterType === 'shared'
                         ? '공유된 키워드 세트가 없습니다'
                         : '개인 키워드 세트가 없습니다'}
@@ -329,16 +348,19 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
             )}
           </div>
 
-          <Button variant="outline" className="!ml-2 !text-sm  !text-gray-700 !border-gray-300">
-            현재 조건 저장
-          </Button>
-
           <Button
-            variant="outline"
-            className="ml-2 text-sm  text-gray-700 border-gray-300"
+            variant="unstyled"
+            className="!cursor-pointer !rounded-md border !border-gray-300 !bg-[rgb(104,111,232)] !px-3 !py-2 !text-sm !text-white"
             onClick={resetKeywords}
           >
             키워드 초기화
+          </Button>
+          <Button
+            variant="purple"
+            onClick={copyGroup}
+            className="!cursor-pointer !rounded-md border !border-gray-300 !bg-[rgb(104,111,232)] !px-3 !py-2 !text-sm !text-white"
+          >
+            {filterType === 'shared' ? '개인 그룹으로 복사' : '공용 그룹으로 복사'}
           </Button>
 
           <Button variant="ghost" className="ml-2 p-1 text-gray-500">
@@ -347,31 +369,25 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 키워드 행 */}
-        <div className="space-y-3 !mb-6">
+        <div className="!mb-6 space-y-3">
           {keywordRows.map((row, _) => (
-            <div key={row.id} className="flex items-center">
+            <div key={row.id} className="!flex !items-center">
               <Select
                 value={row.searchField || 'title'}
                 onValueChange={value =>
                   updateKeywordRow(row.id, { searchField: value as 'title' | 'content' })
                 }
               >
-                <SelectTrigger className="w-[130px] h-[30px] mr-[10px] z-10 bg-[#4285F4] text-white font-semibold text-xs border-none ">
+                <SelectTrigger className="!z-10 !mr-[10px] !h-[30px] !w-[130px] !border-none !text-xs !font-semibold">
                   <SelectValue>
                     {row.searchField === 'title' ? '공고 제목' : '첨부파일 본문'}
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-[#505050] text-white border-none">
-                  <SelectItem
-                    value="title"
-                    className="text-white focus:bg-[#4285F4] focus:text-white px-4 py-2"
-                  >
+                <SelectContent className="bg-[#505050] !px-2 !py-1">
+                  <SelectItem value="title">
                     <span className="pl-4">공고 제목</span>
                   </SelectItem>
-                  <SelectItem
-                    value="content"
-                    className="text-white focus:bg-[#4285F4] focus:text-white px-4 py-2"
-                  >
+                  <SelectItem value="content">
                     <span className="pl-4">첨부파일 본문</span>
                   </SelectItem>
                 </SelectContent>
@@ -382,20 +398,14 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 value={row.conjunction}
                 onValueChange={value => updateKeywordRow(row.id, { conjunction: value as any })}
               >
-                <SelectTrigger className="w-[55px] h-[30px] !mx-[20px] z-10 text-white text-xs border-none">
+                <SelectTrigger className="!z-10 !mx-[20px] !h-[30px] !w-[55px] !border-none !text-xs">
                   <SelectValue placeholder="조건" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#505050] text-white border-none">
-                  <SelectItem
-                    value="AND"
-                    className="text-white focus:bg-[#4285F4] focus:text-white px-4 py-2"
-                  >
+                <SelectContent className="bg-[#505050]!px-2 !py-1">
+                  <SelectItem value="AND">
                     <span className="pl-4">AND</span>
                   </SelectItem>
-                  <SelectItem
-                    value="OR"
-                    className="text-white focus:bg-[#4285F4] focus:text-white px-4 py-2"
-                  >
+                  <SelectItem value="OR">
                     <span className="pl-4">OR</span>
                   </SelectItem>
                 </SelectContent>
@@ -406,11 +416,11 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                   value={row.keyword}
                   onChange={e => updateKeywordRow(row.id, { keyword: e.target.value })}
                   placeholder="키워드를 입력해보세요"
-                  className="flex w-[180px] bg-white self-center min-h-[30px] h-[30px] !mr-4 z-[4] border-solid border border-[#ebebeb] rounded-[5px] font-[var(--font_default)] text-xs font-semibold text-[#423F3F] p-[6px] pr-10 opacity-100"
+                  className="!z-[4] !mr-4 !flex !h-[30px] !min-h-[30px] !w-[180px] !self-center !rounded-[5px] !border !border-solid !border-[#ebebeb] !bg-white !p-[6px] !pr-10 !text-xs !font-[var(--font_default)] !font-semibold !text-[#423F3F] !opacity-100"
                 />
                 <Button
                   variant="ghost"
-                  className="flex rounded-[5px] cursor-pointer ml-1"
+                  className="!ml-1 !flex !cursor-pointer !rounded-[5px]"
                   onClick={() => addKeywordTag(row.id)}
                   title="키워드 추가"
                 >
@@ -419,28 +429,28 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                     width={24}
                     height={24}
                     alt="추가"
-                    className="h-6 w-6"
+                    className="!h-6 !w-6"
                   />
                 </Button>
               </div>
 
               {/* 각 행별 태그 표시 영역을 같은 줄에 배치 */}
               {keywordTagsByRow[row.id] && keywordTagsByRow[row.id].length > 0 && (
-                <div className="flex flex-wrap gap-2 !ml-4">
+                <div className="!ml-4 !flex !flex-wrap !gap-2">
                   {keywordTagsByRow[row.id].map((tag, tagIndex) => (
                     <div
                       key={tagIndex}
-                      className="bg-[#a6a1db] self-center !rounded-[20px] opacity-100 !py-1 !px-4 text-white flex items-center"
+                      className="!flex !items-center !self-center !rounded-[20px] !bg-[#a6a1db] !px-4 !py-1 !text-white !opacity-100"
                     >
-                      <span className="text-xs font-medium">{tag}</span>
+                      <span className="!text-xs !font-medium">{tag}</span>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="ml-1.5 p-0 h-auto text-white hover:text-gray-100 rounded-full cursor-pointer"
+                        className="!hover:text-gray-100 !ml-1.5 !h-auto !cursor-pointer !rounded-full !p-0 !text-white"
                         onClick={() => removeKeywordTag(row.id, tag)}
                         aria-label={`태그 삭제: ${tag}`}
                       >
-                        <X className="h-3.5 w-3.5" />
+                        <X className="!h-3.5 !w-3.5" />
                       </Button>
                     </div>
                   ))}
@@ -451,24 +461,24 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 제외 키워드 영역 */}
-        <div className="space-y-4 !mb-6">
+        <div className="!mb-6 space-y-4">
           <div className="flex flex-col pb-3">
-            <span className="self-start min-w-[120px] max-w-[120px] mb-2 h-[30px] z-[4] whitespace-pre-wrap overflow-visible text-[14px] font-bold text-[#939393] leading-[1.4] rounded-none opacity-100">
+            <span className="!z-[4] !mb-2 !h-[30px] !max-w-[120px] !min-w-[120px] !self-start !overflow-visible !rounded-none !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[#939393] !opacity-100">
               제목 제외 키워드
             </span>
             <div className="flex-1">
               <div className="flex gap-2">
-                <div className="relative flex-1 max-w-md">
+                <div className="relative max-w-md flex-1">
                   <Input
                     placeholder="제목에서 제외할 키워드 입력"
-                    className="w-full  bg-white self-center min-h-[30px] h-[30px] m-0 z-[4] border-solid border border-[#ebebeb] rounded-[5px] font-[var(--font_default)] text-xs font-semibold text-[#423F3F] p-[6px] pr-10 opacity-100"
+                    className="!z-[4] !m-0 !h-[30px] !min-h-[30px] !w-full !self-center !rounded-[5px] !border !border-solid !border-[#ebebeb] !bg-white !p-[6px] !pr-10 !text-xs !font-[var(--font_default)] !font-semibold !text-[#423F3F] !opacity-100"
                     value={excludeTitleInput}
                     onChange={e => setExcludeTitleInput(e.target.value)}
                     onKeyPress={e => handleKeyPress(e, 'title')}
                   />
                   <Button
                     variant="ghost"
-                    className="absolute right-0 mr-[-5px] self-center min-w-[30px] max-w-[30px] order-5 min-h-[30px] max-h-[30px] w-[30px] flex-grow h-[30px] ml-[5px] z-[2] rounded-[5px]"
+                    className="!absolute !right-0 !z-[2] !order-5 !mr-[-5px] !ml-[5px] !h-[30px] !max-h-[30px] !min-h-[30px] !w-[30px] !max-w-[30px] !min-w-[30px] !flex-grow !self-center !rounded-[5px]"
                     onClick={handleAddExcludeTitleKeyword}
                   >
                     <Image
@@ -476,25 +486,25 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                       width={24}
                       height={24}
                       alt="추가"
-                      className="h-6 w-6"
+                      className="!h-6 !w-6"
                     />
                   </Button>
                 </div>
               </div>
 
               {excludeTitleKeywords.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {excludeTitleKeywords.map((keyword, index) => (
                     <div
                       key={index}
-                      className="bg-[#F2989E] self-start min-w-0 order-2 min-h-0 w-max flex-none h-max mr-[5px] z-[4] overflow-visible justify-start rounded-[20px] opacity-100 py-[4px] px-[10px] text-white flex items-center"
+                      className="!z-[4] !order-2 !mr-[5px] !flex !h-max !min-h-0 !w-max !min-w-0 !flex-none !items-center !justify-start !self-start !overflow-visible !rounded-[20px] !bg-[#F2989E] !px-[10px] !py-[4px] !text-white !opacity-100"
                     >
-                      <span className="text-xs font-medium">{keyword}</span>
+                      <span className="!text-xs !font-medium">{keyword}</span>
                       <button
-                        className="ml-1.5 p-0.5 text-white hover:text-gray-100 rounded-full"
+                        className="!hover:text-gray-100 !ml-1.5 !rounded-full !p-0.5 !text-white"
                         onClick={() => removeExcludeTitleKeyword(keyword)}
                       >
-                        <X className="h-3.5 w-3.5" />
+                        <X className="!h-3.5 !w-3.5" />
                       </button>
                     </div>
                   ))}
@@ -504,22 +514,22 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
           </div>
 
           <div className="flex flex-col pb-3">
-            <span className="self-start min-w-[120px] max-w-[120px] mb-2 h-[30px] z-[4] whitespace-pre-wrap overflow-visible font-[var(--font_default)] text-[14px] font-bold text-[#939393] leading-[1.4] rounded-none opacity-100">
+            <span className="!z-[4] !mb-2 !h-[30px] !max-w-[120px] !min-w-[120px] !self-start !overflow-visible !rounded-none !text-[14px] !leading-[1.4] !font-[var(--font_default)] !font-bold !whitespace-pre-wrap !text-[#939393] !opacity-100">
               본문 제외 키워드
             </span>
             <div className="flex-1">
               <div className="flex gap-2">
-                <div className="relative flex-1 max-w-md">
+                <div className="relative max-w-md flex-1">
                   <Input
                     placeholder="본문에서 제외할 키워드 입력"
-                    className="w-full  bg-white self-center min-h-[30px] h-[30px] m-0 z-[4] border-solid border border-[#ebebeb] rounded-[5px] font-[var(--font_default)] text-xs font-semibold text-[#423F3F] p-[6px] pr-10 opacity-100"
+                    className="!z-[4] !m-0 !h-[30px] !min-h-[30px] !w-full !self-center !rounded-[5px] !border !border-solid !border-[#ebebeb] !bg-white !p-[6px] !pr-10 !text-xs !font-[var(--font_default)] !font-semibold !text-[#423F3F] !opacity-100"
                     value={excludeContentInput}
                     onChange={e => setExcludeContentInput(e.target.value)}
                     onKeyPress={e => handleKeyPress(e, 'content')}
                   />
                   <Button
                     variant="ghost"
-                    className="absolute right-0 mr-[-5px] self-center min-w-[30px] max-w-[30px] order-5 min-h-[30px] max-h-[30px] w-[30px] flex-grow h-[30px] ml-[5px] z-[2] rounded-[5px]"
+                    className="!absolute !right-0 !z-[2] !order-5 !mr-[-5px] !ml-[5px] !h-[30px] !max-h-[30px] !min-h-[30px] !w-[30px] !max-w-[30px] !min-w-[30px] !flex-grow !self-center !rounded-[5px]"
                     onClick={handleAddExcludeContentKeyword}
                   >
                     <Image
@@ -527,25 +537,25 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                       width={24}
                       height={24}
                       alt="추가"
-                      className="h-6 w-6"
+                      className="!h-6 !w-6"
                     />
                   </Button>
                 </div>
               </div>
 
               {excludeContentKeywords.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {excludeContentKeywords.map((keyword, index) => (
                     <div
                       key={index}
-                      className="bg-[#F2989E] self-start min-w-0 order-2 min-h-0 w-max flex-none h-max mr-[5px] z-[4] overflow-visible justify-start rounded-[20px] opacity-100 py-[4px] px-[10px] text-white flex items-center"
+                      className="!z-[4] !order-2 !mr-[5px] !flex !h-max !min-h-0 !w-max !min-w-0 !flex-none !items-center !justify-start !self-start !overflow-visible !rounded-[20px] !bg-[#F2989E] !px-[10px] !py-[4px] !text-white !opacity-100"
                     >
-                      <span className="text-xs font-medium">{keyword}</span>
+                      <span className="!text-xs !font-medium">{keyword}</span>
                       <button
-                        className="ml-1.5 p-0.5 text-white hover:text-gray-100 rounded-full"
+                        className="!hover:text-gray-100 !ml-1.5 !rounded-full !p-0.5 !text-white"
                         onClick={() => removeExcludeContentKeyword(keyword)}
                       >
-                        <X className="h-3.5 w-3.5" />
+                        <X className="!h-3.5 !w-3.5" />
                       </button>
                     </div>
                   ))}
@@ -556,39 +566,39 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 금액 필터 */}
-        <div className="flex items-center gap-2 !mb-4">
-          <span className="self-center min-w-[120px] max-w-[120px] order-1 h-[30px] m-0 z-[4] whitespace-pre-wrap overflow-visible font-[var(--font_default)] text-[14px] font-bold text-[#939393] leading-[1.4] rounded-none opacity-100">
+        <div className="!mb-4 flex items-center gap-2">
+          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
             사업 금액
           </span>
           <Input
             type="number"
             value={minAmount}
             onChange={e => setAmountRange(Number(e.target.value), maxAmount)}
-            className="w-36 "
+            className="w-36"
           />
           <span className="">~</span>
           <Input
             type="number"
             value={maxAmount}
             onChange={e => setAmountRange(minAmount, Number(e.target.value))}
-            className="w-36 "
+            className="w-36"
           />
-          <div className="flex items-center ml-4">
+          <div className="ml-4 flex items-center">
             <Checkbox
               id="exclude-amount"
               checked={excludeAmount}
               onCheckedChange={() => toggleExcludeAmount()}
               className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
             />
-            <label htmlFor="exclude-amount" className="ml-2 text-sm text-gray-700 ">
+            <label htmlFor="exclude-amount" className="!ml-2 !text-sm !text-gray-700">
               금액 제한 없음
             </label>
           </div>
         </div>
 
         {/* 날짜 필터 */}
-        <div className="flex items-center gap-2 !mb-4">
-          <span className="self-center min-w-[120px] max-w-[120px] order-1 h-[30px] m-0 z-[4] whitespace-pre-wrap overflow-visible font-[var(--font_default)] text-[14px] font-bold text-[#939393] leading-[1.4] rounded-none opacity-100">
+        <div className="!mb-4 flex items-center gap-2">
+          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
             공고일
           </span>
           <Input
@@ -598,7 +608,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
               setStartDate(e.target.value);
               setTimeFilter('custom'); // 날짜 직접 입력하면 custom으로 변경
             }}
-            className="w-40 bg-gray-50 "
+            className="w-40 bg-gray-50"
           />
           <span className="">~</span>
           <Input
@@ -608,23 +618,23 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
               setEndDate(e.target.value);
               setTimeFilter('custom'); // 날짜 직접 입력하면 custom으로 변경
             }}
-            className="w-40 bg-gray-50 "
+            className="w-40 bg-gray-50"
           />
-          <div className="flex items-center ml-4">
+          <div className="ml-4 flex items-center">
             <Checkbox
               id="include-expired"
               checked={includeExpired}
               onCheckedChange={() => toggleIncludeExpired()}
               className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
             />
-            <label htmlFor="include-expired" className="ml-2 text-sm text-gray-700 ">
+            <label htmlFor="include-expired" className="!ml-2 !text-sm !text-gray-700">
               마감일 지난 공고 포함
             </label>
           </div>
         </div>
 
         {/* 시간 필터 */}
-        <div className="flex items-center mb-4">
+        <div className="mb-4 flex items-center">
           <div className="flex gap-8">
             <div className="flex items-center space-x-2">
               <input
@@ -636,9 +646,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 onChange={() => {
                   setTimeFilter('day');
                 }}
-                className="w-4 h-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
+                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="day" className="text-sm text-gray-700 ">
+              <label htmlFor="day" className="text-sm text-gray-700">
                 하루 전
               </label>
             </div>
@@ -652,9 +662,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 onChange={() => {
                   setTimeFilter('week');
                 }}
-                className="w-4 h-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
+                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="week" className="text-sm text-gray-700 ">
+              <label htmlFor="week" className="text-sm text-gray-700">
                 일주일 전
               </label>
             </div>
@@ -668,9 +678,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 onChange={() => {
                   setTimeFilter('month');
                 }}
-                className="w-4 h-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
+                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="month" className="text-sm text-gray-700 ">
+              <label htmlFor="month" className="text-sm text-gray-700">
                 한 달 전
               </label>
             </div>
@@ -684,9 +694,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 onChange={() => {
                   setTimeFilter('all');
                 }}
-                className="w-4 h-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
+                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="all" className="text-sm text-gray-700 ">
+              <label htmlFor="all" className="text-sm text-gray-700">
                 전체 기간
               </label>
             </div>
@@ -694,17 +704,17 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 사업 구분 */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="self-center min-w-[120px] max-w-[120px] order-1 h-[30px] m-0 z-[4] whitespace-pre-wrap overflow-visible font-[var(--font_default)] text-[14px] font-bold text-[#939393] leading-[1.4] rounded-none opacity-100">
+        <div className="mb-4 flex items-center gap-2">
+          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
             사업 구분
           </span>
-          <select className="border rounded-md px-3 py-2 w-48 text-sm bg-gray-50 ">
+          <select className="w-48 rounded-md border bg-gray-50 px-3 py-2 text-sm">
             <option value="all">전체</option>
             <option value="current">현재</option>
             <option value="company">기업 제한</option>
           </select>
-          <span className="text-gray-600 w-24 ml-8 text-sm font-medium ">정렬 기준</span>
-          <select className="border rounded-md px-3 py-2 w-48 text-sm bg-gray-50 ">
+          <span className="ml-8 w-24 text-sm font-medium text-gray-600">정렬 기준</span>
+          <select className="w-48 rounded-md border bg-gray-50 px-3 py-2 text-sm">
             <option value="relevance">정확도 순</option>
             <option value="date">날짜 순</option>
             <option value="amount">금액 순</option>
@@ -712,8 +722,8 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 조건 체크박스 */}
-        <div className="flex items-start mb-6">
-          <span className="self-center min-w-[120px] max-w-[120px] order-1 h-[30px] m-0 z-[4] whitespace-pre-wrap overflow-visible font-[var(--font_default)] text-[14px] font-bold text-[#939393] leading-[1.4] rounded-none opacity-100">
+        <div className="mb-6 flex items-start">
+          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
             조건
           </span>
           <div className="flex flex-wrap gap-x-8 gap-y-2">
@@ -722,7 +732,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 id="condition1"
                 className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="condition1" className="ml-2 text-sm text-gray-700 ">
+              <label htmlFor="condition1" className="!ml-2 !text-sm !text-gray-700">
                 업종조건 충족
               </label>
             </div>
@@ -731,7 +741,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 id="condition2"
                 className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="condition2" className="ml-2 text-sm text-gray-700 ">
+              <label htmlFor="condition2" className="!ml-2 !text-sm !text-gray-700">
                 물품조건 충족
               </label>
             </div>
@@ -740,7 +750,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 id="condition3"
                 className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="condition3" className="ml-2 text-sm text-gray-700 ">
+              <label htmlFor="condition3" className="!ml-2 !text-sm !text-gray-700">
                 공동수급 허용
               </label>
             </div>
@@ -749,7 +759,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 id="condition4"
                 className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="condition4" className="ml-2 text-sm text-gray-700 ">
+              <label htmlFor="condition4" className="!ml-2 !text-sm !text-gray-700">
                 실적제한 없음
               </label>
             </div>
@@ -758,7 +768,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 id="condition5"
                 className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
               />
-              <label htmlFor="condition5" className="ml-2 text-sm text-gray-700 ">
+              <label htmlFor="condition5" className="!ml-2 !text-sm !text-gray-700">
                 인증제한 없음
               </label>
             </div>
@@ -766,9 +776,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 검색 버튼 */}
-        <div className="flex justify-center mt-8 mb-4">
+        <div className="mt-8 mb-4 flex justify-center">
           <Button
-            className="bg-[rgb(166,161,219)] hover:bg-[rgb(146,141,199)] px-10 py-2.5 flex items-center gap-2 rounded-md transition-all duration-200  cursor-pointer shadow-sm hover:shadow-md hover:scale-[1.02]"
+            className="flex cursor-pointer items-center gap-2 rounded-md bg-[rgb(166,161,219)] px-10 py-2.5 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:bg-[rgb(146,141,199)] hover:shadow-md"
             onClick={handleSearch}
           >
             <Search className="h-5 w-5" />
@@ -776,6 +786,21 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
           </Button>
         </div>
       </div>
+
+      {/* Toast notifications */}
+      <Toast
+        title="키워드가 초기화되었습니다"
+        isVisible={showResetToast}
+        onClose={() => setShowResetToast(false)}
+        icon={<Check className="size-5 text-green-600" />}
+      />
+
+      <Toast
+        title={copyToastMessage}
+        isVisible={showCopyToast}
+        onClose={() => setShowCopyToast(false)}
+        icon={<Check className="size-5 text-green-600" />}
+      />
     </div>
   );
 }

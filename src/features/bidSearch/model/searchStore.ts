@@ -482,7 +482,7 @@ export const useSearchStore = create<SearchState>()(
 
             return {
               savedKeywordSets: [...state.savedKeywordSets, newSet],
-              currentSetId: newSet.id,
+              selectedKeywordSetId: newSet.id,
             };
           }),
       }),
