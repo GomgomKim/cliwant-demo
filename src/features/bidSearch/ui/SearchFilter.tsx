@@ -2,7 +2,7 @@
 
 import { ChevronDown, Plus, Search, Settings2, Star, X, Check } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import { IMAGES } from '@/features/bidSearch/model/constants';
 import { useSearchStore, KeywordRow } from '@/features/bidSearch/model/searchStore';
@@ -10,10 +10,19 @@ import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
-import { Label } from '@/shared/ui/Label';
-import { RadioGroup, RadioGroupItem } from '@/shared/ui/RadioGroup';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/Select';
 import { Toast } from '@/shared/ui/Toast';
+
+// Sub-components
+import { AmountFilter } from './SearchFilterComponents/AmountFilter';
+import { BusinessTypeFilter } from './SearchFilterComponents/BusinessTypeFilter';
+import { ConditionCheckboxes } from './SearchFilterComponents/ConditionCheckboxes';
+import { DateFilter } from './SearchFilterComponents/DateFilter';
+import { ExcludeKeywordSection } from './SearchFilterComponents/ExcludeKeywordSection';
+import { FilterTypeSelector } from './SearchFilterComponents/FilterTypeSelector';
+import { KeywordRowComponent } from './SearchFilterComponents/KeywordRowComponent';
+import { KeywordSetDropdown } from './SearchFilterComponents/KeywordSetDropdown';
+import { TimeFilter } from './SearchFilterComponents/TimeFilter';
 
 interface SearchFilterProps {
   onSearch?: (filters: any) => void;
@@ -56,6 +65,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const [showResetToast, setShowResetToast] = useState(false);
   const [showCopyToast, setShowCopyToast] = useState(false);
   const [copyToastMessage, setCopyToastMessage] = useState('');
+  const [keywordTagsByRow, setKeywordTagsByRow] = useState<Record<string, string[]>>({});
 
   // 필터된 키워드 세트 배열
   const filteredKeywordSets = savedKeywordSets.filter(set =>
@@ -85,7 +95,6 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       console.log('Auto searching with keyword set:', selectedKeywordSetId);
 
       // 키워드셋이 선택되었으나 키워드 입력칸이 비어있는 경우에만 기본 키워드를 설정
-      // 이렇게 하면 사용자가 직접 입력하는 경우에는 덮어쓰지 않음
       if (keywordRows.length === 1 && keywordRows[0].keyword === '') {
         const selectedSet = savedKeywordSets.find(set => set.id === selectedKeywordSetId);
         if (selectedSet && selectedSet.keywordRows.length > 0) {
@@ -101,28 +110,6 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       handleSearch();
     }
   }, [selectedKeywordSetId]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleFilterTypeChange = (type: 'shared' | 'personal') => {
-    setFilterType(type);
-  };
-
-  const handleAddExcludeTitleKeyword = () => {
-    if (excludeTitleInput.trim()) {
-      addExcludeTitleKeyword(excludeTitleInput.trim());
-      setExcludeTitleInput('');
-    }
-  };
-
-  const handleAddExcludeContentKeyword = () => {
-    if (excludeContentInput.trim()) {
-      addExcludeContentKeyword(excludeContentInput.trim());
-      setExcludeContentInput('');
-    }
-  };
-
-  // 추가 - 키워드 태그 관리를 위한 상태 및 함수
-  // 각 행마다 자체 태그 목록을 관리하기 위해 객체로 변경
-  const [keywordTagsByRow, setKeywordTagsByRow] = useState<Record<string, string[]>>({});
 
   // 키워드를 태그로 추가하는 함수
   const addKeywordTag = (rowId: string) => {
@@ -160,6 +147,23 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     setShowResetToast(true);
   };
 
+  // 그룹 복사 핸들러
+  const copyGroup = () => {
+    if (!selectedKeywordSetId) return;
+    const currentSet = savedKeywordSets.find(set => set.id === selectedKeywordSetId);
+    if (!currentSet) return;
+
+    const newName = currentSet.name;
+    // isShared 반대로 설정하여 복사
+    saveCurrentSet(newName, !currentSet.isShared);
+
+    // Set toast message based on current filter type
+    const toastMessage =
+      filterType === 'shared' ? '개인 그룹으로 복사되었습니다' : '공용 그룹으로 복사되었습니다';
+    setCopyToastMessage(toastMessage);
+    setShowCopyToast(true);
+  };
+
   const handleSearch = () => {
     // 모든 키워드 가져오기
     const allKeywords = keywordRows
@@ -195,16 +199,6 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent, fieldType: 'title' | 'content') => {
-    if (e.key === 'Enter') {
-      if (fieldType === 'title') {
-        handleAddExcludeTitleKeyword();
-      } else {
-        handleAddExcludeContentKeyword();
-      }
-    }
-  };
-
   // timeFilter 변경 시 날짜 자동 업데이트
   const updateDatesByTimeFilter = (filter: string) => {
     const now = new Date();
@@ -235,21 +229,28 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     }
   }, [timeFilter]);
 
-  // 그룹 복사 핸들러
-  const copyGroup = () => {
-    if (!selectedKeywordSetId) return;
-    const currentSet = savedKeywordSets.find(set => set.id === selectedKeywordSetId);
-    if (!currentSet) return;
-    // 같은 이름 사용 (복사 표시 삭제)
-    const newName = currentSet.name;
-    // isShared 반대로 설정하여 복사
-    saveCurrentSet(newName, !currentSet.isShared);
+  const handleAddExcludeTitleKeyword = () => {
+    if (excludeTitleInput.trim()) {
+      addExcludeTitleKeyword(excludeTitleInput.trim());
+      setExcludeTitleInput('');
+    }
+  };
 
-    // Set toast message based on current filter type
-    const toastMessage =
-      filterType === 'shared' ? '개인 그룹으로 복사되었습니다' : '공용 그룹으로 복사되었습니다';
-    setCopyToastMessage(toastMessage);
-    setShowCopyToast(true);
+  const handleAddExcludeContentKeyword = () => {
+    if (excludeContentInput.trim()) {
+      addExcludeContentKeyword(excludeContentInput.trim());
+      setExcludeContentInput('');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent, fieldType: 'title' | 'content') => {
+    if (e.key === 'Enter') {
+      if (fieldType === 'title') {
+        handleAddExcludeTitleKeyword();
+      } else {
+        handleAddExcludeContentKeyword();
+      }
+    }
   };
 
   return (
@@ -270,83 +271,17 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       <div className="!mb-5 bg-white p-4">
         {/* 검색 조건 선택 */}
         <div className="!mb-6 flex items-center gap-2">
-          <div className="flex">
-            <Button
-              variant="unstyled"
-              size="none"
-              className={cn(
-                '!h-[30px] !cursor-pointer !rounded-full !px-[10px] !text-xs !font-bold',
-                filterType === 'shared'
-                  ? '!z-[4] !bg-[rgb(166,161,219)] !text-white'
-                  : '!z-[3] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)]'
-              )}
-              onClick={() => handleFilterTypeChange('shared')}
-            >
-              공유
-            </Button>
-            <Button
-              variant="unstyled"
-              size="none"
-              className={cn(
-                '!ml-2 !h-[30px] !cursor-pointer !rounded-full !px-[10px] !text-xs !font-bold',
-                filterType === 'personal'
-                  ? '!z-[4] !bg-[rgb(166,161,219)] !text-white'
-                  : '!z-[3] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)]'
-              )}
-              onClick={() => handleFilterTypeChange('personal')}
-            >
-              개인
-            </Button>
-          </div>
+          <FilterTypeSelector filterType={filterType} onFilterTypeChange={setFilterType} />
 
-          <div className="relative ml-4">
-            <div
-              className="flex min-w-[180px] cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white p-2"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm font-medium">{selectedSet?.name || '키워드 그룹 선택'}</span>
-              <ChevronDown className="ml-auto h-4 w-4 text-gray-400" />
-            </div>
-
-            {isDropdownOpen && (
-              <div className="!absolute !top-full !left-0 !z-50 !mt-1 !w-64 !rounded-md !border !border-gray-200 !bg-white !shadow-lg !backdrop-blur-sm">
-                <div className="py-1">
-                  {filteredKeywordSets.length > 0 ? (
-                    filteredKeywordSets.map(set => (
-                      <div
-                        key={set.id}
-                        className={cn(
-                          '!flex !cursor-pointer !items-center !gap-2 !px-3 !py-2 !font-["Pretendard"] !transition-colors !duration-150 hover:!bg-gray-100',
-                          selectedKeywordSetId === set.id ? '!bg-gray-50' : ''
-                        )}
-                        onClick={() => {
-                          selectKeywordSet(set.id);
-                          setIsDropdownOpen(false);
-                        }}
-                      >
-                        <Star
-                          className={cn(
-                            '!h-4 !w-4',
-                            selectedKeywordSetId === set.id
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-gray-300'
-                          )}
-                        />
-                        <span className="text-sm">{set.name}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="px-3 py-2 text-sm text-gray-500">
-                      {filterType === 'shared'
-                        ? '공유된 키워드 세트가 없습니다'
-                        : '개인 키워드 세트가 없습니다'}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          <KeywordSetDropdown
+            selectedSet={selectedSet}
+            filteredKeywordSets={filteredKeywordSets}
+            isDropdownOpen={isDropdownOpen}
+            selectedKeywordSetId={selectedKeywordSetId}
+            setIsDropdownOpen={setIsDropdownOpen}
+            selectKeywordSet={selectKeywordSet}
+            filterType={filterType}
+          />
 
           <Button
             variant="unstyled"
@@ -370,410 +305,61 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
         {/* 키워드 행 */}
         <div className="!mb-6 space-y-3">
-          {keywordRows.map((row, _) => (
-            <div key={row.id} className="!flex !items-center">
-              <Select
-                value={row.searchField || 'title'}
-                onValueChange={value =>
-                  updateKeywordRow(row.id, { searchField: value as 'title' | 'content' })
-                }
-              >
-                <SelectTrigger className="!z-10 !mr-[10px] !h-[30px] !w-[130px] !border-none !text-xs !font-semibold">
-                  <SelectValue>
-                    {row.searchField === 'title' ? '공고 제목' : '첨부파일 본문'}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="bg-[#505050] !px-2 !py-1">
-                  <SelectItem value="title">
-                    <span className="pl-4">공고 제목</span>
-                  </SelectItem>
-                  <SelectItem value="content">
-                    <span className="pl-4">첨부파일 본문</span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* 개별 conjunction 선택 컴포넌트 복원 */}
-              <Select
-                value={row.conjunction}
-                onValueChange={value => updateKeywordRow(row.id, { conjunction: value as any })}
-              >
-                <SelectTrigger className="!z-10 !mx-[20px] !h-[30px] !w-[55px] !border-none !text-xs">
-                  <SelectValue placeholder="조건" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#505050]!px-2 !py-1">
-                  <SelectItem value="AND">
-                    <span className="pl-4">AND</span>
-                  </SelectItem>
-                  <SelectItem value="OR">
-                    <span className="pl-4">OR</span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              <div className="relative flex items-center">
-                <Input
-                  value={row.keyword}
-                  onChange={e => updateKeywordRow(row.id, { keyword: e.target.value })}
-                  placeholder="키워드를 입력해보세요"
-                  className="!z-[4] !mr-4 !flex !h-[30px] !min-h-[30px] !w-[180px] !self-center !rounded-[5px] !border !border-solid !border-[#ebebeb] !bg-white !p-[6px] !pr-10 !text-xs !font-[var(--font_default)] !font-semibold !text-[#423F3F] !opacity-100"
-                />
-                <Button
-                  variant="ghost"
-                  className="!ml-1 !flex !cursor-pointer !rounded-[5px]"
-                  onClick={() => addKeywordTag(row.id)}
-                  title="키워드 추가"
-                >
-                  <Image
-                    src={IMAGES.PLUS_BUTTON}
-                    width={24}
-                    height={24}
-                    alt="추가"
-                    className="!h-6 !w-6"
-                  />
-                </Button>
-              </div>
-
-              {/* 각 행별 태그 표시 영역을 같은 줄에 배치 */}
-              {keywordTagsByRow[row.id] && keywordTagsByRow[row.id].length > 0 && (
-                <div className="!ml-4 !flex !flex-wrap !gap-2">
-                  {keywordTagsByRow[row.id].map((tag, tagIndex) => (
-                    <div
-                      key={tagIndex}
-                      className="!flex !items-center !self-center !rounded-[20px] !bg-[#a6a1db] !px-4 !py-1 !text-white !opacity-100"
-                    >
-                      <span className="!text-xs !font-medium">{tag}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="!hover:text-gray-100 !ml-1.5 !h-auto !cursor-pointer !rounded-full !p-0 !text-white"
-                        onClick={() => removeKeywordTag(row.id, tag)}
-                        aria-label={`태그 삭제: ${tag}`}
-                      >
-                        <X className="!h-3.5 !w-3.5" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          {keywordRows.map(row => (
+            <KeywordRowComponent
+              key={row.id}
+              row={row}
+              updateKeywordRow={updateKeywordRow}
+              addKeywordTag={addKeywordTag}
+              keywordTags={keywordTagsByRow[row.id] || []}
+              removeKeywordTag={removeKeywordTag}
+            />
           ))}
         </div>
 
         {/* 제외 키워드 영역 */}
-        <div className="!mb-6 space-y-4">
-          <div className="flex flex-col pb-3">
-            <span className="!z-[4] !mb-2 !h-[30px] !max-w-[120px] !min-w-[120px] !self-start !overflow-visible !rounded-none !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[#939393] !opacity-100">
-              제목 제외 키워드
-            </span>
-            <div className="flex-1">
-              <div className="flex gap-2">
-                <div className="relative max-w-md flex-1">
-                  <Input
-                    placeholder="제목에서 제외할 키워드 입력"
-                    className="!z-[4] !m-0 !h-[30px] !min-h-[30px] !w-full !self-center !rounded-[5px] !border !border-solid !border-[#ebebeb] !bg-white !p-[6px] !pr-10 !text-xs !font-[var(--font_default)] !font-semibold !text-[#423F3F] !opacity-100"
-                    value={excludeTitleInput}
-                    onChange={e => setExcludeTitleInput(e.target.value)}
-                    onKeyPress={e => handleKeyPress(e, 'title')}
-                  />
-                  <Button
-                    variant="ghost"
-                    className="!absolute !right-0 !z-[2] !order-5 !mr-[-5px] !ml-[5px] !h-[30px] !max-h-[30px] !min-h-[30px] !w-[30px] !max-w-[30px] !min-w-[30px] !flex-grow !self-center !rounded-[5px]"
-                    onClick={handleAddExcludeTitleKeyword}
-                  >
-                    <Image
-                      src={IMAGES.PLUS_BUTTON}
-                      width={24}
-                      height={24}
-                      alt="추가"
-                      className="!h-6 !w-6"
-                    />
-                  </Button>
-                </div>
-              </div>
-
-              {excludeTitleKeywords.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {excludeTitleKeywords.map((keyword, index) => (
-                    <div
-                      key={index}
-                      className="!z-[4] !order-2 !mr-[5px] !flex !h-max !min-h-0 !w-max !min-w-0 !flex-none !items-center !justify-start !self-start !overflow-visible !rounded-[20px] !bg-[#F2989E] !px-[10px] !py-[4px] !text-white !opacity-100"
-                    >
-                      <span className="!text-xs !font-medium">{keyword}</span>
-                      <button
-                        className="!hover:text-gray-100 !ml-1.5 !rounded-full !p-0.5 !text-white"
-                        onClick={() => removeExcludeTitleKeyword(keyword)}
-                      >
-                        <X className="!h-3.5 !w-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex flex-col pb-3">
-            <span className="!z-[4] !mb-2 !h-[30px] !max-w-[120px] !min-w-[120px] !self-start !overflow-visible !rounded-none !text-[14px] !leading-[1.4] !font-[var(--font_default)] !font-bold !whitespace-pre-wrap !text-[#939393] !opacity-100">
-              본문 제외 키워드
-            </span>
-            <div className="flex-1">
-              <div className="flex gap-2">
-                <div className="relative max-w-md flex-1">
-                  <Input
-                    placeholder="본문에서 제외할 키워드 입력"
-                    className="!z-[4] !m-0 !h-[30px] !min-h-[30px] !w-full !self-center !rounded-[5px] !border !border-solid !border-[#ebebeb] !bg-white !p-[6px] !pr-10 !text-xs !font-[var(--font_default)] !font-semibold !text-[#423F3F] !opacity-100"
-                    value={excludeContentInput}
-                    onChange={e => setExcludeContentInput(e.target.value)}
-                    onKeyPress={e => handleKeyPress(e, 'content')}
-                  />
-                  <Button
-                    variant="ghost"
-                    className="!absolute !right-0 !z-[2] !order-5 !mr-[-5px] !ml-[5px] !h-[30px] !max-h-[30px] !min-h-[30px] !w-[30px] !max-w-[30px] !min-w-[30px] !flex-grow !self-center !rounded-[5px]"
-                    onClick={handleAddExcludeContentKeyword}
-                  >
-                    <Image
-                      src={IMAGES.PLUS_BUTTON}
-                      width={24}
-                      height={24}
-                      alt="추가"
-                      className="!h-6 !w-6"
-                    />
-                  </Button>
-                </div>
-              </div>
-
-              {excludeContentKeywords.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {excludeContentKeywords.map((keyword, index) => (
-                    <div
-                      key={index}
-                      className="!z-[4] !order-2 !mr-[5px] !flex !h-max !min-h-0 !w-max !min-w-0 !flex-none !items-center !justify-start !self-start !overflow-visible !rounded-[20px] !bg-[#F2989E] !px-[10px] !py-[4px] !text-white !opacity-100"
-                    >
-                      <span className="!text-xs !font-medium">{keyword}</span>
-                      <button
-                        className="!hover:text-gray-100 !ml-1.5 !rounded-full !p-0.5 !text-white"
-                        onClick={() => removeExcludeContentKeyword(keyword)}
-                      >
-                        <X className="!h-3.5 !w-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+        <ExcludeKeywordSection
+          excludeTitleInput={excludeTitleInput}
+          setExcludeTitleInput={setExcludeTitleInput}
+          excludeContentInput={excludeContentInput}
+          setExcludeContentInput={setExcludeContentInput}
+          excludeTitleKeywords={excludeTitleKeywords}
+          excludeContentKeywords={excludeContentKeywords}
+          handleAddExcludeTitleKeyword={handleAddExcludeTitleKeyword}
+          handleAddExcludeContentKeyword={handleAddExcludeContentKeyword}
+          removeExcludeTitleKeyword={removeExcludeTitleKeyword}
+          removeExcludeContentKeyword={removeExcludeContentKeyword}
+          handleKeyPress={handleKeyPress}
+        />
 
         {/* 금액 필터 */}
-        <div className="!mb-4 flex items-center gap-2">
-          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
-            사업 금액
-          </span>
-          <Input
-            type="number"
-            value={minAmount}
-            onChange={e => setAmountRange(Number(e.target.value), maxAmount)}
-            className="w-36"
-          />
-          <span className="">~</span>
-          <Input
-            type="number"
-            value={maxAmount}
-            onChange={e => setAmountRange(minAmount, Number(e.target.value))}
-            className="w-36"
-          />
-          <div className="ml-4 flex items-center">
-            <Checkbox
-              id="exclude-amount"
-              checked={excludeAmount}
-              onCheckedChange={() => toggleExcludeAmount()}
-              className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-            />
-            <label htmlFor="exclude-amount" className="!ml-2 !text-sm !text-gray-700">
-              금액 제한 없음
-            </label>
-          </div>
-        </div>
+        <AmountFilter
+          minAmount={minAmount}
+          maxAmount={maxAmount}
+          setAmountRange={setAmountRange}
+          excludeAmount={excludeAmount}
+          toggleExcludeAmount={toggleExcludeAmount}
+        />
 
         {/* 날짜 필터 */}
-        <div className="!mb-4 flex items-center gap-2">
-          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
-            공고일
-          </span>
-          <Input
-            type="date"
-            value={startDate}
-            onChange={e => {
-              setStartDate(e.target.value);
-              setTimeFilter('custom'); // 날짜 직접 입력하면 custom으로 변경
-            }}
-            className="w-40 bg-gray-50"
-          />
-          <span className="">~</span>
-          <Input
-            type="date"
-            value={endDate}
-            onChange={e => {
-              setEndDate(e.target.value);
-              setTimeFilter('custom'); // 날짜 직접 입력하면 custom으로 변경
-            }}
-            className="w-40 bg-gray-50"
-          />
-          <div className="ml-4 flex items-center">
-            <Checkbox
-              id="include-expired"
-              checked={includeExpired}
-              onCheckedChange={() => toggleIncludeExpired()}
-              className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-            />
-            <label htmlFor="include-expired" className="!ml-2 !text-sm !text-gray-700">
-              마감일 지난 공고 포함
-            </label>
-          </div>
-        </div>
+        <DateFilter
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          setTimeFilter={setTimeFilter}
+          includeExpired={includeExpired}
+          toggleIncludeExpired={toggleIncludeExpired}
+        />
 
         {/* 시간 필터 */}
-        <div className="mb-4 flex items-center">
-          <div className="flex gap-8">
-            <div className="flex items-center space-x-2">
-              <input
-                type="radio"
-                id="day"
-                name="timeFilter"
-                value="day"
-                checked={timeFilter === 'day'}
-                onChange={() => {
-                  setTimeFilter('day');
-                }}
-                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="day" className="text-sm text-gray-700">
-                하루 전
-              </label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="radio"
-                id="week"
-                name="timeFilter"
-                value="week"
-                checked={timeFilter === 'week'}
-                onChange={() => {
-                  setTimeFilter('week');
-                }}
-                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="week" className="text-sm text-gray-700">
-                일주일 전
-              </label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="radio"
-                id="month"
-                name="timeFilter"
-                value="month"
-                checked={timeFilter === 'month'}
-                onChange={() => {
-                  setTimeFilter('month');
-                }}
-                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="month" className="text-sm text-gray-700">
-                한 달 전
-              </label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <input
-                type="radio"
-                id="all"
-                name="timeFilter"
-                value="all"
-                checked={timeFilter === 'all'}
-                onChange={() => {
-                  setTimeFilter('all');
-                }}
-                className="h-4 w-4 text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="all" className="text-sm text-gray-700">
-                전체 기간
-              </label>
-            </div>
-          </div>
-        </div>
+        <TimeFilter timeFilter={timeFilter} setTimeFilter={setTimeFilter} />
 
         {/* 사업 구분 */}
-        <div className="mb-4 flex items-center gap-2">
-          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
-            사업 구분
-          </span>
-          <select className="w-48 rounded-md border bg-gray-50 px-3 py-2 text-sm">
-            <option value="all">전체</option>
-            <option value="current">현재</option>
-            <option value="company">기업 제한</option>
-          </select>
-          <span className="ml-8 w-24 text-sm font-medium text-gray-600">정렬 기준</span>
-          <select className="w-48 rounded-md border bg-gray-50 px-3 py-2 text-sm">
-            <option value="relevance">정확도 순</option>
-            <option value="date">날짜 순</option>
-            <option value="amount">금액 순</option>
-          </select>
-        </div>
+        <BusinessTypeFilter />
 
         {/* 조건 체크박스 */}
-        <div className="mb-6 flex items-start">
-          <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
-            조건
-          </span>
-          <div className="flex flex-wrap gap-x-8 gap-y-2">
-            <div className="flex items-center">
-              <Checkbox
-                id="condition1"
-                className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="condition1" className="!ml-2 !text-sm !text-gray-700">
-                업종조건 충족
-              </label>
-            </div>
-            <div className="flex items-center">
-              <Checkbox
-                id="condition2"
-                className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="condition2" className="!ml-2 !text-sm !text-gray-700">
-                물품조건 충족
-              </label>
-            </div>
-            <div className="flex items-center">
-              <Checkbox
-                id="condition3"
-                className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="condition3" className="!ml-2 !text-sm !text-gray-700">
-                공동수급 허용
-              </label>
-            </div>
-            <div className="flex items-center">
-              <Checkbox
-                id="condition4"
-                className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="condition4" className="!ml-2 !text-sm !text-gray-700">
-                실적제한 없음
-              </label>
-            </div>
-            <div className="flex items-center">
-              <Checkbox
-                id="condition5"
-                className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
-              />
-              <label htmlFor="condition5" className="!ml-2 !text-sm !text-gray-700">
-                인증제한 없음
-              </label>
-            </div>
-          </div>
-        </div>
+        <ConditionCheckboxes />
 
         {/* 검색 버튼 */}
         <div className="mt-8 mb-4 flex justify-center">
