@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 
 import { IMAGES } from '@/features/bidSearch/model/constants';
-import { useSearchStore } from '@/features/bidSearch/model/searchStore';
+import { useSearchStore, KeywordRow } from '@/features/bidSearch/model/searchStore';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
@@ -153,26 +153,23 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   const handleSearch = () => {
-    // 현재 검색 필터 상태를 모아서 객체로 전달
-    const allTags = Object.values(keywordTagsByRow).flat();
+    // 모든 키워드 가져오기
+    const allKeywords = keywordRows
+      .flatMap(row => {
+        const tags = keywordTagsByRow[row.id] || [];
+        return tags.map(tag => ({
+          keyword: tag,
+          searchField: row.searchField,
+          conjunction: row.conjunction,
+          rowId: row.id,
+        }));
+      })
+      .filter(item => item.keyword.trim() !== '');
+
+    console.log('Search keywords with conjunctions:', allKeywords);
 
     const filters = {
-      keywords: [
-        // 키워드 행에서 입력된 키워드 (비어있지 않은 것만)
-        ...keywordRows
-          .filter(row => row.keyword.trim() !== '')
-          .map(row => ({
-            searchField: row.searchField || 'title',
-            conjunction: row.conjunction,
-            keyword: row.keyword,
-          })),
-        // 태그로 추가된 키워드들도 검색어로 포함
-        ...allTags.map(tag => ({
-          searchField: 'title' as const, // 태그는 기본적으로 제목 검색으로 설정
-          conjunction: 'OR' as const,
-          keyword: tag,
-        })),
-      ],
+      keywords: allKeywords,
       excludeTitleKeywords,
       excludeContentKeywords,
       minAmount,
@@ -186,7 +183,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       selectedKeywordSetId,
     };
 
-    console.log('Search filters:', filters);
+    console.log('Final search filters:', filters);
 
     // 상위 컴포넌트로 필터 상태 전달
     if (onSearch) {
@@ -253,28 +250,32 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         {/* 검색 조건 선택 */}
         <div className="flex items-center gap-2 !mb-6">
           <div className="flex">
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               className={cn(
-                'h-[30px] text-xs font-bold py-0 px-[10px] rounded-full opacity-100 self-center min-w-0 w-max flex-grow-0 m-0 border-0 cursor-pointer whitespace-pre-wrap overflow-visible text-center leading-tight font-["Pretendard"]',
+                '!h-[30px] !text-xs !font-bold !px-[10px] !rounded-md cursor-pointer',
                 filterType === 'shared'
-                  ? 'shadow-[0px_2px_4px_0px_rgba(0,0,0,0.2)] bg-[rgb(166,161,219)] text-white z-[4]'
-                  : 'shadow-[0px_2px_4px_0px_rgb(255,255,255)] bg-[rgb(234,234,234)] text-[rgb(102,102,102)] z-[3]'
+                  ? '!shadow-[0px_2px_4px_0px_rgba(0,0,0,0.2)] !bg-[rgb(166,161,219)] !text-white z-[4]'
+                  : '!shadow-[0px_2px_4px_0px_rgb(255,255,255)] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)] z-[3]'
               )}
               onClick={() => handleFilterTypeChange('shared')}
             >
               공유
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               className={cn(
-                'h-[30px] text-xs font-bold py-0 px-[10px] rounded-full opacity-100 self-center min-w-0 w-max flex-grow-0 m-0 border-0 cursor-pointer whitespace-pre-wrap overflow-visible text-center leading-tight font-["Pretendard"]',
+                '!h-[30px] !text-xs !font-bold !px-[10px] !rounded-md cursor-pointer !ml-2',
                 filterType === 'personal'
-                  ? 'shadow-[0px_2px_4px_0px_rgba(0,0,0,0.2)] bg-[rgb(166,161,219)] text-white z-[4]'
-                  : 'shadow-[0px_2px_4px_0px_rgb(255,255,255)] bg-[rgb(234,234,234)] text-[rgb(102,102,102)] z-[3]'
+                  ? '!shadow-[0px_2px_4px_0px_rgba(0,0,0,0.2)] !bg-[rgb(166,161,219)] !text-white z-[4]'
+                  : '!shadow-[0px_2px_4px_0px_rgb(255,255,255)] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)] z-[3]'
               )}
               onClick={() => handleFilterTypeChange('personal')}
             >
               개인
-            </button>
+            </Button>
           </div>
 
           <div className="relative ml-4">
@@ -328,8 +329,8 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
             )}
           </div>
 
-          <Button variant="outline" className="ml-2 text-sm  text-gray-700 border-gray-300">
-            임시 조건 저장
+          <Button variant="outline" className="!ml-2 !text-sm  !text-gray-700 !border-gray-300">
+            현재 조건 저장
           </Button>
 
           <Button
@@ -347,7 +348,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
         {/* 키워드 행 */}
         <div className="space-y-3 !mb-6">
-          {keywordRows.map((row, index) => (
+          {keywordRows.map((row, _) => (
             <div key={row.id} className="flex items-center">
               <Select
                 value={row.searchField || 'title'}
@@ -376,6 +377,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                 </SelectContent>
               </Select>
 
+              {/* 개별 conjunction 선택 컴포넌트 복원 */}
               <Select
                 value={row.conjunction}
                 onValueChange={value => updateKeywordRow(row.id, { conjunction: value as any })}
@@ -384,10 +386,16 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                   <SelectValue placeholder="조건" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#505050] text-white border-none">
-                  <SelectItem value="AND" className="text-white focus:text-white px-4 py-2">
+                  <SelectItem
+                    value="AND"
+                    className="text-white focus:bg-[#4285F4] focus:text-white px-4 py-2"
+                  >
                     <span className="pl-4">AND</span>
                   </SelectItem>
-                  <SelectItem value="OR" className="text-white focus:text-white px-4 py-2">
+                  <SelectItem
+                    value="OR"
+                    className="text-white focus:bg-[#4285F4] focus:text-white px-4 py-2"
+                  >
                     <span className="pl-4">OR</span>
                   </SelectItem>
                 </SelectContent>
@@ -398,7 +406,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
                   value={row.keyword}
                   onChange={e => updateKeywordRow(row.id, { keyword: e.target.value })}
                   placeholder="키워드를 입력해보세요"
-                  className="flex w-[180px]  bg-white self-center min-h-[30px] h-[30px] m-0 z-[4] border-solid border border-[#ebebeb] rounded-[5px] font-[var(--font_default)] text-xs font-semibold text-[#423F3F] p-[6px] pr-10 opacity-100"
+                  className="flex w-[180px] bg-white self-center min-h-[30px] h-[30px] !mr-4 z-[4] border-solid border border-[#ebebeb] rounded-[5px] font-[var(--font_default)] text-xs font-semibold text-[#423F3F] p-[6px] pr-10 opacity-100"
                 />
                 <Button
                   variant="ghost"
