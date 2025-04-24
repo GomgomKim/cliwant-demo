@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes';
 
 import { useCounterStore } from '@/shared/store/useCounterStore';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui/Button';
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/card';
+} from '@/shared/ui/Card';
 
 export const WelcomeFeature = () => {
   const { count, increment, decrement, reset } = useCounterStore();
