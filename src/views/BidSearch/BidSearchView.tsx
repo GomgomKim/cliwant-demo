@@ -82,6 +82,39 @@ export function BidSearchView() {
       );
     };
 
+    // timeFilter 기반으로 bid 필터링
+    const filterBidsByTime = (bids: BidItem[]): BidItem[] => {
+      // filters.timeFilter에서 선택된 시간 필터
+      const timeFilter = filters.timeFilter;
+      if (timeFilter === 'all') return bids;
+
+      const now = new Date();
+      const fromDate = new Date();
+
+      // 시간 필터에 따라 시작 날짜 설정
+      if (timeFilter === 'day') {
+        fromDate.setDate(now.getDate() - 1);
+      } else if (timeFilter === 'week') {
+        fromDate.setDate(now.getDate() - 7);
+      } else if (timeFilter === 'month') {
+        fromDate.setMonth(now.getMonth() - 1);
+      } else if (timeFilter === 'custom' && filters.startDate && filters.endDate) {
+        // custom 시간 필터의 경우 startDate와 endDate 사용
+        return bids.filter(bid => {
+          const bidDate = new Date(bid.publishedDate);
+          const startDate = new Date(filters.startDate);
+          const endDate = new Date(filters.endDate);
+          return bidDate >= startDate && bidDate <= endDate;
+        });
+      }
+
+      // 시간 필터에 따른 기간 내의 공고만 필터링
+      return bids.filter(bid => {
+        const bidDate = new Date(bid.publishedDate);
+        return bidDate >= fromDate && bidDate <= now;
+      });
+    };
+
     // 새로운 검색 결과 처리 로직
     if (keywordFilters.length > 0) {
       // 그룹핑: rowId를 기준으로 그룹화하여 각 그룹의 키워드를 AND/OR 조건으로 결합
@@ -134,6 +167,9 @@ export function BidSearchView() {
         }
       });
 
+      // 시간 필터 적용
+      results = filterBidsByTime(results);
+
       const resultsBySet: Record<string, BidItem[]> = {};
       if (selectedKeywordSetId) {
         resultsBySet[selectedKeywordSetId] = results;
@@ -162,7 +198,9 @@ export function BidSearchView() {
           // AND: 교집합
           return acc.filter(item => rowMatches.includes(item));
         }, [] as BidItem[]);
-        resultsBySet[set.id] = results;
+
+        // 시간 필터 적용
+        resultsBySet[set.id] = filterBidsByTime(results);
       });
 
       setSearchResultsByGroup(resultsBySet);
