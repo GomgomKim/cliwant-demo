@@ -56,32 +56,55 @@ export function BidSearchView() {
     // 키워드 기반 필터링
     if (keywords && keywords.length > 0) {
       filteredResults = filteredResults.filter(bid => {
-        // 모든 키워드 조건 검사
-        return keywords.every((keywordObj: any, index: number) => {
-          const { searchField, keyword, conjunction } = keywordObj;
+        // 여러 키워드에 대한 필터링 로직 개선
+        let result = true;
+        let orConditionMet = false;
+        let hasOrCondition = false;
 
-          // 첫 번째 키워드거나 AND 연결자면 필터링 진행
-          if (index === 0 || conjunction === 'AND') {
-            if (searchField === 'title') {
-              return bid.title.toLowerCase().includes(keyword.toLowerCase());
-            } else if (searchField === 'content') {
-              // content는 organization과 budget을 검색
-              return (
-                bid.organization.toLowerCase().includes(keyword.toLowerCase()) ||
-                bid.budget.toLowerCase().includes(keyword.toLowerCase())
-              );
-            } else {
-              // 전체 검색
-              return (
-                bid.title.toLowerCase().includes(keyword.toLowerCase()) ||
-                bid.organization.toLowerCase().includes(keyword.toLowerCase()) ||
-                bid.budget.toLowerCase().includes(keyword.toLowerCase())
-              );
+        for (let i = 0; i < keywords.length; i++) {
+          const { searchField, keyword, conjunction } = keywords[i];
+
+          // 키워드가 비어있으면 건너뛰기
+          if (!keyword || keyword.trim() === '') continue;
+
+          // 키워드 매칭 검사
+          let isMatched = false;
+          if (searchField === 'title') {
+            isMatched = bid.title.toLowerCase().includes(keyword.toLowerCase());
+          } else if (searchField === 'content') {
+            isMatched =
+              bid.organization.toLowerCase().includes(keyword.toLowerCase()) ||
+              bid.budget.toLowerCase().includes(keyword.toLowerCase());
+          } else {
+            isMatched =
+              bid.title.toLowerCase().includes(keyword.toLowerCase()) ||
+              bid.organization.toLowerCase().includes(keyword.toLowerCase()) ||
+              bid.budget.toLowerCase().includes(keyword.toLowerCase());
+          }
+
+          // 첫 번째 키워드는 무조건 적용
+          if (i === 0) {
+            result = isMatched;
+          }
+          // AND 조건인 경우: 이전 결과와 AND 연산
+          else if (conjunction === 'AND') {
+            result = result && isMatched;
+          }
+          // OR 조건인 경우: OR 연산 결과 저장
+          else if (conjunction === 'OR') {
+            hasOrCondition = true;
+            if (isMatched) {
+              orConditionMet = true;
             }
           }
-          // OR 연결자는 다음 키워드 조건을 허용
-          return true;
-        });
+        }
+
+        // OR 조건이 있었다면 최종 결과와 OR 연산
+        if (hasOrCondition) {
+          return result || orConditionMet;
+        }
+
+        return result;
       });
     }
 
