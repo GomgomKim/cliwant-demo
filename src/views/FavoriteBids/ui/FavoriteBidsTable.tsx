@@ -88,7 +88,7 @@ export function FavoriteBidsTable({
                         return (
                           <td key="delete" className="px-6 py-4 text-sm text-gray-700">
                             <button onClick={() => onDelete(bid.id)}>
-                              <Trash2 className="h-5 w-5 text-red-600" />
+                              <Trash2 className="h-5 w-5 text-black" />
                             </button>
                           </td>
                         );
