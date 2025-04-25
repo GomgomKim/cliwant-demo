@@ -291,58 +291,50 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   return (
-    <div className="rounded-lg border bg-white shadow">
-      <div className="flex items-center justify-end border-b p-4">
-        <span className="text-sm">검색 결과 개수</span>
-        <Select defaultValue="20">
-          <SelectTrigger className="!ml-2 !w-16 !rounded !border !px-2 !py-1 !text-sm">
-            <SelectValue placeholder="항목 수" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="20">20</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="100">100</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button className="ml-2 rounded-md bg-[rgb(166,161,219)] text-xs text-white hover:bg-[rgb(146,141,199)]">
-          저장
-        </Button>
+    <div className="!rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
+      <div className="!flex !items-center !justify-between !border-b !border-gray-200 !p-4">
+        <h3 className="!text-base !font-semibold !text-gray-800">검색 필터</h3>
+        <div className="!flex !items-center">
+          <span className="!text-sm !text-gray-600">검색 결과 개수</span>
+          <Select defaultValue="20">
+            <SelectTrigger className="!ml-2 !w-16 !rounded !border !px-2 !py-1 !text-sm">
+              <SelectValue placeholder="항목 수" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="20">20</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button className="!ml-2 !rounded-md !bg-[rgb(166,161,219)] !text-xs !text-white hover:!bg-[rgb(146,141,199)]">
+            저장
+          </Button>
+        </div>
       </div>
 
       {/* 검색 필터 영역 */}
-      <div className="!mb-5 bg-white p-4">
+      <div className="!space-y-6 !p-6">
         {/* 검색 조건 선택 */}
-        <div className="!mb-6 flex items-center gap-2">
-          <FilterTypeSelector filterType={filterType} onFilterTypeChange={setFilterType} />
+        <div className="!mb-4 !flex !flex-col !gap-4">
+          {/* 검색 필터 타입 선택 */}
+          <div className="!space-y-2">
+            <p className="!text-sm !font-medium !text-gray-700">검색 방법</p>
+            <FilterTypeSelector filterType={filterType} onFilterTypeChange={setFilterType} />
+          </div>
 
-          <KeywordSetDropdown
-            selectedSet={selectedSet}
-            filteredKeywordSets={filteredKeywordSets}
-            isDropdownOpen={isDropdownOpen}
-            selectedKeywordSetId={selectedKeywordSetId}
-            setIsDropdownOpen={setIsDropdownOpen}
-            selectKeywordSet={selectKeywordSet}
-            filterType={filterType}
-          />
-
-          <Button
-            variant="unstyled"
-            className="!cursor-pointer !rounded-md border !border-gray-300 !bg-[rgb(104,111,232)] !px-3 !py-2 !text-sm !text-white"
-            onClick={resetKeywords}
-          >
-            키워드 초기화
-          </Button>
-          <Button
-            variant="purple"
-            onClick={copyGroup}
-            className="!cursor-pointer !rounded-md border !border-gray-300 !bg-[rgb(104,111,232)] !px-3 !py-2 !text-sm !text-white"
-          >
-            {filterType === 'shared' ? '개인 그룹으로 복사' : '공용 그룹으로 복사'}
-          </Button>
-
-          <Button variant="ghost" className="ml-2 p-1 text-gray-500">
-            <Settings2 size={18} />
-          </Button>
+          {/* 키워드셋 드롭다운 */}
+          <div className="!space-y-2">
+            <p className="!text-sm !font-medium !text-gray-700">키워드 셋</p>
+            <KeywordSetDropdown
+              selectedSet={selectedSet}
+              filteredKeywordSets={filteredKeywordSets}
+              isDropdownOpen={isDropdownOpen}
+              selectedKeywordSetId={selectedKeywordSetId}
+              setIsDropdownOpen={setIsDropdownOpen}
+              selectKeywordSet={selectKeywordSet}
+              filterType={filterType}
+            />
+          </div>
         </div>
 
         {/* 키워드 행 */}
@@ -404,13 +396,14 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         <ConditionCheckboxes />
 
         {/* 검색 버튼 */}
-        <div className="mt-8 mb-4 flex justify-center">
+        <div className="!mt-6 !flex !items-center !justify-center">
           <Button
-            className="flex cursor-pointer items-center gap-2 rounded-md bg-[rgb(166,161,219)] px-10 py-2.5 shadow-sm transition-all duration-200 hover:scale-[1.02] hover:bg-[rgb(146,141,199)] hover:shadow-md"
-            onClick={handleSearch}
+            disabled={!selectedKeywordSetId}
+            onClick={() => handleSearch()}
+            className="!flex !h-12 !w-40 !items-center !justify-center !gap-2 !rounded-full !bg-blue-600 !px-6 !py-3 !text-white !shadow-md hover:!bg-blue-700 active:!bg-blue-800"
           >
-            <Search className="h-5 w-5" />
-            <span className="font-medium">검색하기</span>
+            <Search className="!h-5 !w-5" />
+            <span className="!font-medium">검색</span>
           </Button>
         </div>
       </div>

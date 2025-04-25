@@ -8,33 +8,39 @@ interface FilterTypeSelectorProps {
 
 export function FilterTypeSelector({ filterType, onFilterTypeChange }: FilterTypeSelectorProps) {
   return (
-    <div className="flex">
-      <Button
-        variant="unstyled"
-        size="none"
-        className={cn(
-          '!h-[30px] !cursor-pointer !rounded-full !px-[10px] !text-xs !font-bold',
-          filterType === 'shared'
-            ? '!z-[4] !bg-[rgb(166,161,219)] !text-white'
-            : '!z-[3] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)]'
-        )}
-        onClick={() => onFilterTypeChange('shared')}
-      >
-        공유
-      </Button>
-      <Button
-        variant="unstyled"
-        size="none"
-        className={cn(
-          '!ml-2 !h-[30px] !cursor-pointer !rounded-full !px-[10px] !text-xs !font-bold',
-          filterType === 'personal'
-            ? '!z-[4] !bg-[rgb(166,161,219)] !text-white'
-            : '!z-[3] !bg-[rgb(234,234,234)] !text-[rgb(102,102,102)]'
-        )}
-        onClick={() => onFilterTypeChange('personal')}
-      >
-        개인
-      </Button>
+    <div className="!flex !items-center !justify-center !rounded-lg !bg-gray-50 !p-2 !shadow-sm">
+      <div className="!relative !flex !h-9 !w-[200px] !rounded-full !bg-gray-200 !p-1">
+        {/* 활성화된 배경 효과 */}
+        <div
+          className={cn(
+            '!absolute !top-1 !h-7 !w-[98px] !rounded-full !bg-[rgb(166,161,219)] !transition-all !duration-300 !ease-in-out',
+            filterType === 'personal' ? '!left-[98px]' : '!left-1'
+          )}
+        />
+
+        <Button
+          variant="unstyled"
+          size="none"
+          className={cn(
+            '!relative !z-10 !h-7 !w-[98px] !cursor-pointer !rounded-full !px-4 !py-1 !text-xs !font-bold !transition-colors !duration-200',
+            filterType === 'shared' ? '!text-white' : '!text-gray-600 hover:!text-gray-800'
+          )}
+          onClick={() => onFilterTypeChange('shared')}
+        >
+          공유
+        </Button>
+        <Button
+          variant="unstyled"
+          size="none"
+          className={cn(
+            '!relative !z-10 !h-7 !w-[98px] !cursor-pointer !rounded-full !px-4 !py-1 !text-xs !font-bold !transition-colors !duration-200',
+            filterType === 'personal' ? '!text-white' : '!text-gray-600 hover:!text-gray-800'
+          )}
+          onClick={() => onFilterTypeChange('personal')}
+        >
+          개인
+        </Button>
+      </div>
     </div>
   );
 }
