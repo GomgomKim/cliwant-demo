@@ -1,14 +1,15 @@
 'use client';
 
-import { Search, Trash2 } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { Search } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { DUMMY_BID_DATA } from '@/features/bidSearch/model/data';
 import { BidItem } from '@/features/bidSearch/model/types';
-import { Pagination } from '@/features/bidSearch/ui';
 import { useFavoriteStore } from '@/features/favorites/model/favoriteStore';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
+
+import { FavoriteBidsTable } from './ui/FavoriteBidsTable';
 
 export function FavoriteBidsView() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,7 +18,6 @@ export function FavoriteBidsView() {
   const [sortKey, setSortKey] = useState<'budget' | 'publishedDate' | 'deadline' | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
 
-  // derive favorites and toggle from store
   const favorites = useFavoriteStore(state => state.favorites);
   const toggleFavorite = useFavoriteStore(state => state.toggleFavorite);
 
@@ -91,73 +91,16 @@ export function FavoriteBidsView() {
       </div>
 
       {/* 관심 공고 목록 */}
-      <div className="overflow-x-auto rounded-lg bg-white p-6 shadow-sm">
-        {sortedBids.length > 0 ? (
-          <>
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="h-8">
-                <tr className="bg-[rgb(166,161,219)] text-white">
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">공고 단계</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">구분</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">공고명</th>
-                  <th
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase"
-                    onClick={() => handleSort('budget')}
-                  >
-                    금액{sortKey === 'budget' ? (sortAsc ? ' ▲' : ' ▼') : ''}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">공고기관</th>
-                  <th
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase"
-                    onClick={() => handleSort('publishedDate')}
-                  >
-                    게시일{sortKey === 'publishedDate' ? (sortAsc ? ' ▲' : ' ▼') : ''}
-                  </th>
-                  <th
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase"
-                    onClick={() => handleSort('deadline')}
-                  >
-                    마감일{sortKey === 'deadline' ? (sortAsc ? ' ▲' : ' ▼') : ''}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium uppercase">삭제</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {currentItems.map(bid => (
-                  <tr key={bid.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-700">{bid.bidType}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{bid.status}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{bid.title}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{bid.budget}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{bid.organization}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{bid.publishedDate}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{bid.deadline}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">
-                      <button onClick={() => toggleFavorite(bid.id)}>
-                        <Trash2 className="h-5 w-5 text-red-600" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="mt-4">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            </div>
-          </>
-        ) : (
-          <div className="py-8 text-center text-gray-500">
-            <div className="mb-2">관심 공고가 없습니다.</div>
-            <div className="text-sm">
-              입찰 검색에서 관심 있는 공고를 찾아 별표 아이콘을 클릭하여 추가하세요.
-            </div>
-          </div>
-        )}
-      </div>
+      <FavoriteBidsTable
+        bids={currentItems}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        sortKey={sortKey}
+        sortAsc={sortAsc}
+        onSort={handleSort}
+        onDelete={toggleFavorite}
+      />
     </div>
   );
 }
