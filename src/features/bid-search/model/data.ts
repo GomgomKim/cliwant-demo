@@ -1121,3 +1121,9 @@ export const DUMMY_BID_DATA: BidItem[] = [
     isFavorite: true,
   },
 ];
+
+// 임시 cost
+export const DUMMY_BID_DATA_WITH_COST: (BidItem & { cost: number })[] = DUMMY_BID_DATA.map(bid => ({
+  ...bid,
+  cost: [100000000, 300000000, 500000000, 1000000000][Math.floor(Math.random() * 4)],
+}));
