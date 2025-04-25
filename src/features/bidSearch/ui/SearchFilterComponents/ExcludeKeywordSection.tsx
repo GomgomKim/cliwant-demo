@@ -33,33 +33,26 @@ export function ExcludeKeywordSection({
   handleKeyPress,
 }: ExcludeKeywordSectionProps) {
   return (
-    <div className="!mb-6 !space-y-4">
-      <div className="!flex !items-center !gap-4 !rounded-lg !bg-white !p-4 !shadow-sm">
+    <div className="!mb-3 !space-y-4">
+      <div className="!flex !items-center !gap-3">
         <span className="!min-w-[120px] !text-sm !font-semibold !text-gray-700">
           제목 제외 키워드
         </span>
-        <div className="!flex !flex-1 !items-center !gap-2">
-          <Input
-            placeholder="제목에서 제외할 키워드 입력"
-            className="!w-full !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm"
-            value={excludeTitleInput}
-            onChange={e => setExcludeTitleInput(e.target.value)}
-            onKeyPress={e => handleKeyPress(e, 'title')}
-          />
-          <Button
-            variant="unstyled"
-            className="!rounded-md !bg-blue-500 !p-2 !text-white hover:!bg-blue-600"
-            onClick={handleAddExcludeTitleKeyword}
-          >
-            <Image
-              src={IMAGES.PLUS_BUTTON}
-              width={24}
-              height={24}
-              alt="추가"
-              className="!h-5 !w-5"
-            />
-          </Button>
-        </div>
+        <Input
+          placeholder="제목에서 제외할 키워드 입력"
+          className="!h-8 !w-72 !rounded-[5px] !border !border-gray-300 !px-3 !text-sm"
+          value={excludeTitleInput}
+          onChange={e => setExcludeTitleInput(e.target.value)}
+          onKeyPress={e => handleKeyPress(e, 'title')}
+        />
+        <Button
+          variant="ghost"
+          className="!ml-1 !flex !cursor-pointer !rounded-[5px]"
+          onClick={handleAddExcludeTitleKeyword}
+          title="키워드 추가"
+        >
+          <Image src={IMAGES.PLUS_BUTTON} width={24} height={24} alt="추가" className="!h-6 !w-6" />
+        </Button>
         {excludeTitleKeywords.length > 0 && (
           <div className="!ml-auto !flex !flex-wrap !gap-2">
             {excludeTitleKeywords.map((keyword, index) => (
@@ -80,32 +73,25 @@ export function ExcludeKeywordSection({
         )}
       </div>
 
-      <div className="!flex !items-center !gap-4 !rounded-lg !bg-white !p-4 !shadow-sm">
+      <div className="!flex !items-center !gap-3">
         <span className="!min-w-[120px] !text-sm !font-semibold !text-gray-700">
           본문 제외 키워드
         </span>
-        <div className="!flex !flex-1 !items-center !gap-2">
-          <Input
-            placeholder="본문에서 제외할 키워드 입력"
-            className="!w-full !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm"
-            value={excludeContentInput}
-            onChange={e => setExcludeContentInput(e.target.value)}
-            onKeyPress={e => handleKeyPress(e, 'content')}
-          />
-          <Button
-            variant="unstyled"
-            className="!rounded-md !bg-blue-500 !p-2 !text-white hover:!bg-blue-600"
-            onClick={handleAddExcludeContentKeyword}
-          >
-            <Image
-              src={IMAGES.PLUS_BUTTON}
-              width={24}
-              height={24}
-              alt="추가"
-              className="!h-5 !w-5"
-            />
-          </Button>
-        </div>
+        <Input
+          placeholder="본문에서 제외할 키워드 입력"
+          className="!h-8 !w-72 !rounded-[5px] !border !border-gray-300 !px-3 !text-sm"
+          value={excludeContentInput}
+          onChange={e => setExcludeContentInput(e.target.value)}
+          onKeyPress={e => handleKeyPress(e, 'content')}
+        />
+        <Button
+          variant="ghost"
+          className="!ml-1 !flex !cursor-pointer !rounded-[5px]"
+          onClick={handleAddExcludeContentKeyword}
+          title="키워드 추가"
+        >
+          <Image src={IMAGES.PLUS_BUTTON} width={24} height={24} alt="추가" className="!h-6 !w-6" />
+        </Button>
         {excludeContentKeywords.length > 0 && (
           <div className="!ml-auto !flex !flex-wrap !gap-2">
             {excludeContentKeywords.map((keyword, index) => (

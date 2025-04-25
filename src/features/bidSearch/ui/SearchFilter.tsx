@@ -338,7 +338,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 키워드 행 */}
-        <div className="!mb-6 space-y-3">
+        <div className="!mb-3 space-y-3">
           {keywordRows.map(row => (
             <KeywordRowComponent
               key={row.id}
