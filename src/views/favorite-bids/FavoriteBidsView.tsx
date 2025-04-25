@@ -6,6 +6,8 @@ import { DUMMY_BID_DATA } from '@/features/bid-search/model/data';
 import { BidItem } from '@/features/bid-search/model/types';
 import { useFavoriteStore } from '@/features/favorites/model/favoriteStore';
 import { Checkbox } from '@/shared/ui/Checkbox';
+import { Input } from '@/shared/ui/Input';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/shared/ui/Select';
 
 import { BID_TYPE_OPTIONS, BUDGET_OPTIONS, STATUS_OPTIONS } from './model/constants';
 import { FavoriteBidsTable } from './ui/FavoriteBidsTable';
@@ -86,67 +88,71 @@ export function FavoriteBidsView() {
         </div>
       </div>
 
-      <div className="!mt-6 mr-5 w-[95%] !rounded-lg !border !bg-white !p-6 !shadow-sm">
+      <div className="!mt-6 !mr-5 !w-[95%] !rounded-lg !border !bg-white !p-6 !shadow-sm">
         {/* 상단 필터 */}
-        <div className="mb-6 grid grid-cols-6 items-center gap-4">
-          <select
-            className="border px-3 py-2"
-            value={filterBidType}
-            onChange={e => setFilterBidType(e.target.value)}
-          >
-            <option value="">공고 단계</option>
-            {BID_TYPE_OPTIONS.map(opt => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-          <input
+        <div className="!mb-6 grid grid-cols-6 items-center gap-4">
+          <Select value={filterBidType} onValueChange={val => setFilterBidType(val)}>
+            <SelectTrigger className="!px-3 !py-2">
+              <SelectValue placeholder="공고 단계" />
+            </SelectTrigger>
+            <SelectContent className="!border !border-gray-200 !bg-white !shadow-md">
+              {BID_TYPE_OPTIONS.map(opt => (
+                <SelectItem key={opt} value={opt}>
+                  {opt}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
             type="text"
             placeholder="공고명"
-            className="border px-3 py-2"
+            className="!px-3 !py-2"
             value={filterTitle}
             onChange={e => setFilterTitle(e.target.value)}
           />
-          <input
+          <Input
             type="text"
             placeholder="기관"
-            className="border px-3 py-2"
+            className="!px-3 !py-2"
             value={filterOrg}
             onChange={e => setFilterOrg(e.target.value)}
           />
-          <select
-            className="border px-3 py-2"
-            value={filterBudget}
-            onChange={e => setFilterBudget(Number(e.target.value))}
+          <Select
+            value={filterBudget.toString()}
+            onValueChange={val => setFilterBudget(Number(val))}
           >
-            {BUDGET_OPTIONS.map(opt => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-          <select
-            className="border px-3 py-2"
-            value={filterStatus}
-            onChange={e => setFilterStatus(e.target.value)}
-          >
-            <option value="">구분</option>
-            {STATUS_OPTIONS.map(opt => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="!px-3 !py-2">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="!border !border-gray-200 !bg-white !shadow-md">
+              {BUDGET_OPTIONS.map(opt => (
+                <SelectItem key={opt.value} value={String(opt.value)}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={filterStatus} onValueChange={val => setFilterStatus(val)}>
+            <SelectTrigger className="!px-3 !py-2">
+              <SelectValue placeholder="구분" />
+            </SelectTrigger>
+            <SelectContent className="!border !border-gray-200 !bg-white !shadow-md">
+              {STATUS_OPTIONS.map(opt => (
+                <SelectItem key={opt} value={opt}>
+                  {opt}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {/* 메모 표시 토글 */}
-          <div className="flex items-center gap-2">
+          <div className="!flex !items-center !gap-2">
             <Checkbox
               id="show-memo"
               checked={showMemo}
               onCheckedChange={val => setShowMemo(!!val)}
-              className="h-4 w-4 rounded border border-gray-300"
+              className="!h-4 !w-4 !rounded !border !border-gray-700"
             />
-            <label htmlFor="show-memo" className="text-sm text-gray-700">
+            <label htmlFor="show-memo" className="!text-sm !text-gray-700">
               메모 표시
             </label>
           </div>
