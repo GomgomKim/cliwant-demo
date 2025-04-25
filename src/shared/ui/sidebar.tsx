@@ -16,49 +16,51 @@ export function Sidebar({ className }: SidebarProps) {
   const [searchMenuOpen, setSearchMenuOpen] = useState(true);
 
   return (
-    <div className={cn('w-60 bg-white border-r border-gray-200 min-h-screen', className)}>
-      <div className="flex flex-col py-2">
-        {/* 입찰검색 메뉴 */}
-        <div className="px-4 py-2">
+    <div className={cn('min-h-screen w-64 bg-white shadow-xl', className)}>
+      <div className="flex flex-col space-y-4 p-6">
+        {/* 입찰 검색 메뉴 */}
+        <div>
           <button
-            className="w-full flex items-center justify-between p-3 rounded-md bg-[#1c1e64] text-white"
+            className="flex w-full items-center justify-between rounded-lg bg-indigo-600 p-3 text-lg font-semibold text-white transition-colors hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-400 focus:outline-none"
             onClick={() => setSearchMenuOpen(!searchMenuOpen)}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Search className="h-5 w-5" />
-              <span className="font-medium">입찰검색</span>
+              <span>입찰 검색</span>
             </div>
             <ChevronDown
               className={cn(
-                'h-5 w-5 transition-transform',
-                searchMenuOpen ? 'transform rotate-180' : ''
+                'h-5 w-5 transition-transform duration-200',
+                searchMenuOpen ? 'rotate-180' : ''
               )}
             />
           </button>
 
           {searchMenuOpen && (
-            <div className="border-l-2 border-gray-200 ml-7 pl-4 mt-2">
+            <div className="mt-4 flex flex-col space-y-2 pl-6">
               <Link
                 href="/bids"
                 className={cn(
-                  'flex items-center gap-2 py-3 my-1 w-full text-sm font-medium',
-                  pathname === '/bids' ? 'text-[#1c1e64]' : 'text-gray-600 hover:text-[#1c1e64]'
+                  'flex items-center gap-2 rounded-md px-4 py-2 text-base font-medium transition-colors',
+                  pathname === '/bids'
+                    ? 'bg-indigo-100 text-indigo-700'
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-indigo-600'
                 )}
               >
                 <List className="h-5 w-5" />
-                <span>국내입찰</span>
+                <span>국내 입찰</span>
               </Link>
               <Link
                 href="/favorites"
                 className={cn(
-                  'flex items-center gap-2 py-3 my-1 w-full text-sm font-medium',
+                  'flex items-center gap-2 rounded-md px-4 py-2 text-base font-medium transition-colors',
                   pathname === '/favorites'
-                    ? 'text-[#1c1e64]'
-                    : 'text-gray-600 hover:text-[#1c1e64]'
+                    ? 'bg-indigo-100 text-indigo-700'
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-indigo-600'
                 )}
               >
                 <Bookmark className="h-5 w-5" />
-                <span>관심공고</span>
+                <span>관심 공고</span>
               </Link>
             </div>
           )}
