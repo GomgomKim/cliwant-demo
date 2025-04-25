@@ -1,12 +1,14 @@
 'use client';
 
 import { ArrowLeft, Star, StarOff, Share2, ArrowRight } from 'lucide-react';
+import { Check, AlertTriangle } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
 import { DUMMY_BID_DATA_WITH_COST } from '@/features/bid-search/model/data';
 import { Button } from '@/shared/ui/Button';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/shared/ui/Select';
+import { Toast } from '@/shared/ui/Toast';
 
 import {
   GUIDE_BUTTON_LABELS,
@@ -25,6 +27,9 @@ export function BidDetailView() {
   const [qualificationNote, setQualificationNote] = useState('');
   const [isFavorite, setIsFavorite] = useState(bid?.isFavorite ?? false);
   const [scope, setScope] = useState<string>('본 공고');
+  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [showUCToast, setShowUCToast] = useState(false);
+  const [showLinkToast, setShowLinkToast] = useState(false);
 
   useEffect(() => {
     if (bid) {
@@ -36,8 +41,14 @@ export function BidDetailView() {
   const handleSave = () => {
     if (bid) {
       localStorage.setItem(`bid-note-${bid.id}`, qualificationNote);
-      alert('저장되었습니다.');
+      setShowSaveToast(true);
     }
+  };
+
+  const handleShare = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    setShowLinkToast(true);
   };
 
   if (!bid) {
@@ -66,20 +77,29 @@ export function BidDetailView() {
         <ArrowLeft size={16} /> 뒤로가기
       </Button>
 
-      <h1 className="mb-2 !inline-block !border-b-2 !border-[#5851A8] !pb-2 text-2xl font-bold !text-[#5851A8]">
+      <h1 className="!mb-2 !inline-block !border-b-2 !border-[#5851A8] !pb-2 text-2xl font-bold !text-[#5851A8]">
         {bid.title}
       </h1>
-      <div className="mb-6 flex items-center gap-4">
+      <div className="!mb-6 !flex !items-center !gap-4">
         <Button
           variant="unstyled"
           size="none"
           onClick={() => setIsFavorite(f => !f)}
-          className="!text-[#5851A8] hover:opacity-70"
+          className="!hover:opacity-70"
         >
-          {isFavorite ? <Star size={20} /> : <StarOff size={20} />}
+          {isFavorite ? (
+            <Star size={20} fill="#FFC107" color="#FFC107" />
+          ) : (
+            <StarOff size={20} className="!text-[#5851A8]" />
+          )}
         </Button>
         <span className="text-sm">{isFavorite ? '보관중' : '보관'}</span>
-        <Button variant="unstyled" size="none" className="!text-[#5851A8] hover:opacity-70">
+        <Button
+          variant="unstyled"
+          size="none"
+          onClick={handleShare}
+          className="!cursor-pointer !text-[#5851A8] hover:opacity-70"
+        >
           <Share2 size={20} />
         </Button>
       </div>
@@ -90,7 +110,8 @@ export function BidDetailView() {
             key={label}
             variant="unstyled"
             size="none"
-            className={`!rounded !px-4 !py-2 ${
+            onClick={label === '공고 상세' ? undefined : () => setShowUCToast(true)}
+            className={`!cursor-pointer !rounded !px-4 !py-2 ${
               label === '공고 상세'
                 ? '!bg-[#5851A8] !text-white hover:opacity-90'
                 : '!border !border-[#5851A8] !text-[#5851A8] hover:opacity-70'
@@ -101,13 +122,13 @@ export function BidDetailView() {
         ))}
       </div>
 
-      <div className="!mb-10 !grid !grid-cols-3 !gap-8">
-        <div className="!col-span-2 !rounded-lg !border !border-gray-200 !bg-white !p-8 !shadow-sm">
+      <div className="!mb-10 !grid !grid-cols-2 !gap-8">
+        <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !p-8 !shadow-sm">
           <div className="mb-4 !inline-block !border-b-2 !border-[#5851A8] !pb-2 font-semibold !text-[#5851A8]">
             자격 분석 노트
           </div>
           <textarea
-            className="!h-40 !w-full !rounded-lg !border !border-gray-200 !p-4"
+            className="!my-4 !h-32 !w-full !rounded-lg !border !border-gray-200 !p-4"
             value={qualificationNote}
             onChange={e => setQualificationNote(e.target.value)}
           />
@@ -116,23 +137,20 @@ export function BidDetailView() {
               variant="unstyled"
               size="none"
               onClick={handleSave}
-              className="!hover:opacity-90 !rounded !bg-[#5851A8] !px-6 !py-2 !text-white"
+              className="!hover:opacity-90 !w-full !cursor-pointer !rounded !bg-[#5851A8] !px-6 !py-2 !text-white"
             >
               저장
             </Button>
           </div>
         </div>
 
-        <div className="!rounded-lg !border !border-gray-200 !bg-white !p-8 !shadow-sm">
-          <div className="mb-4 !inline-block !border-b-2 !border-[#5851A8] !pb-2 font-semibold !text-[#5851A8]">
+        <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !p-8 !shadow-sm">
+          <div className="!mb-4 !inline-block !border-b-2 !border-[#5851A8] !pb-2 font-semibold !text-[#5851A8]">
             프로젝트 정보
           </div>
           <ul>
             {infoItems.map(item => (
-              <li
-                key={item.label}
-                className="!last:border-none !flex !justify-between !border-b !py-1"
-              >
+              <li key={item.label} className="!flex !justify-between !py-2">
                 <span className="font-medium !text-[#5851A8]">{item.label}</span>
                 <span>{item.value}</span>
               </li>
@@ -143,7 +161,7 @@ export function BidDetailView() {
 
       <div className="!grid !grid-cols-3 !gap-8">
         <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !p-8 !shadow-sm">
-          <div className="mb-4 !inline-block !border-b-2 !border-[#5851A8] !pb-2 font-semibold !text-[#5851A8]">
+          <div className="!mb-4 !inline-block !border-b-2 !border-[#5851A8] !pb-2 font-semibold !text-[#5851A8]">
             공동수급 · 지역제한 · 선정방식
           </div>
           <table className="!w-full !divide-y !divide-gray-100">
@@ -161,9 +179,9 @@ export function BidDetailView() {
         {restrictionItems.map((r, i) => (
           <div
             key={i}
-            className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !p-6 !shadow-sm"
+            className="!col-span-1 !flex !flex-col !rounded-lg !border !border-gray-200 !bg-white !p-6 !shadow-sm"
           >
-            <div className="mb-4 flex items-center justify-between">
+            <div className="!mb-4 flex items-center justify-between">
               <span className="font-semibold !text-[#5851A8]">{r.title}</span>
               <Select defaultValue={scope} onValueChange={val => setScope(val)}>
                 <SelectTrigger className="!w-48 !rounded-md !border !border-gray-200 !bg-gray-50 !px-4 !py-2 !text-sm !text-gray-900 !shadow-sm hover:!border-[rgb(166,161,219)]">
@@ -179,17 +197,20 @@ export function BidDetailView() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="mb-2 text-sm text-gray-600">
+            <div className="!mb-10 !text-sm !text-gray-600">
               {`${r.certificationLabel} (${r.certificationCount})`}
             </div>
-            <div className="mb-4 font-medium !text-[#5851A8]">{r.statusText}</div>
-            <div className="flex flex-wrap gap-2">
+            <div className="!mb-4 !flex justify-center font-medium !text-green-400">
+              {r.statusText}
+            </div>
+            <div className="!mt-7 !flex !flex-wrap !justify-center gap-2">
               {r.guideButtons.map(btn => (
                 <Button
                   key={btn}
                   variant="unstyled"
                   size="none"
-                  className="!hover:opacity-90 !flex !items-center !gap-1 !rounded !bg-[#5851A8] !px-4 !py-2 !text-sm !text-white"
+                  onClick={() => setShowUCToast(true)}
+                  className="!hover:opacity-90 !flex !cursor-pointer !items-center !gap-1 !rounded !bg-[#5851A8] !px-4 !py-2 !text-sm !text-white"
                 >
                   {btn} <ArrowRight size={14} />
                 </Button>
@@ -198,6 +219,28 @@ export function BidDetailView() {
           </div>
         ))}
       </div>
+
+      <Toast
+        title="저장되었습니다."
+        isVisible={showSaveToast}
+        onClose={() => setShowSaveToast(false)}
+        icon={<Check className="size-5 text-green-600" />}
+        position="top"
+      />
+      <Toast
+        title="준비중입니다."
+        isVisible={showUCToast}
+        onClose={() => setShowUCToast(false)}
+        icon={<AlertTriangle className="size-5 text-yellow-600" />}
+        position="top"
+      />
+      <Toast
+        title="링크가 클립보드에 복사되었습니다."
+        isVisible={showLinkToast}
+        onClose={() => setShowLinkToast(false)}
+        icon={<Check className="size-5 text-green-600" />}
+        position="top"
+      />
     </div>
   );
 }

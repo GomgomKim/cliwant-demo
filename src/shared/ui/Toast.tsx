@@ -103,7 +103,7 @@ export const Toast = ({
             animate={{ y: animateY, opacity: 1 }}
             exit={{ y: exitY, opacity: 0 }}
           >
-            <div className="inline-flex items-center justify-center gap-4 rounded-lg border border-green-300 bg-green-50 px-12 py-4 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)]">
+            <div className="inline-flex items-center justify-center gap-4 rounded-lg border border-green-300 bg-green-50 px-3 py-2 shadow-[0px_2px_12px_0px_rgba(0,0,0,0.12)]">
               {icon && icon}
               <div className="flex flex-col items-start">
                 <p className="text-base leading-6 font-semibold text-green-700">{title}</p>
