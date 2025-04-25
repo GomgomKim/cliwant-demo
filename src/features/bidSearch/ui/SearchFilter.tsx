@@ -266,6 +266,14 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     }
   }, [timeFilter]);
 
+  // timeFilter에 따라 includeExpired 자동 토글
+  useEffect(() => {
+    const shouldInclude = ['year', 'all'].includes(timeFilter);
+    if (shouldInclude !== includeExpired) {
+      toggleIncludeExpired();
+    }
+  }, [timeFilter, includeExpired, toggleIncludeExpired]);
+
   const handleAddExcludeTitleKeyword = () => {
     if (excludeTitleInput.trim()) {
       addExcludeTitleKeyword(excludeTitleInput.trim());
@@ -384,10 +392,16 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
           setTimeFilter={setTimeFilter}
           includeExpired={includeExpired}
           toggleIncludeExpired={toggleIncludeExpired}
+          timeFilter={timeFilter}
         />
 
         {/* 시간 필터 */}
-        <TimeFilter timeFilter={timeFilter} setTimeFilter={setTimeFilter} />
+        <TimeFilter
+          timeFilter={timeFilter}
+          setTimeFilter={setTimeFilter}
+          includeExpired={includeExpired}
+          toggleIncludeExpired={toggleIncludeExpired}
+        />
 
         {/* 사업 구분 */}
         <BusinessTypeFilter />

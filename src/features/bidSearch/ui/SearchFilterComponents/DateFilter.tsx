@@ -12,6 +12,7 @@ interface DateFilterProps {
   setTimeFilter: (filter: TimeFilterType) => void;
   includeExpired: boolean;
   toggleIncludeExpired: () => void;
+  timeFilter: TimeFilterType;
 }
 
 export function DateFilter({
@@ -22,30 +23,37 @@ export function DateFilter({
   setTimeFilter,
   includeExpired,
   toggleIncludeExpired,
+  timeFilter,
 }: DateFilterProps) {
   return (
     <div className="!mb-6 !flex !items-center !gap-4 !rounded-lg !bg-white !p-4 !shadow-sm">
       <span className="!min-w-[120px] !text-sm !font-semibold !text-gray-700">공고일</span>
-      <Input
-        type="date"
-        value={startDate}
-        onChange={e => {
-          setStartDate(e.target.value);
-          setTimeFilter('custom' as TimeFilterType);
-        }}
-        className="!w-36 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm"
-      />
-      <span className="!text-gray-500">~</span>
-      <Input
-        type="date"
-        value={endDate}
-        onChange={e => {
-          setEndDate(e.target.value);
-          setTimeFilter('custom' as TimeFilterType);
-        }}
-        className="!w-36 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm"
-      />
-      <div className="!ml-auto !flex !items-center !gap-2">
+
+      <div className="!flex !items-center !gap-2">
+        <Input
+          type="date"
+          value={startDate}
+          onChange={e => {
+            setStartDate(e.target.value);
+            setTimeFilter('custom' as TimeFilterType);
+          }}
+          disabled={timeFilter !== 'custom'}
+          className="!w-36 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm !filter disabled:!cursor-not-allowed disabled:!bg-gray-100 [&::-webkit-calendar-picker-indicator]:!invert"
+        />
+        <span className="!text-gray-500">~</span>
+        <Input
+          type="date"
+          value={endDate}
+          onChange={e => {
+            setEndDate(e.target.value);
+            setTimeFilter('custom' as TimeFilterType);
+          }}
+          disabled={timeFilter !== 'custom'}
+          className="!w-36 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm !filter disabled:!cursor-not-allowed disabled:!bg-gray-100 [&::-webkit-calendar-picker-indicator]:!invert"
+        />
+      </div>
+
+      <div className="!flex !items-center !gap-2 !pl-2">
         <Checkbox
           id="include-expired"
           checked={includeExpired}
@@ -56,6 +64,8 @@ export function DateFilter({
           마감일 지난 공고 포함
         </label>
       </div>
+
+      <div className="!flex-1"></div>
     </div>
   );
 }

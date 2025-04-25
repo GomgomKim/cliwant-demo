@@ -5,7 +5,7 @@ import { devtools, persist } from 'zustand/middleware';
 export type FilterType = 'personal' | 'shared';
 export type SearchMode = 'simple' | 'ai' | 'advanced';
 export type FilterConjunction = 'AND' | 'OR';
-export type TimeFilter = 'day' | 'week' | 'month' | 'all' | 'custom';
+export type TimeFilter = 'day' | 'week' | 'month' | 'year' | 'all' | 'custom';
 
 export interface KeywordRow {
   id: string;
