@@ -208,7 +208,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       excludeTitleKeywords,
       excludeContentKeywords,
       minAmount,
-      maxAmount,
+      maxAmount: excludeAmount ? null : maxAmount,
       excludeAmount,
       startDate,
       endDate,
@@ -225,7 +225,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       ),
       제외제목키워드: excludeTitleKeywords,
       제외본문키워드: excludeContentKeywords,
-      금액범위: excludeAmount ? '제한없음' : `${minAmount}~${maxAmount}`,
+      금액범위: excludeAmount ? `${minAmount} 이상` : `${minAmount}~${maxAmount}`,
       기간: `${startDate || '없음'} ~ ${endDate || '없음'} (${timeFilter})`,
       마감포함: includeExpired ? 'O' : 'X',
     });
