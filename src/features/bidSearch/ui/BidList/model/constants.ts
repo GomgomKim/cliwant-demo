@@ -1,6 +1,6 @@
 // Common className for all headers (except the first one which has width)
 export const TABLE_HEADER_DEFAULT_CLASS =
-  'px-6 py-4 text-left text-xs font-medium tracking-wider text-white uppercase';
+  'px-6 py-4 text-left text-xs font-medium tracking-wider text-white uppercase h-8';
 
 // Background color for the header row
 export const TABLE_HEADER_BG_CLASS = 'bg-[rgb(166,161,219)]';
