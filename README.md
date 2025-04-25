@@ -1,65 +1,37 @@
-# Next.js with Feature-Sliced Design
+## App 실행 가이드
 
-This project is a Next.js application structured according to Feature-Sliced Design (FSD) methodology.
+1. 프로젝트 클론
+   ```bash
+   git clone <repository-url>
+   cd <project-folder>
+   ```
+2. 의존성 설치
+   ```bash
+   pnpm install
+   ```
+3. 개발 서버 실행
 
-## Project Structure
+   ```bash
+   pnpm dev
+   ```
 
-```
-src/
-├── app/             # App Router pages and layouts
-├── entities/        # Business entities (users, products, etc.)
-├── features/        # User scenarios and processes
-├── pages/           # (optional) Pages directory for additional routing
-├── shared/          # Reusable infrastructure
-│   ├── api/         # API clients and methods
-│   ├── config/      # Global configuration
-│   ├── lib/         # Utility functions and helpers
-│   ├── types/       # TypeScript type definitions
-│   └── ui/          # UI components
-└── widgets/         # Composite components for pages
-```
+   브라우저에서 http://localhost:3000 에 접속합니다.
 
-## Getting Started
+## 사용한 디자인 패턴 설명 (FSD)
 
-First, run the development server:
+이 프로젝트는 Feature-Sliced Design (FSD) 아키텍처 패턴을 기반으로 구조화되었습니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Slices (기능 계층)
+  - app: Next.js App Router 페이지 및 레이아웃
+  - widgets: 재사용 가능한 UI 컴포넌트 조합
+  - features: 사용자 시나리오 및 도메인 로직 단위
+  - entities: 핵심 비즈니스 엔티티 (예: 유저, 제품)
+  - shared: 공통 모듈 (API, 유틸리티, 타입 등)
+- Segments (세분화)
+  각 Slice 내에서 기능별로 폴더를 구분하여 관심사를 분리합니다.
+- Public API
+  index 파일을 통해 외부로 내보낼 인터페이스만 노출하여 캡슐화를 유지합니다.
+- Unidirectional Dependency
+  상위 계층만 하위 계층을 참조하도록 의존성 방향을 단방향으로 유지합니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-- [Feature-Sliced Design](https://feature-sliced.design/) - Learn about FSD methodology
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial
-
-## Architecture Decisions
-
-This project follows the Feature-Sliced Design methodology to create a modular, scalable architecture:
-
-1. **Slices**: The codebase is divided into horizontal layers (app, widgets, features, entities, shared)
-2. **Segments**: Each layer is divided into segments to group related functionality
-3. **Public API**: Only exports what's needed through index files
-4. **Unidirectional Dependencies**: Higher layers can import from lower layers but not vice versa
-
-This structure helps maintain separation of concerns and makes the codebase more maintainable.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+이러한 구조는 코드의 가독성, 재사용성, 유지보수성을 향상시키며, 프로젝트 확장에 유리합니다.
