@@ -17,31 +17,29 @@ export function AmountFilter({
   toggleExcludeAmount,
 }: AmountFilterProps) {
   return (
-    <div className="!mb-4 flex items-center gap-2">
-      <span className="z-[4] order-1 m-0 h-[30px] max-w-[120px] min-w-[120px] self-center overflow-visible rounded-none text-[14px] leading-[1.4] font-[var(--font_default)] font-bold whitespace-pre-wrap text-[#939393] opacity-100">
-        사업 금액
-      </span>
+    <div className="!mb-6 !flex !items-center !gap-4 !rounded-lg !bg-white !p-4 !shadow-sm">
+      <span className="!min-w-[120px] !text-sm !font-semibold !text-gray-700">사업 금액</span>
       <Input
         type="number"
         value={minAmount}
         onChange={e => setAmountRange(Number(e.target.value), maxAmount)}
-        className="w-36"
+        className="!w-32 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm"
       />
-      <span className="">~</span>
+      <span className="!text-gray-500">~</span>
       <Input
         type="number"
         value={maxAmount}
         onChange={e => setAmountRange(minAmount, Number(e.target.value))}
-        className="w-36"
+        className="!w-32 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm"
       />
-      <div className="ml-4 flex items-center">
+      <div className="!ml-auto !flex !items-center !gap-2">
         <Checkbox
           id="exclude-amount"
           checked={excludeAmount}
           onCheckedChange={() => toggleExcludeAmount()}
-          className="text-[rgb(166,161,219)] focus:ring-[rgb(166,161,219)]"
+          className="!text-blue-600 focus:!ring-blue-600"
         />
-        <label htmlFor="exclude-amount" className="!ml-2 !text-sm !text-gray-700">
+        <label htmlFor="exclude-amount" className="!text-sm !text-gray-700">
           금액 제한 없음
         </label>
       </div>
