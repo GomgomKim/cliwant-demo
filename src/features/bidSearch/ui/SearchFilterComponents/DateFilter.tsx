@@ -50,7 +50,7 @@ export function DateFilter({
           id="include-expired"
           checked={includeExpired}
           onCheckedChange={() => toggleIncludeExpired()}
-          className="!text-blue-600 focus:!ring-blue-600"
+          className="!h-5 !w-5 !rounded !border-2 !border-gray-400 !bg-white !text-blue-600 !transition-all !duration-200 focus:!ring-1 focus:!ring-blue-600"
         />
         <label htmlFor="include-expired" className="!text-sm !text-gray-700">
           마감일 지난 공고 포함
