@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { BidItem } from '@/features/bidSearch/model/types';
-
 interface FavoriteState {
   favorites: number[]; // 관심 공고 ID 배열
   toggleFavorite: (bidId: number) => void;

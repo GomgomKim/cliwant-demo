@@ -1,4 +1,4 @@
-import { BidItem } from '@/features/bidSearch/model/types';
+import { BidItem } from '@/features/bid-search/model/types';
 
 export type FavoriteBid = BidItem;
 
@@ -20,4 +20,5 @@ export interface FavoriteBidsTableProps {
   sortAsc: boolean;
   onSort: (key: SortKey) => void;
   onDelete: (id: number) => void;
+  showMemo: boolean;
 }

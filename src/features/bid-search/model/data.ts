@@ -10,7 +10,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-15',
     publishedDate: '2025-04-23',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -21,7 +21,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-30',
     publishedDate: '2025-04-22',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -32,7 +32,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-20',
     publishedDate: '2025-04-20',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -43,7 +43,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-15',
     publishedDate: '2025-04-18',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -54,7 +54,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-10',
     publishedDate: '2025-04-15',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -65,7 +65,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-28',
     publishedDate: '2025-04-10',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -76,7 +76,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-25',
     publishedDate: '2025-04-08',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -87,7 +87,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-10',
     publishedDate: '2025-04-03',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: true,
   },
   {
@@ -98,7 +98,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-30',
     publishedDate: '2025-03-28',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -109,7 +109,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-29',
     publishedDate: '2025-03-24',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
 
@@ -122,7 +122,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-30',
     publishedDate: '2025-04-01',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -133,7 +133,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-07-15',
     publishedDate: '2025-03-15',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -144,7 +144,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-28',
     publishedDate: '2025-02-20',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -155,7 +155,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-07-20',
     publishedDate: '2025-02-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -166,7 +166,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-25',
     publishedDate: '2025-01-15',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -177,7 +177,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-07-05',
     publishedDate: '2025-04-19',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -188,7 +188,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-22',
     publishedDate: '2025-04-21',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -199,7 +199,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-07-10',
     publishedDate: '2025-04-17',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -210,7 +210,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-20',
     publishedDate: '2025-04-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -221,7 +221,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-07-25',
     publishedDate: '2025-03-10',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -234,7 +234,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-30',
     publishedDate: '2025-04-22',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -245,7 +245,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-10-15',
     publishedDate: '2025-04-16',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: true,
   },
   {
@@ -256,7 +256,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-25',
     publishedDate: '2025-04-11',
     status: '공사',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -267,7 +267,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-10-05',
     publishedDate: '2025-03-25',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -278,7 +278,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-20',
     publishedDate: '2025-02-14',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: true,
   },
   {
@@ -289,7 +289,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-10-10',
     publishedDate: '2025-09-12',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -300,7 +300,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-28',
     publishedDate: '2025-09-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -311,7 +311,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-10-20',
     publishedDate: '2025-09-18',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: true,
   },
   {
@@ -322,7 +322,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-15',
     publishedDate: '2025-09-01',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -333,7 +333,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-10-25',
     publishedDate: '2025-09-20',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -346,7 +346,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-01-30',
     publishedDate: '2026-01-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -357,7 +357,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-15',
     publishedDate: '2026-01-10',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -368,7 +368,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-01-25',
     publishedDate: '2026-01-03',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -379,7 +379,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-10',
     publishedDate: '2026-01-12',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -390,7 +390,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-01-20',
     publishedDate: '2026-01-02',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -401,7 +401,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-05',
     publishedDate: '2026-01-08',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -412,7 +412,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-01-28',
     publishedDate: '2026-01-04',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -423,7 +423,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-20',
     publishedDate: '2026-01-15',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -434,7 +434,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-01-15',
     publishedDate: '2026-01-01',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -445,7 +445,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-25',
     publishedDate: '2026-01-18',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -458,7 +458,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-30',
     publishedDate: '2026-03-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -469,7 +469,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-04-15',
     publishedDate: '2026-03-10',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: true,
   },
   {
@@ -480,7 +480,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-25',
     publishedDate: '2026-03-02',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -491,7 +491,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-04-10',
     publishedDate: '2026-03-12',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -502,7 +502,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-20',
     publishedDate: '2026-03-01',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: true,
   },
   {
@@ -513,7 +513,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-04-05',
     publishedDate: '2026-03-08',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -524,7 +524,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-28',
     publishedDate: '2026-03-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -535,7 +535,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-04-20',
     publishedDate: '2026-03-15',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -546,7 +546,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-15',
     publishedDate: '2026-03-01',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -557,7 +557,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-04-25',
     publishedDate: '2026-03-18',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -570,7 +570,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-03-30',
     publishedDate: '2025-03-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -581,7 +581,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-15',
     publishedDate: '2025-03-10',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -592,7 +592,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-03-25',
     publishedDate: '2025-03-02',
     status: '공사',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -603,7 +603,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-10',
     publishedDate: '2025-03-12',
     status: '공사',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -614,7 +614,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-03-20',
     publishedDate: '2025-03-01',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -625,7 +625,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-05',
     publishedDate: '2025-03-08',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -636,7 +636,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-03-28',
     publishedDate: '2025-03-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -647,7 +647,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-20',
     publishedDate: '2025-03-15',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -658,7 +658,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-03-15',
     publishedDate: '2025-03-01',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -669,7 +669,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-04-25',
     publishedDate: '2025-03-18',
     status: '공사',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -682,7 +682,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-15',
     publishedDate: '2025-05-15',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -693,7 +693,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-30',
     publishedDate: '2025-05-10',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -704,7 +704,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-25',
     publishedDate: '2025-05-20',
     status: '공사',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -715,7 +715,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-25',
     publishedDate: '2025-05-05',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -726,7 +726,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-10',
     publishedDate: '2025-05-12',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -737,7 +737,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-28',
     publishedDate: '2025-05-08',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -748,7 +748,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-20',
     publishedDate: '2025-05-18',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -759,7 +759,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-05',
     publishedDate: '2025-05-01',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -770,7 +770,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-05-20',
     publishedDate: '2025-05-03',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -781,7 +781,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-06-30',
     publishedDate: '2025-05-25',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -794,7 +794,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-08-30',
     publishedDate: '2025-08-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -805,7 +805,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-15',
     publishedDate: '2025-08-10',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -816,7 +816,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-08-25',
     publishedDate: '2025-08-02',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -827,7 +827,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-10',
     publishedDate: '2025-08-15',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -838,7 +838,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-08-20',
     publishedDate: '2025-08-01',
     status: '물품',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -849,7 +849,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-05',
     publishedDate: '2025-08-08',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -860,7 +860,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-08-28',
     publishedDate: '2025-08-03',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -871,7 +871,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-20',
     publishedDate: '2025-08-18',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -882,7 +882,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-08-15',
     publishedDate: '2025-08-01',
     status: '공사',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -893,7 +893,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-09-25',
     publishedDate: '2025-08-20',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -906,7 +906,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-12-15',
     publishedDate: '2025-11-20',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -917,7 +917,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-11-30',
     publishedDate: '2025-11-10',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -928,7 +928,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-12-10',
     publishedDate: '2025-11-15',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -939,7 +939,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-12-05',
     publishedDate: '2025-11-05',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -950,7 +950,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-11-25',
     publishedDate: '2025-11-01',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -961,7 +961,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-12-20',
     publishedDate: '2025-11-18',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -972,7 +972,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-11-28',
     publishedDate: '2025-11-03',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -983,7 +983,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-12-25',
     publishedDate: '2025-11-25',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -994,7 +994,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-11-20',
     publishedDate: '2025-11-01',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -1005,7 +1005,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2025-12-30',
     publishedDate: '2025-11-30',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 
@@ -1018,7 +1018,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-15',
     publishedDate: '2026-02-20',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -1029,7 +1029,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-28',
     publishedDate: '2026-02-10',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -1040,7 +1040,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-10',
     publishedDate: '2026-02-15',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -1051,7 +1051,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-05',
     publishedDate: '2026-02-05',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -1062,7 +1062,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-25',
     publishedDate: '2026-02-01',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -1073,7 +1073,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-20',
     publishedDate: '2026-02-18',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -1084,7 +1084,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-28',
     publishedDate: '2026-02-03',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
   {
@@ -1095,7 +1095,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-25',
     publishedDate: '2026-02-25',
     status: '용역',
-    bidType: '제한입찰',
+    bidType: '사전 규격',
     isFavorite: false,
   },
   {
@@ -1106,7 +1106,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-02-15',
     publishedDate: '2026-02-01',
     status: '물품',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: false,
   },
   {
@@ -1117,7 +1117,7 @@ export const DUMMY_BID_DATA: BidItem[] = [
     deadline: '2026-03-30',
     publishedDate: '2026-02-28',
     status: '용역',
-    bidType: '입찰',
+    bidType: '입찰 공고',
     isFavorite: true,
   },
 ];

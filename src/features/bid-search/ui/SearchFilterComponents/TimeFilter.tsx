@@ -1,4 +1,4 @@
-import { TimeFilter as TimeFilterType } from '@/features/bidSearch/model/searchStore';
+import { TimeFilter as TimeFilterType } from '@/features/bid-search/model/searchStore';
 import { cn } from '@/shared/lib/utils';
 
 interface TimeFilterProps {

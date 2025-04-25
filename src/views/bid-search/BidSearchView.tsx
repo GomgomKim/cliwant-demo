@@ -3,10 +3,10 @@
 import { Search } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-import { DUMMY_BID_DATA } from '@/features/bidSearch/model/data';
-import { useSearchStore } from '@/features/bidSearch/model/searchStore';
-import { BidItem } from '@/features/bidSearch/model/types';
-import { BidList, Pagination, SearchFilter } from '@/features/bidSearch/ui';
+import { DUMMY_BID_DATA } from '@/features/bid-search/model/data';
+import { useSearchStore } from '@/features/bid-search/model/searchStore';
+import { BidItem } from '@/features/bid-search/model/types';
+import { BidList, Pagination, SearchFilter } from '@/features/bid-search/ui';
 import { useFavoriteStore } from '@/features/favorites/model/favoriteStore';
 
 export function BidSearchView() {

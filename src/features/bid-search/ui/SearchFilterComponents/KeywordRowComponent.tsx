@@ -1,8 +1,8 @@
 import { X } from 'lucide-react';
 import Image from 'next/image';
 
-import { IMAGES } from '@/features/bidSearch/model/constants';
-import { KeywordRow } from '@/features/bidSearch/model/searchStore';
+import { IMAGES } from '@/features/bid-search/model/constants';
+import { KeywordRow } from '@/features/bid-search/model/searchStore';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/Select';

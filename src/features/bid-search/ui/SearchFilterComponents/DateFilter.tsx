@@ -1,4 +1,4 @@
-import { TimeFilter as TimeFilterType } from '@/features/bidSearch/model/searchStore';
+import { TimeFilter as TimeFilterType } from '@/features/bid-search/model/searchStore';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
 

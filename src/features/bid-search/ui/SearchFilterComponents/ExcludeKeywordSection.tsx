@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import Image from 'next/image';
 
-import { IMAGES } from '@/features/bidSearch/model/constants';
+import { IMAGES } from '@/features/bid-search/model/constants';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 

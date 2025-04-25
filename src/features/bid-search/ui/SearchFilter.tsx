@@ -4,8 +4,8 @@ import { ChevronDown, Plus, Search, Settings2, Star, X, Check } from 'lucide-rea
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-import { IMAGES } from '@/features/bidSearch/model/constants';
-import { useSearchStore, KeywordRow } from '@/features/bidSearch/model/searchStore';
+import { IMAGES } from '@/features/bid-search/model/constants';
+import { useSearchStore, KeywordRow } from '@/features/bid-search/model/searchStore';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
