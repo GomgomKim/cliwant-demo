@@ -267,9 +267,6 @@ export function BidSearchView() {
       {isSearched && currentSet && (
         <div key={currentSet.id} className="mt-6 rounded-lg border bg-white shadow-sm">
           <div className="flex items-center justify-between border-b p-4">
-            <h2 className="font-['Pretendard'] text-base font-medium text-gray-800">
-              {currentSet.name} ({currentSet.isShared ? '공용' : '개인'} 그룹)
-            </h2>
             <div className="font-['Pretendard'] text-sm text-gray-500">
               총{' '}
               <span className="font-semibold text-[rgb(166,161,219)]">{currentResults.length}</span>
