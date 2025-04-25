@@ -294,11 +294,16 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     <div className="rounded-lg border bg-white shadow">
       <div className="flex items-center justify-end border-b p-4">
         <span className="text-sm">검색 결과 개수</span>
-        <select className="ml-2 w-16 rounded border px-2 py-1 text-sm">
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
+        <Select defaultValue="20">
+          <SelectTrigger className="!ml-2 !w-16 !rounded !border !px-2 !py-1 !text-sm">
+            <SelectValue placeholder="항목 수" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="20">20</SelectItem>
+            <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+          </SelectContent>
+        </Select>
         <Button className="ml-2 rounded-md bg-[rgb(166,161,219)] text-xs text-white hover:bg-[rgb(146,141,199)]">
           저장
         </Button>
