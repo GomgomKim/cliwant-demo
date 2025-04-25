@@ -2,8 +2,8 @@
 
 1. 프로젝트 클론
    ```bash
-   git clone <repository-url>
-   cd <project-folder>
+   git clone https://github.com/GomgomKim
+   cd https://github.com/GomgomKim
    ```
 2. 의존성 설치
    ```bash
