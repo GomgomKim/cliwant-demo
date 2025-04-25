@@ -53,17 +53,14 @@ export function DateFilter({
         />
       </div>
 
-      <div className="!flex !items-center !gap-2 !pl-2">
+      <label className="!flex !cursor-pointer !items-center !gap-2 !pl-2">
         <Checkbox
-          id="include-expired"
           checked={includeExpired}
           onCheckedChange={() => toggleIncludeExpired()}
           className="!h-5 !w-5 !rounded !border-2 !border-gray-400 !bg-white !text-blue-600 !transition-all !duration-200 focus:!ring-1 focus:!ring-blue-600"
         />
-        <label htmlFor="include-expired" className="!text-sm !text-gray-700">
-          마감일 지난 공고 포함
-        </label>
-      </div>
+        <span className="!text-sm !text-gray-700">마감일 지난 공고 포함</span>
+      </label>
 
       <div className="!flex-1"></div>
     </div>

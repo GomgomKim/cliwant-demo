@@ -209,10 +209,6 @@ export function BidSearchView() {
     // 검색시 페이지를 첫 페이지로 초기화
     setCurrentPage(1);
     setIsSearched(true);
-
-    // 디버깅을 위한 로그
-    console.log('Applied filters:', filters);
-    console.log('Search results:', searchResultsByGroup);
   };
 
   // 사업 구분 및 입찰 방식 필터 변경 시 결과 업데이트
@@ -234,11 +230,6 @@ export function BidSearchView() {
     }
   }, [bidStatus, bidType]);
 
-  // isSearched 상태 변화 추적을 위한 디버깅 로그
-  useEffect(() => {
-    console.log('isSearched :', isSearched);
-  }, [isSearched]);
-
   // timeFilter가 변경될 때 라벨도 업데이트
   useEffect(() => {
     // SearchFilter 컴포넌트에서 radio button 변경 시 반영
@@ -257,7 +248,9 @@ export function BidSearchView() {
     <div className="container mx-auto py-4 font-['Pretendard']">
       <div className="mb-6 flex items-center gap-6">
         <div className="flex-1">
-          <h1 className="mb-1 font-['Pretendard'] text-xl font-semibold">입찰 공고</h1>
+          <h1 className="!mb-4 !inline-block !border-b-2 !border-[rgb(166,161,219)] !pb-2 !font-['Pretendard'] !text-xl !font-bold !text-[rgb(68,64,128)]">
+            입찰 공고
+          </h1>
         </div>
       </div>
 

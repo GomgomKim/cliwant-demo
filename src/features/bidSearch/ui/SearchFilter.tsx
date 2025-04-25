@@ -272,7 +272,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     if (shouldInclude !== includeExpired) {
       toggleIncludeExpired();
     }
-  }, [timeFilter, includeExpired, toggleIncludeExpired]);
+  }, [timeFilter]);
 
   const handleAddExcludeTitleKeyword = () => {
     if (excludeTitleInput.trim()) {
@@ -314,7 +314,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
               <SelectItem value="100">100</SelectItem>
             </SelectContent>
           </Select>
-          <Button className="!ml-2 !rounded-md !bg-[rgb(166,161,219)] !text-xs !text-white hover:!bg-[rgb(146,141,199)]">
+          <Button className="!ml-2 !rounded-md !bg-[rgb(166,161,219)] !px-3 !text-xs !text-white hover:!bg-[rgb(146,141,199)]">
             저장
           </Button>
         </div>

@@ -24,20 +24,9 @@ export function TimeFilter({
     { id: 'custom', label: '자유 입력' },
   ];
 
-  // 마감일 포함 여부를 설정하는 함수
-  const handleToggleExpired = (optionId: string) => {
-    // 일년 전이나 전체 조회 시 마감일 포함 체크
-    if (['year', 'all'].includes(optionId)) {
-      if (!includeExpired) {
-        toggleIncludeExpired(); // 체크 안되어 있으면 체크
-      }
-    }
-    // 하루 전, 일주일 전, 한 달 전, 자유 입력 시 마감일 포함 해제
-    else if (['day', 'week', 'month', 'custom'].includes(optionId)) {
-      if (includeExpired) {
-        toggleIncludeExpired(); // 체크 되어 있으면 해제
-      }
-    }
+  // Remove automatic toggling, only handle setTimeFilter
+  const handleTimeFilterChange = (optionId: TimeFilterType) => {
+    setTimeFilter(optionId);
   };
 
   return (
@@ -53,10 +42,7 @@ export function TimeFilter({
                 ? '!border-[rgb(166,161,219)] !bg-[rgba(166,161,219,0.1)] !text-[rgb(166,161,219)]'
                 : '!border-gray-200 !bg-white !text-gray-700 hover:!border-gray-300'
             )}
-            onClick={() => {
-              setTimeFilter(option.id as TimeFilterType);
-              handleToggleExpired(option.id);
-            }}
+            onClick={() => handleTimeFilterChange(option.id as TimeFilterType)}
           >
             <input
               type="radio"
@@ -64,10 +50,7 @@ export function TimeFilter({
               name="timeFilter"
               value={option.id}
               checked={timeFilter === option.id}
-              onChange={() => {
-                setTimeFilter(option.id as TimeFilterType);
-                handleToggleExpired(option.id);
-              }}
+              onChange={() => handleTimeFilterChange(option.id as TimeFilterType)}
               className="!absolute !opacity-0"
             />
             <label htmlFor={option.id} className="!cursor-pointer !text-xs !font-medium">
