@@ -6,8 +6,9 @@ import { useState, useEffect } from 'react';
 import { DUMMY_BID_DATA } from '@/features/bid-search/model/data';
 import { useSearchStore } from '@/features/bid-search/model/searchStore';
 import { BidItem } from '@/features/bid-search/model/types';
-import { BidList, Pagination, SearchFilter } from '@/features/bid-search/ui';
+import { BidList, Pagination } from '@/features/bid-search/ui';
 import { useFavoriteStore } from '@/features/favorites/model/favoriteStore';
+import { SearchFilter } from '@/widgets/SearchFilter';
 
 export function BidSearchView() {
   const [currentPage, setCurrentPage] = useState(1);

@@ -1,21 +1,28 @@
 'use client';
 
-import { Check, Search } from 'lucide-react';
+import { ChevronDown, Plus, Search, Settings2, Star, X, Check } from 'lucide-react';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-import { useSearchStore } from '@/features/bid-search/model/searchStore';
+import { IMAGES } from '@/features/bid-search/model/constants';
+import { useSearchStore, KeywordRow } from '@/features/bid-search/model/searchStore';
+import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/Button';
+import { Checkbox } from '@/shared/ui/Checkbox';
+import { Input } from '@/shared/ui/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/Select';
 import { Toast } from '@/shared/ui/Toast';
-import { AmountFilter } from '@/widgets/SearchFilter/SearchFilterComponents/AmountFilter';
-import { BusinessTypeFilter } from '@/widgets/SearchFilter/SearchFilterComponents/BusinessTypeFilter';
-import { ConditionCheckboxes } from '@/widgets/SearchFilter/SearchFilterComponents/ConditionCheckboxes';
-import { DateFilter } from '@/widgets/SearchFilter/SearchFilterComponents/DateFilter';
-import { ExcludeKeywordSection } from '@/widgets/SearchFilter/SearchFilterComponents/ExcludeKeywordSection';
-import { FilterTypeSelector } from '@/widgets/SearchFilter/SearchFilterComponents/FilterTypeSelector';
-import { KeywordRowComponent } from '@/widgets/SearchFilter/SearchFilterComponents/KeywordRowComponent';
-import { KeywordSetDropdown } from '@/widgets/SearchFilter/SearchFilterComponents/KeywordSetDropdown';
-import { TimeFilter } from '@/widgets/SearchFilter/SearchFilterComponents/TimeFilter';
+
+// Sub-components
+import { AmountFilter } from './SearchFilterComponents/AmountFilter';
+import { BusinessTypeFilter } from './SearchFilterComponents/BusinessTypeFilter';
+import { ConditionCheckboxes } from './SearchFilterComponents/ConditionCheckboxes';
+import { DateFilter } from './SearchFilterComponents/DateFilter';
+import { ExcludeKeywordSection } from './SearchFilterComponents/ExcludeKeywordSection';
+import { FilterTypeSelector } from './SearchFilterComponents/FilterTypeSelector';
+import { KeywordRowComponent } from './SearchFilterComponents/KeywordRowComponent';
+import { KeywordSetDropdown } from './SearchFilterComponents/KeywordSetDropdown';
+import { TimeFilter } from './SearchFilterComponents/TimeFilter';
 
 interface SearchFilterProps {
   onSearch?: (filters: any) => void;
@@ -407,7 +414,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
           <Button
             disabled={!selectedKeywordSetId}
             onClick={() => handleSearch()}
-            className="!flex !h-12 !w-40 !cursor-pointer !items-center !justify-center !gap-2 !rounded-full !bg-blue-600 !px-6 !py-3 !text-white !shadow-md hover:!bg-blue-700 active:!bg-blue-800"
+            className="!flex !h-12 !w-40 !items-center !justify-center !gap-2 !rounded-full !bg-blue-600 !px-6 !py-3 !text-white !shadow-md hover:!bg-blue-700 active:!bg-blue-800"
           >
             <Search className="!h-5 !w-5" />
             <span className="!font-medium">검색</span>
