@@ -2,8 +2,8 @@
 
 1. 프로젝트 클론
    ```bash
-   git clone https://github.com/GomgomKim
-   cd https://github.com/GomgomKim
+   git clone https://github.com/GomgomKim/cliwant-demo.git
+   cd cliwant-demo
    ```
 2. 의존성 설치
    ```bash
