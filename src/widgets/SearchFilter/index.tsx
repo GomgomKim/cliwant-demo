@@ -1,6 +1,16 @@
 'use client';
 
-import { ChevronDown, Plus, Search, Settings2, Star, X, Check } from 'lucide-react';
+import {
+  ChevronDown,
+  Plus,
+  Search,
+  Settings2,
+  Star,
+  X,
+  Check,
+  ChevronUp,
+  CogIcon,
+} from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -66,6 +76,8 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const [showCopyToast, setShowCopyToast] = useState(false);
   const [copyToastMessage, setCopyToastMessage] = useState('');
   const [keywordTagsByRow, setKeywordTagsByRow] = useState<Record<string, string[]>>({});
+  const [activeTab, setActiveTab] = useState('bid'); // 'bid', 'spec', 'plan', or 'failed'
+  const [filterMode, setFilterMode] = useState('advanced'); // 'simple', 'ai', or 'advanced'
 
   // 필터된 키워드 세트 배열
   const filteredKeywordSets = savedKeywordSets.filter(set =>
@@ -299,80 +311,303 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   return (
-    <div className="!rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
-      <div className="!flex !items-center !justify-between !border-b !border-gray-200 !p-4">
-        <h3 className="!text-base !font-semibold !text-gray-800">검색 필터</h3>
-        <div className="!flex !items-center">
-          <span className="!text-sm !text-gray-600">검색 결과 개수</span>
+    <div className="!flex !min-h-[500px] !w-full !flex-col !rounded-lg !border !border-gray-200 !bg-white !p-6 !shadow-sm">
+      {/* 탭 헤더 영역 */}
+      <div className="!mb-3 !flex !items-center !justify-between !border-b !border-gray-200 !pb-2">
+        <div className="!flex !gap-3">
+          <h4
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'bid' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            onClick={() => setActiveTab('bid')}
+          >
+            입찰 공고
+          </h4>
+          <h4
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'spec' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            onClick={() => setActiveTab('spec')}
+          >
+            사전 규격
+          </h4>
+          <h4
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'plan' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            onClick={() => setActiveTab('plan')}
+          >
+            발주 계획
+          </h4>
+          <h4
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'failed' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            onClick={() => setActiveTab('failed')}
+          >
+            유찰 공고
+          </h4>
+        </div>
+
+        <div className="!flex !items-center !gap-2">
+          <span className="!text-sm !font-semibold !text-gray-700">검색 결과 개수</span>
           <Select defaultValue="20">
-            <SelectTrigger className="!ml-2 !w-16 !rounded !border !px-2 !py-1 !text-sm">
+            <SelectTrigger className="!w-16 !rounded !border !px-2 !py-1 !text-sm">
               <SelectValue placeholder="항목 수" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="20">20</SelectItem>
               <SelectItem value="50">50</SelectItem>
               <SelectItem value="100">100</SelectItem>
+              <SelectItem value="200">200</SelectItem>
             </SelectContent>
           </Select>
-          <Button className="!ml-2 !rounded-md !bg-[rgb(166,161,219)] !px-3 !text-xs !text-white hover:!bg-[rgb(146,141,199)]">
+          <Button className="!rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
             저장
           </Button>
         </div>
       </div>
 
-      {/* 검색 필터 영역 */}
-      <div className="!space-y-6 !p-6">
-        {/* 검색 조건 선택 */}
-        <div className="!mb-4 !flex !flex-col !gap-4">
-          {/* 검색 필터 타입 선택 */}
-          <div className="!space-y-2">
-            <p className="!text-sm !font-medium !text-gray-700">검색 방법</p>
-            <FilterTypeSelector filterType={filterType} onFilterTypeChange={setFilterType} />
+      {/* 검색 모드 선택 */}
+      <div className="!mb-2 !flex">
+        <div className="!flex !gap-1">
+          <div
+            className={`!cursor-pointer !rounded-full !px-4 !py-1 !text-sm !font-bold ${
+              filterMode === 'simple'
+                ? '!bg-[rgba(108,186,162,0.1)] !text-[#6CBAA2] !shadow-sm'
+                : '!bg-transparent !text-gray-500'
+            }`}
+            onClick={() => setFilterMode('simple')}
+          >
+            간편 검색
           </div>
+          <div
+            className={`!cursor-pointer !rounded-full !px-4 !py-1 !text-sm !font-bold ${
+              filterMode === 'ai'
+                ? '!bg-[rgba(251,0,255,0.06)] !text-[#EE7F86] !shadow-sm'
+                : '!bg-transparent !text-gray-500'
+            }`}
+            onClick={() => setFilterMode('ai')}
+          >
+            AI 검색
+          </div>
+          <div
+            className={`!cursor-pointer !rounded-full !px-4 !py-1 !text-sm !font-bold ${
+              filterMode === 'advanced'
+                ? '!bg-[#686FE8] !text-white !shadow-sm'
+                : '!bg-transparent !text-gray-500'
+            }`}
+            onClick={() => setFilterMode('advanced')}
+          >
+            고급 검색
+          </div>
+        </div>
+      </div>
 
-          {/* 키워드셋 드롭다운 */}
-          <div className="!space-y-2">
-            <p className="!text-sm !font-medium !text-gray-700">키워드 셋</p>
-            <KeywordSetDropdown
-              selectedSet={selectedSet}
-              filteredKeywordSets={filteredKeywordSets}
-              isDropdownOpen={isDropdownOpen}
-              selectedKeywordSetId={selectedKeywordSetId}
-              setIsDropdownOpen={setIsDropdownOpen}
-              selectKeywordSet={selectKeywordSet}
-              filterType={filterType}
-            />
+      {/* 필터 본문 컨테이너 */}
+      <div className="!mb-4 !rounded-md !border !border-gray-200 !bg-white !p-5">
+        <div className="!mb-4 !flex !items-center !justify-between">
+          {/* 필터 타입 선택 */}
+          <div className="!flex !items-center !gap-1">
+            <div className="!flex !h-8 !rounded-full !bg-gray-200 !p-1">
+              <div
+                className={`!flex !h-6 !w-24 !cursor-pointer !items-center !justify-center !rounded-full !text-xs !font-bold ${
+                  filterType === 'shared'
+                    ? '!bg-[#A6A1DB] !text-white'
+                    : '!bg-transparent !text-gray-600'
+                }`}
+                onClick={() => setFilterType('shared')}
+              >
+                공유
+              </div>
+              <div
+                className={`!flex !h-6 !w-24 !cursor-pointer !items-center !justify-center !rounded-full !text-xs !font-bold ${
+                  filterType === 'personal'
+                    ? '!bg-[#A6A1DB] !text-white'
+                    : '!bg-transparent !text-gray-600'
+                }`}
+                onClick={() => setFilterType('personal')}
+              >
+                개인
+              </div>
+            </div>
+
+            <div className="!mx-2 !flex !items-center">
+              <button className="!flex !h-6 !w-6 !items-center !justify-center !rounded !text-blue-900">
+                <Star size={16} />
+              </button>
+            </div>
+
+            <select className="!w-60 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
+              <option value="" disabled selected>
+                그룹을 선택하세요
+              </option>
+              <option>신규_그룹_공용_2025_04_09</option>
+              <option>신규_그룹_개인_2025_01_14</option>
+            </select>
+
+            <Button className="!ml-1 !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
+              현재 조건 저장
+            </Button>
+
+            <Button className="!ml-1 !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
+              {filterType === 'shared' ? '개인 그룹으로 복사' : '공용 그룹으로 복사'}
+            </Button>
+
+            <Button size="sm" variant="ghost" className="!ml-1 !p-1">
+              <Settings2 size={16} />
+            </Button>
+
+            <div className="!ml-auto !flex !items-center !gap-2">
+              <span className="!text-sm !font-semibold !text-gray-500">AI 키워드 추천 받기</span>
+              <div className="!relative !h-5 !w-10 !rounded-full !bg-gray-200">
+                <div className="!absolute !top-0.5 !left-0.5 !h-4 !w-4 !rounded-full !bg-white"></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* 키워드 행 */}
-        <div className="!mb-3 space-y-3">
-          {keywordRows.map(row => (
-            <KeywordRowComponent
-              key={row.id}
-              row={row}
-              updateKeywordRow={updateKeywordRow}
-              addKeywordTag={addKeywordTag}
-              keywordTags={keywordTagsByRow[row.id] || []}
-              removeKeywordTag={removeKeywordTag}
+        {/* 키워드 행 필드 */}
+        <div className="!mb-4 !space-y-2">
+          <div className="!flex !items-center !gap-2">
+            <select className="!w-24 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
+              <option value="title">공고 제목</option>
+              <option value="content">첨부파일 본문</option>
+            </select>
+
+            <select className="!w-16 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
+              <option value="OR">OR</option>
+              <option value="AND">AND</option>
+            </select>
+
+            <input
+              type="text"
+              className="!w-48 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
+              placeholder="키워드를 입력해보세요"
             />
-          ))}
+
+            <button className="!h-8 !w-8 !overflow-hidden !rounded-md">
+              <img
+                src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705385303393x142142722905198800/Group%20187.png"
+                alt="Add"
+                className="!h-full !w-full !object-cover"
+              />
+            </button>
+
+            <div className="!flex !gap-1">
+              <div className="!flex !items-center !rounded-full !bg-[#A6A1DB] !px-3 !py-1 !text-xs !text-white">
+                <span>인공지능</span>
+                <X size={14} className="!ml-1 !cursor-pointer" />
+              </div>
+            </div>
+          </div>
+
+          {/* 추가 키워드 행들... */}
+          <div className="!flex !items-center !gap-2">
+            <select className="!w-24 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
+              <option value="title">공고 제목</option>
+              <option value="content">첨부파일 본문</option>
+            </select>
+
+            <select className="!w-16 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
+              <option value="OR">OR</option>
+              <option value="AND">AND</option>
+            </select>
+
+            <input
+              type="text"
+              className="!w-48 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
+              placeholder="키워드를 입력해보세요"
+            />
+
+            <button className="!h-8 !w-8 !overflow-hidden !rounded-md">
+              <img
+                src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705385319891x747155394626461700/Group%20187.png"
+                alt="Add"
+                className="!h-full !w-full !object-cover"
+              />
+            </button>
+          </div>
         </div>
 
         {/* 제외 키워드 영역 */}
-        <ExcludeKeywordSection
-          excludeTitleInput={excludeTitleInput}
-          setExcludeTitleInput={setExcludeTitleInput}
-          excludeContentInput={excludeContentInput}
-          setExcludeContentInput={setExcludeContentInput}
-          excludeTitleKeywords={excludeTitleKeywords}
-          excludeContentKeywords={excludeContentKeywords}
-          handleAddExcludeTitleKeyword={handleAddExcludeTitleKeyword}
-          handleAddExcludeContentKeyword={handleAddExcludeContentKeyword}
-          removeExcludeTitleKeyword={removeExcludeTitleKeyword}
-          removeExcludeContentKeyword={removeExcludeContentKeyword}
-          handleKeyPress={handleKeyPress}
-        />
+        <div className="!mb-4 !space-y-2">
+          <div className="!flex !items-center">
+            <span className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
+              제목 제외 키워드
+            </span>
+            <div className="!flex !items-center !gap-2">
+              <input
+                type="text"
+                className="!w-56 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
+                placeholder="제목에서 제외할 키워드 입력"
+                value={excludeTitleInput}
+                onChange={e => setExcludeTitleInput(e.target.value)}
+                onKeyPress={e => handleKeyPress(e, 'title')}
+              />
+              <button
+                className="!h-8 !w-8 !overflow-hidden !rounded-md"
+                onClick={handleAddExcludeTitleKeyword}
+              >
+                <img
+                  src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
+                  alt="Add"
+                  className="!h-full !w-full !object-cover"
+                />
+              </button>
+            </div>
+
+            <div className="!ml-2 !flex !gap-1">
+              {excludeTitleKeywords.map((keyword, index) => (
+                <div
+                  key={index}
+                  className="!flex !items-center !rounded-full !bg-[#F2989E] !px-3 !py-1 !text-xs !text-white"
+                >
+                  <span>{keyword}</span>
+                  <X
+                    size={14}
+                    className="!ml-1 !cursor-pointer"
+                    onClick={() => removeExcludeTitleKeyword(keyword)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="!flex !items-center">
+            <span className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
+              본문 제외 키워드
+            </span>
+            <div className="!flex !items-center !gap-2">
+              <input
+                type="text"
+                className="!w-56 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
+                placeholder="본문에서 제외할 키워드 입력"
+                value={excludeContentInput}
+                onChange={e => setExcludeContentInput(e.target.value)}
+                onKeyPress={e => handleKeyPress(e, 'content')}
+              />
+              <button
+                className="!h-8 !w-8 !overflow-hidden !rounded-md"
+                onClick={handleAddExcludeContentKeyword}
+              >
+                <img
+                  src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
+                  alt="Add"
+                  className="!h-full !w-full !object-cover"
+                />
+              </button>
+            </div>
+
+            <div className="!ml-2 !flex !gap-1">
+              {excludeContentKeywords.map((keyword, index) => (
+                <div
+                  key={index}
+                  className="!flex !items-center !rounded-full !bg-[#F2989E] !px-3 !py-1 !text-xs !text-white"
+                >
+                  <span>{keyword}</span>
+                  <X
+                    size={14}
+                    className="!ml-1 !cursor-pointer"
+                    onClick={() => removeExcludeContentKeyword(keyword)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
         {/* 금액 필터 */}
         <AmountFilter
@@ -409,17 +644,27 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         {/* 조건 체크박스 */}
         <ConditionCheckboxes />
 
-        {/* 검색 버튼 */}
-        <div className="!mt-6 !flex !items-center !justify-center">
-          <Button
-            disabled={!selectedKeywordSetId}
-            onClick={() => handleSearch()}
-            className="!flex !h-12 !w-40 !items-center !justify-center !gap-2 !rounded-full !bg-blue-600 !px-6 !py-3 !text-white !shadow-md hover:!bg-blue-700 active:!bg-blue-800"
+        {/* 더보기/접기 & 검색 버튼 */}
+        <div className="!mt-4 !flex !items-center !justify-between">
+          <div className="!flex-1"></div>
+          <div className="!flex !cursor-pointer !items-center !text-blue-900">
+            <span className="!text-sm !font-semibold">상세 필터 접기</span>
+            <ChevronUp size={18} className="!ml-1" />
+          </div>
+          <button
+            onClick={handleSearch}
+            className="!ml-auto !flex !items-center !rounded-md !bg-[#151663] !px-6 !py-2 !font-bold !text-white"
           >
-            <Search className="!h-5 !w-5" />
-            <span className="!font-medium">검색</span>
-          </Button>
+            <Search size={16} className="!mr-2" />
+            검색하기
+          </button>
         </div>
+      </div>
+
+      {/* 검색 설명 영역 */}
+      <div className="!mb-4 !text-center !text-gray-700">
+        공고 제목에서 <span className="!text-[#686FE8]">인공지능</span>을 포함하고, 사업 구분은{' '}
+        <span className="!text-[#6CBAA2]">전체</span>에 해당하는 공고를 찾습니다.
       </div>
 
       {/* Toast notifications */}

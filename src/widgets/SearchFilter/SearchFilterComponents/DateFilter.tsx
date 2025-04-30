@@ -26,10 +26,12 @@ export function DateFilter({
   timeFilter,
 }: DateFilterProps) {
   return (
-    <div className="!mb-6 !flex !items-center !gap-4 !rounded-lg !bg-white !p-4 !shadow-sm">
-      <span className="!min-w-[120px] !text-sm !font-semibold !text-gray-700">공고일</span>
+    <div className="!mb-6 !flex !items-center">
+      <div className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
+        공고일
+      </div>
 
-      <div className="!flex !items-center !gap-2">
+      <div className="!flex !items-center">
         <Input
           type="date"
           value={startDate}
@@ -38,9 +40,9 @@ export function DateFilter({
             setTimeFilter('custom' as TimeFilterType);
           }}
           disabled={timeFilter !== 'custom'}
-          className="!w-36 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm !filter disabled:!cursor-not-allowed disabled:!bg-gray-100 [&::-webkit-calendar-picker-indicator]:!invert"
+          className="!w-[140px] !rounded !border !border-gray-200 !bg-white !px-3 !py-1 !text-sm disabled:!bg-gray-100"
         />
-        <span className="!text-gray-500">~</span>
+        <span className="!mx-2 !text-gray-500">~</span>
         <Input
           type="date"
           value={endDate}
@@ -49,20 +51,20 @@ export function DateFilter({
             setTimeFilter('custom' as TimeFilterType);
           }}
           disabled={timeFilter !== 'custom'}
-          className="!w-36 !rounded-md !border !border-gray-200 !bg-gray-50 !px-3 !py-2 !text-sm !filter disabled:!cursor-not-allowed disabled:!bg-gray-100 [&::-webkit-calendar-picker-indicator]:!invert"
+          className="!w-[140px] !rounded !border !border-gray-200 !bg-white !px-3 !py-1 !text-sm disabled:!bg-gray-100"
         />
       </div>
 
-      <label className="!flex !cursor-pointer !items-center !gap-2 !pl-2">
-        <Checkbox
-          checked={includeExpired}
-          onCheckedChange={() => toggleIncludeExpired()}
-          className="!h-5 !w-5 !rounded !border-2 !border-gray-400 !bg-white !text-blue-600 !transition-all !duration-200 focus:!ring-1 focus:!ring-blue-600"
-        />
-        <span className="!text-sm !text-gray-700">마감일 지난 공고 포함</span>
-      </label>
-
-      <div className="!flex-1"></div>
+      <div className="!ml-3">
+        <label className="!flex !cursor-pointer !items-center">
+          <Checkbox
+            checked={includeExpired}
+            onCheckedChange={() => toggleIncludeExpired()}
+            className="!h-4 !w-4 !rounded !border !border-gray-300 !bg-white"
+          />
+          <span className="!ml-1 !text-sm !text-gray-700">마감일 지난 공고 포함</span>
+        </label>
+      </div>
     </div>
   );
 }

@@ -24,37 +24,35 @@ export function TimeFilter({
     { id: 'custom', label: '자유 입력' },
   ];
 
-  // Remove automatic toggling, only handle setTimeFilter
+  // Handle time filter change
   const handleTimeFilterChange = (optionId: TimeFilterType) => {
     setTimeFilter(optionId);
   };
 
   return (
-    <div className="!mb-6 !rounded-lg !bg-white !p-4 !shadow-sm">
-      <div className="!mb-2 !text-sm !font-semibold !text-gray-700">기간 필터</div>
-      <div className="!flex !flex-wrap !items-center !gap-2">
+    <div className="!mb-6">
+      <div className="!ml-[80px] !flex !flex-wrap !items-center">
         {timeOptions.map(option => (
-          <div
-            key={option.id}
-            className={cn(
-              '!relative !flex !min-w-[80px] !cursor-pointer !items-center !justify-center !rounded-full !border !px-3 !py-1 !text-center !transition-all',
-              timeFilter === option.id
-                ? '!border-[rgb(166,161,219)] !bg-[rgba(166,161,219,0.1)] !text-[rgb(166,161,219)]'
-                : '!border-gray-200 !bg-white !text-gray-700 hover:!border-gray-300'
-            )}
-            onClick={() => handleTimeFilterChange(option.id as TimeFilterType)}
-          >
-            <input
-              type="radio"
-              id={option.id}
-              name="timeFilter"
-              value={option.id}
-              checked={timeFilter === option.id}
-              onChange={() => handleTimeFilterChange(option.id as TimeFilterType)}
-              className="!absolute !opacity-0"
-            />
-            <label htmlFor={option.id} className="!cursor-pointer !text-xs !font-medium">
-              {option.label}
+          <div key={option.id} className="!mr-2">
+            <label className="!flex !cursor-pointer !items-center">
+              <input
+                type="radio"
+                name="timeFilter"
+                value={option.id}
+                checked={timeFilter === option.id}
+                onChange={() => handleTimeFilterChange(option.id as TimeFilterType)}
+                className="!absolute !opacity-0"
+              />
+              <span
+                className={cn(
+                  '!rounded-full !border !px-3 !py-1 !text-sm !font-medium',
+                  timeFilter === option.id
+                    ? '!border-[#686FE8] !bg-[rgba(104,111,232,0.1)] !text-[#686FE8]'
+                    : '!border-gray-200 !bg-white !text-gray-700 hover:!border-gray-300'
+                )}
+              >
+                {option.label}
+              </span>
             </label>
           </div>
         ))}
