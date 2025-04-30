@@ -1,5 +1,4 @@
 import { TimeFilter as TimeFilterType } from '@/features/bid-search/model/searchStore';
-import { cn } from '@/shared/lib/utils';
 
 interface TimeFilterProps {
   timeFilter: TimeFilterType;
@@ -31,30 +30,19 @@ export function TimeFilter({
 
   return (
     <div className="!mb-6">
-      <div className="!ml-[80px] !flex !flex-wrap !items-center">
+      <div className="!ml-[80px] !flex !flex-wrap !items-center !gap-4">
         {timeOptions.map(option => (
-          <div key={option.id} className="!mr-2">
-            <label className="!flex !cursor-pointer !items-center">
-              <input
-                type="radio"
-                name="timeFilter"
-                value={option.id}
-                checked={timeFilter === option.id}
-                onChange={() => handleTimeFilterChange(option.id as TimeFilterType)}
-                className="!absolute !opacity-0"
-              />
-              <span
-                className={cn(
-                  '!rounded-full !border !px-3 !py-1 !text-sm !font-medium',
-                  timeFilter === option.id
-                    ? '!border-[#686FE8] !bg-[rgba(104,111,232,0.1)] !text-[#686FE8]'
-                    : '!border-gray-200 !bg-white !text-gray-700 hover:!border-gray-300'
-                )}
-              >
-                {option.label}
-              </span>
-            </label>
-          </div>
+          <label key={option.id} className="!flex !cursor-pointer !items-center !space-x-2">
+            <input
+              type="radio"
+              name="timeFilter"
+              value={option.id}
+              checked={timeFilter === option.id}
+              onChange={() => handleTimeFilterChange(option.id as TimeFilterType)}
+              className="!checked:!bg-blue !h-4 !w-4 !appearance-none !rounded-full !border !border-[#888888] !bg-white checked:!border-[888888]"
+            />
+            <span className="!text-[14px] !font-normal !text-[#888888]">{option.label}</span>
+          </label>
         ))}
       </div>
     </div>

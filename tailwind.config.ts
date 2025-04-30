@@ -62,6 +62,7 @@ const config: Config = {
           900: 'hsl(var(--navy-900))',
           800: 'hsl(var(--navy-800))',
         },
+        blue: 'hsl(var(--blue))',
       },
       borderRadius: {
         lg: 'var(--radius)',

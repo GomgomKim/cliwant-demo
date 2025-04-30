@@ -1,3 +1,4 @@
+import { cn } from '@/shared/lib/utils';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
 
@@ -17,42 +18,44 @@ export function AmountFilter({
   toggleExcludeAmount,
 }: AmountFilterProps) {
   return (
-    <div className="!mb-6 !flex !items-center !gap-4">
-      <div className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
+    <div className="!mb-6 !flex !items-center !gap-0">
+      <div className="!w-[80px] !max-w-[120px] !min-w-[80px] !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
         사업 금액
       </div>
-      <div className="!flex !flex-1 !items-center">
-        <div className="!flex !items-center">
+      <div className="!flex !flex-1 !items-center !gap-0">
+        <div className="!flex !items-center !gap-1">
           <Input
             type="number"
             value={minAmount}
             onChange={e => setAmountRange(Number(e.target.value), maxAmount)}
-            className="!w-[140px] !rounded !border !border-gray-200 !bg-white !px-3 !py-2 !text-sm"
+            className="!h-[30px] !w-[140px] !rounded !border !border-gray-200 !bg-white !px-2 !py-1 !text-sm [&::-webkit-inner-spin-button]:!appearance-none [&::-webkit-outer-spin-button]:!appearance-none"
             placeholder="0"
           />
-          {excludeAmount ? (
-            <span className="!mx-2 !text-gray-500">이상</span>
-          ) : (
-            <>
-              <span className="!mx-2 !text-gray-500">~</span>
+          <span className="!text-gray-500">~</span>
+          <div className="!w-[140px]">
+            {!excludeAmount && (
               <Input
                 type="number"
                 value={maxAmount}
                 onChange={e => setAmountRange(minAmount, Number(e.target.value))}
-                className="!w-[140px] !rounded !border !border-gray-200 !bg-white !px-3 !py-2 !text-sm"
+                className="!h-[30px] !w-[140px] !rounded !border !border-gray-200 !bg-white !px-2 !py-1 !text-sm [&::-webkit-inner-spin-button]:!appearance-none [&::-webkit-outer-spin-button]:!appearance-none"
                 placeholder="5000000"
               />
-            </>
-          )}
+            )}
+          </div>
         </div>
-        <div className="!ml-2 !flex !items-center">
+        <div className="!ml-2 !flex !items-center !gap-2">
           <Checkbox
             id="exclude-amount"
             checked={excludeAmount}
             onCheckedChange={() => toggleExcludeAmount()}
-            className="!h-4 !w-4 !rounded !border !border-gray-300 !bg-white"
+            className={cn(
+              '!size-[13px] !rounded-sm !border !border-gray-500 !bg-white',
+              excludeAmount &&
+                '!text-white [&]:!border-[hsl(var(--blue))] [&]:!bg-[hsl(var(--blue))]'
+            )}
           />
-          <label htmlFor="exclude-amount" className="!ml-1 !text-sm !text-gray-700">
+          <label htmlFor="exclude-amount" className="!text-[13px] !font-normal !text-gray-500">
             금액 제한 없음
           </label>
         </div>

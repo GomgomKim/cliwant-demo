@@ -438,8 +438,11 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
               </button>
             </div>
 
-            <select className="!w-60 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
-              <option value="" disabled selected>
+            <select
+              className="!w-60 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm"
+              defaultValue=""
+            >
+              <option value="" disabled>
                 그룹을 선택하세요
               </option>
               <option>신규_그룹_공용_2025_04_09</option>
