@@ -426,7 +426,15 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
             <div className="!mx-2 !flex !items-center">
               <button className="!flex !h-6 !w-6 !items-center !justify-center !rounded !text-blue-900">
-                <Star size={16} />
+                <div className="!h-[22px] !w-[22px] !flex-shrink-0 !text-[rgb(21,22,99)]">
+                  <Image
+                    src="/pin.svg"
+                    alt="Pin"
+                    width={22}
+                    height={22}
+                    className="!h-full !w-full"
+                  />
+                </div>
               </button>
             </div>
 
@@ -447,7 +455,15 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
             </Button>
 
             <Button size="sm" variant="ghost" className="!ml-1 !p-1">
-              <Settings2 size={16} />
+              <div className="!h-[24px] !w-[24px] !flex-shrink-0 !text-[rgb(21,22,99)]">
+                <Image
+                  src="/settings.svg"
+                  alt="Settings"
+                  width={24}
+                  height={24}
+                  className="!h-full !w-full"
+                />
+              </div>
             </Button>
 
             <div className="!ml-auto !flex !items-center !gap-2">
