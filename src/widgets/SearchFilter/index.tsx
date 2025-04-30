@@ -364,30 +364,30 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       <div className="!mb-2 !flex">
         <div className="!flex !gap-1">
           <div
-            className={`!cursor-pointer !rounded-full !px-4 !py-1 !text-sm !font-bold ${
+            className={`!z-[4] !flex !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !cursor-pointer !items-center !justify-center !self-center !rounded-[20px] !px-[15px] !py-0 !text-[14px] !leading-[1.4] !font-bold ${
               filterMode === 'simple'
-                ? '!bg-[rgba(108,186,162,0.1)] !text-[#6CBAA2] !shadow-sm'
-                : '!bg-transparent !text-gray-500'
+                ? '!bg-[rgb(108,186,162)] !text-white !shadow-[0px_2px_4px_0px_var(--color_text_default)]'
+                : '!bg-[rgba(108,186,162,0.1)] !text-[rgb(108,186,162)] !shadow-[0px_2px_4px_0px_var(--color_destructive_default)]'
             }`}
             onClick={() => setFilterMode('simple')}
           >
             간편 검색
           </div>
           <div
-            className={`!cursor-pointer !rounded-full !px-4 !py-1 !text-sm !font-bold ${
+            className={`!z-[4] !flex !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !cursor-pointer !items-center !justify-center !self-center !rounded-[20px] !px-[15px] !py-0 !text-[14px] !leading-[1.4] !font-bold ${
               filterMode === 'ai'
-                ? '!bg-[rgba(251,0,255,0.06)] !text-[#EE7F86] !shadow-sm'
-                : '!bg-transparent !text-gray-500'
+                ? '!bg-gradient-to-r !from-[rgb(251,0,255)] !to-[rgb(93,44,255)] !text-white !shadow-[0px_2px_4px_0px_var(--color_text_default)]'
+                : '!bg-gradient-to-r !from-[rgba(251,0,255,0.06)] !to-[rgba(251,0,255,0.06)] !text-[rgb(238,127,134)] !shadow-[0px_2px_4px_0px_var(--color_destructive_default)]'
             }`}
             onClick={() => setFilterMode('ai')}
           >
             AI 검색
           </div>
           <div
-            className={`!cursor-pointer !rounded-full !px-4 !py-1 !text-sm !font-bold ${
+            className={`!z-[4] !flex !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !cursor-pointer !items-center !justify-center !self-center !rounded-[20px] !px-[15px] !py-0 !text-[14px] !leading-[1.4] !font-bold ${
               filterMode === 'advanced'
-                ? '!bg-[#686FE8] !text-white !shadow-sm'
-                : '!bg-transparent !text-gray-500'
+                ? '!bg-[rgb(104,111,232)] !text-white !shadow-[0px_2px_4px_0px_var(--color_text_default)]'
+                : '!bg-[rgba(104,111,232,0.1)] !text-[rgb(104,111,232)] !shadow-[0px_2px_4px_0px_var(--color_destructive_default)]'
             }`}
             onClick={() => setFilterMode('advanced')}
           >
@@ -401,26 +401,26 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         <div className="!mb-4 !flex !items-center !justify-between">
           {/* 필터 타입 선택 */}
           <div className="!flex !items-center !gap-1">
-            <div className="!flex !h-8 !rounded-full !bg-gray-200 !p-1">
+            <div className="!z-[18] !flex !min-h-[40px] !w-max !min-w-[40px] !cursor-pointer !flex-row !items-center !gap-[5px] !self-center !overflow-visible !rounded-none !opacity-100">
               <div
-                className={`!flex !h-6 !w-24 !cursor-pointer !items-center !justify-center !rounded-full !text-xs !font-bold ${
+                className={`!z-[4] !flex !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !items-center !justify-center !self-center !rounded-[20px] !px-[10px] !py-0 !text-xs !leading-[1.4] !font-bold !shadow-[0px_2px_4px_0px_rgba(var(--color_primary_contrast_default_rgb),0.2)] ${
                   filterType === 'shared'
                     ? '!bg-[#A6A1DB] !text-white'
-                    : '!bg-transparent !text-gray-600'
+                    : '!bg-[#EAEAEA] !text-[#666666] !shadow-[0px_2px_4px_0px_rgb(255,255,255)]'
                 }`}
                 onClick={() => setFilterType('shared')}
               >
-                공유
+                <div>공유</div>
               </div>
               <div
-                className={`!flex !h-6 !w-24 !cursor-pointer !items-center !justify-center !rounded-full !text-xs !font-bold ${
+                className={`!z-[4] !flex !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !items-center !justify-center !self-center !rounded-[20px] !px-[10px] !py-0 !text-xs !leading-[1.4] !font-bold !shadow-[0px_2px_4px_0px_rgba(var(--color_primary_contrast_default_rgb),0.2)] ${
                   filterType === 'personal'
                     ? '!bg-[#A6A1DB] !text-white'
-                    : '!bg-transparent !text-gray-600'
+                    : '!bg-[#EAEAEA] !text-[#666666] !shadow-[0px_2px_4px_0px_rgb(255,255,255)]'
                 }`}
                 onClick={() => setFilterType('personal')}
               >
-                개인
+                <div>개인</div>
               </div>
             </div>
 
