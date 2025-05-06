@@ -34,7 +34,7 @@ import { KeywordSetDropdown } from './SearchFilterComponents/KeywordSetDropdown'
 import { TimeFilter } from './SearchFilterComponents/TimeFilter';
 
 interface SearchFilterProps {
-  onSearch?: (filters: any) => void;
+  onSearch?: (filters: any, totalResults: (total: number) => void) => void;
 }
 
 export function SearchFilter({ onSearch }: SearchFilterProps) {
@@ -80,6 +80,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const [isAIToggleOn, setIsAIToggleOn] = useState(false);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(true);
+  const [searchResultCount, setSearchResultCount] = useState(20);
+  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [totalResults, setTotalResults] = useState(0);
 
   // 필터된 키워드 세트 배열
   const filteredKeywordSets = savedKeywordSets.filter(set =>
@@ -185,6 +188,14 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
     setShowCopyToast(true);
   };
 
+  const handleSaveResultCount = () => {
+    setShowSaveToast(true);
+    setTimeout(() => setShowSaveToast(false), 3000);
+
+    // 저장 후 검색 실행
+    handleSearch();
+  };
+
   const handleSearch = () => {
     // 입력 필드의 키워드도 처리
     const keywordsWithInputField = keywordRows.map(row => {
@@ -230,6 +241,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       timeFilter,
       filterType,
       selectedKeywordSetId,
+      resultCount: searchResultCount,
     };
 
     // 필터 조건을 로그로 출력
@@ -242,11 +254,14 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       금액범위: excludeAmount ? `${minAmount} 이상` : `${minAmount}~${maxAmount}`,
       기간: `${startDate || '없음'} ~ ${endDate || '없음'} (${timeFilter})`,
       마감포함: includeExpired ? 'O' : 'X',
+      검색결과개수: searchResultCount,
     });
 
     // 상위 컴포넌트로 필터 상태 전달
     if (onSearch) {
-      onSearch(filters);
+      onSearch(filters, (total: number) => {
+        setTotalResults(total);
+      });
     }
   };
 
@@ -346,18 +361,23 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
           </h4>
         </div>
 
+        {/* 검색 결과 개수 선택 */}
         <div className="!flex !items-center !gap-2">
           <span className="!text-sm !font-semibold !text-[#111111]">검색 결과 개수</span>
           <select
             className="!h-[30px] !w-[50px] !rounded !border !border-[#ebebeb] !bg-white !py-1 !pl-2 !text-xs !font-bold"
-            defaultValue="20"
+            value={searchResultCount}
+            onChange={e => setSearchResultCount(Number(e.target.value))}
           >
             <option value="20">20</option>
             <option value="50">50</option>
             <option value="100">100</option>
             <option value="200">200</option>
           </select>
-          <Button className="!h-[30px] !w-[50px] !cursor-pointer !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
+          <Button
+            className="!h-[30px] !w-[50px] !cursor-pointer !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]"
+            onClick={handleSaveResultCount}
+          >
             저장
           </Button>
         </div>
@@ -754,7 +774,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       {showDescription && (
         <div className="!mb-4 !flex !items-center !justify-between">
           <div className="!text-sm !font-bold">
-            검색 결과 <span className="!text-[#686fe8]">0</span>개
+            검색 결과 <span className="!text-[#686fe8]">{searchResultCount}</span>개
           </div>
           <div className="!text-center !font-bold !text-[#364152]">
             공고 제목에서 <span className="!text-[#686FE8]">인공지능</span> 을 포함하고, 사업 구분은{' '}
@@ -801,6 +821,13 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         title={copyToastMessage}
         isVisible={showCopyToast}
         onClose={() => setShowCopyToast(false)}
+        icon={<Check className="size-5 text-green-600" />}
+      />
+
+      <Toast
+        title="검색 결과 개수가 저장되었습니다"
+        isVisible={showSaveToast}
+        onClose={() => setShowSaveToast(false)}
         icon={<Check className="size-5 text-green-600" />}
       />
     </div>

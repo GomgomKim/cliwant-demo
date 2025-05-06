@@ -15,6 +15,8 @@ export function BidSearchView() {
   const [searchResults, setSearchResults] = useState<BidItem[]>(DUMMY_BID_DATA);
   const [isSearched, setIsSearched] = useState(false);
   const [searchResultsByGroup, setSearchResultsByGroup] = useState<Record<string, BidItem[]>>({});
+  const [totalResults, setTotalResults] = useState(0);
+  const [resultCount, setResultCount] = useState(20);
   const { isFavorite } = useFavoriteStore();
   const searchStore = useSearchStore();
   const {
@@ -37,8 +39,8 @@ export function BidSearchView() {
   const [bidType, setBidType] = useState<string>('');
   const [dateFilterLabel, setDateFilterLabel] = useState('전체 기간');
 
-  // 페이지당 표시할 항목 수
-  const itemsPerPage = 10;
+  // 페이지당 표시할 항목 수를 resultCount로 설정
+  const itemsPerPage = resultCount;
 
   // 전체 페이지 수 계산 (현재 선택된 세트)
   const totalPages = Math.ceil(currentResults.length / itemsPerPage);
@@ -50,11 +52,13 @@ export function BidSearchView() {
   );
 
   // SearchFilter에서 검색 이벤트 처리
-  const handleSearch = (filters: any) => {
+  const handleSearch = (filters: any, setTotal: (total: number) => void) => {
     console.log('Search triggered with filters:', filters);
 
     // 필터에서 전달받은 키워드 목록
     const keywordFilters = filters.keywords || [];
+    const resultCount = filters.resultCount || 20;
+    setResultCount(resultCount);
 
     // 키워드 매칭 함수
     const matchesBid = (bid: BidItem, kw: { keyword: string; searchField?: string }) => {
@@ -83,133 +87,37 @@ export function BidSearchView() {
       );
     };
 
-    // timeFilter 기반으로 bid 필터링
-    const filterBidsByTime = (bids: BidItem[]): BidItem[] => {
-      // filters.timeFilter에서 선택된 시간 필터
-      const timeFilter = filters.timeFilter;
-      if (timeFilter === 'all') return bids;
+    // 필터링된 결과 계산
+    let filteredResults = DUMMY_BID_DATA;
 
-      const now = new Date();
-      const fromDate = new Date();
-
-      // 시간 필터에 따라 시작 날짜 설정
-      if (timeFilter === 'day') {
-        fromDate.setDate(now.getDate() - 1);
-      } else if (timeFilter === 'week') {
-        fromDate.setDate(now.getDate() - 7);
-      } else if (timeFilter === 'month') {
-        fromDate.setMonth(now.getMonth() - 1);
-      } else if (timeFilter === 'custom' && filters.startDate && filters.endDate) {
-        // custom 시간 필터의 경우 startDate와 endDate 사용
-        return bids.filter(bid => {
-          const bidDate = new Date(bid.publishedDate);
-          const startDate = new Date(filters.startDate);
-          const endDate = new Date(filters.endDate);
-          return bidDate >= startDate && bidDate <= endDate;
-        });
-      }
-
-      // 시간 필터에 따른 기간 내의 공고만 필터링
-      return bids.filter(bid => {
-        const bidDate = new Date(bid.publishedDate);
-        return bidDate >= fromDate && bidDate <= now;
-      });
-    };
-
-    // 새로운 검색 결과 처리 로직
+    // 키워드 필터링
     if (keywordFilters.length > 0) {
-      // 그룹핑: rowId를 기준으로 그룹화하여 각 그룹의 키워드를 AND/OR 조건으로 결합
-      const groupedKeywords: Record<
-        string,
-        { searchField: string; conjunction: string; keywords: string[] }
-      > = {};
-      const orderedRowIds: string[] = [];
-      keywordFilters.forEach((kw: any) => {
-        if (!groupedKeywords[kw.rowId]) {
-          groupedKeywords[kw.rowId] = {
-            searchField: kw.searchField,
-            conjunction: kw.conjunction && kw.conjunction !== '' ? kw.conjunction : 'AND',
-            keywords: [kw.keyword],
-          };
-          orderedRowIds.push(kw.rowId);
-        } else {
-          groupedKeywords[kw.rowId].keywords.push(kw.keyword);
-        }
+      filteredResults = filteredResults.filter(bid => {
+        return keywordFilters.every((kw: any) => {
+          const matches = matchesBid(bid, kw);
+          return kw.conjunction === 'OR' ? matches : matches;
+        });
       });
-
-      let results: BidItem[] = [];
-      orderedRowIds.forEach((rowId, index) => {
-        const group = groupedKeywords[rowId];
-        let groupMatches: BidItem[] = [];
-        if (group.conjunction === 'AND') {
-          // AND: bid must match every keyword in the group
-          groupMatches = DUMMY_BID_DATA.filter(bid =>
-            group.keywords.every(kw =>
-              matchesBid(bid, { keyword: kw, searchField: group.searchField })
-            )
-          );
-        } else {
-          // OR condition
-          groupMatches = DUMMY_BID_DATA.filter(bid =>
-            group.keywords.some(kw =>
-              matchesBid(bid, { keyword: kw, searchField: group.searchField })
-            )
-          );
-        }
-        if (index === 0) {
-          results = groupMatches;
-        } else {
-          // Combine with previous groups based on this group's conjunction
-          if (group.conjunction === 'AND') {
-            results = results.filter(bid => groupMatches.includes(bid));
-          } else if (group.conjunction === 'OR') {
-            results = Array.from(new Set([...results, ...groupMatches]));
-          }
-        }
-      });
-
-      // 시간 필터 적용
-      results = filterBidsByTime(results);
-
-      const resultsBySet: Record<string, BidItem[]> = {};
-      if (selectedKeywordSetId) {
-        resultsBySet[selectedKeywordSetId] = results;
-      } else if (savedKeywordSets.length > 0) {
-        resultsBySet[savedKeywordSets[0].id] = results;
-      }
-      setSearchResultsByGroup(resultsBySet);
-    } else {
-      // 기존 로직: 키워드가 없는 경우 저장된 키워드 세트 기반 처리
-      const resultsBySet: Record<string, BidItem[]> = {};
-      searchStore.savedKeywordSets.forEach(set => {
-        const results = set.keywordRows.reduce((acc: BidItem[], row, index) => {
-          if (!row.keyword.trim()) return index === 0 ? [] : acc;
-          const rowMatches = DUMMY_BID_DATA.filter(bid => matchesBid(bid, row));
-          if (index === 0) {
-            return rowMatches;
-          }
-          if (row.conjunction === 'OR') {
-            // OR: 이전 결과와 합집합
-            const union = [...acc];
-            rowMatches.forEach(item => {
-              if (!union.includes(item)) union.push(item);
-            });
-            return union;
-          }
-          // AND: 교집합
-          return acc.filter(item => rowMatches.includes(item));
-        }, [] as BidItem[]);
-
-        // 시간 필터 적용
-        resultsBySet[set.id] = filterBidsByTime(results);
-      });
-
-      setSearchResultsByGroup(resultsBySet);
     }
 
-    // 검색시 페이지를 첫 페이지로 초기화
-    setCurrentPage(1);
+    // 전체 결과 수 설정
+    setTotalResults(filteredResults.length);
+    setTotal(filteredResults.length);
+
+    // 선택된 개수만큼만 결과 저장
+    const limitedResults = filteredResults.slice(0, resultCount);
+
+    // 결과 저장
+    if (selectedKeywordSetId) {
+      setSearchResultsByGroup(prev => ({
+        ...prev,
+        [selectedKeywordSetId]: limitedResults,
+      }));
+    }
+
+    // 검색 완료 상태 설정
     setIsSearched(true);
+    setCurrentPage(1);
   };
 
   // 사업 구분 및 입찰 방식 필터 변경 시 결과 업데이트
@@ -259,7 +167,7 @@ export function BidSearchView() {
         <div className="mt-6 bg-white !shadow-sm">
           {currentResults.length > 0 ? (
             <>
-              <BidList bids={currentItems} />
+              <BidList bids={currentResults} />
             </>
           ) : (
             <div className="p-10 text-center font-['Pretendard'] text-gray-500">
