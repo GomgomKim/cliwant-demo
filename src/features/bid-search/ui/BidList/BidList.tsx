@@ -62,6 +62,7 @@ export function BidList({ bids }: BidListProps) {
   // Column width settings
   const columnWidths = {
     favorite: '60px',
+    index: '60px',
     bidType: '100px',
     title: '350px',
     budget: '150px',
@@ -168,7 +169,7 @@ export function BidList({ bids }: BidListProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {bids.map(bid => (
+            {bids.map((bid, index) => (
               <tr
                 key={bid.id}
                 className="cursor-pointer transition-colors duration-150 odd:bg-white even:bg-gray-50 hover:bg-gray-100"
@@ -176,16 +177,15 @@ export function BidList({ bids }: BidListProps) {
               >
                 {/* Favorite column */}
                 <td style={cellStyle('favorite')}>
-                  <button
-                    className={`rounded-full p-1 focus:outline-none ${
-                      isFavorite(bid.id) ? 'text-yellow-500' : 'text-gray-300 hover:text-yellow-300'
-                    }`}
+                  <Star
+                    className={`h-5 w-5 cursor-pointer ${isFavorite(bid.id) ? 'fill-yellow-500 text-yellow-500' : 'fill-gray-300 text-gray-300 hover:fill-yellow-300 hover:text-yellow-300'}`}
                     onClick={e => handleFavoriteClick(e, bid.id)}
                     aria-label={isFavorite(bid.id) ? '관심공고 해제' : '관심공고 등록'}
-                  >
-                    <Star className={`h-5 w-5 ${isFavorite(bid.id) ? 'fill-yellow-500' : ''}`} />
-                  </button>
+                  />
                 </td>
+
+                {/* Index column */}
+                <td style={cellStyle('index')}>{index + 1}</td>
 
                 {/* Bid Type - now as plain text instead of badge */}
                 <td style={cellStyle('bidType')}>{bid.bidType}</td>
@@ -195,8 +195,14 @@ export function BidList({ bids }: BidListProps) {
                   <div className="text-sm font-medium">{bid.title}</div>
                 </td>
 
+                {/* Budget */}
+                <td style={cellStyle('budget')}>{bid.budget}</td>
+
+                {/* Status - all set to '일반' */}
+                <td style={cellStyle('status')}>일반</td>
+
                 {/* Other cells with appropriate widths */}
-                {['budget', 'status', 'organization', 'publishedDate', 'deadline'].map(key => (
+                {['organization', 'publishedDate', 'deadline'].map(key => (
                   <td key={key} style={cellStyle(key)}>
                     {bid[key as keyof BidItem]}
                   </td>

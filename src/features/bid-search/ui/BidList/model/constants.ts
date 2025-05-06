@@ -19,6 +19,11 @@ export const BID_TABLE_HEADERS: BidTableHeader[] = [
     className: 'w-10 px-6 py-4',
   },
   {
+    id: 'index',
+    label: '',
+    className: TABLE_HEADER_DEFAULT_CLASS,
+  },
+  {
     id: 'bidType',
     label: '상태',
     className: TABLE_HEADER_DEFAULT_CLASS,

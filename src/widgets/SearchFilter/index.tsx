@@ -79,6 +79,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const [filterMode, setFilterMode] = useState('advanced');
   const [isAIToggleOn, setIsAIToggleOn] = useState(false);
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  const [showDescription, setShowDescription] = useState(true);
 
   // 필터된 키워드 세트 배열
   const filteredKeywordSets = savedKeywordSets.filter(set =>
@@ -313,7 +314,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
   return (
     <div
-      suppressHydrationWarning
+      suppressHydrationWarning={true}
       className="!flex !min-h-[500px] !w-full !flex-col !border !border-gray-200 !bg-[#F3F6F7] !p-18 !shadow-sm"
     >
       {/* 탭 헤더 영역 */}
@@ -732,10 +733,43 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
       </div>
 
+      {/* 설명 보기 체크박스 */}
+      <div className="!mt-[-8px] !mb-2 !flex !items-center !justify-end !gap-2">
+        <Checkbox
+          id="show-description"
+          checked={showDescription}
+          onCheckedChange={() => setShowDescription(!showDescription)}
+          className={cn(
+            '!size-[13px] !rounded-sm !border !border-gray-500 !bg-white',
+            showDescription &&
+              '!text-white [&]:!border-[hsl(var(--blue))] [&]:!bg-[hsl(var(--blue))]'
+          )}
+        />
+        <label htmlFor="show-description" className="!text-[13px] !font-normal !text-gray-500">
+          설명 보기
+        </label>
+      </div>
+
       {/* 검색 설명 영역 */}
-      <div className="!mb-4 !text-center !text-[#364152]">
-        공고 제목에서 <span className="!text-[#686FE8]">인공지능</span> 을 포함하고, 사업 구분은{' '}
-        <span className="!text-[#6CBAA2]">전체</span> 에 해당하는 공고를 찾습니다.
+      {showDescription && (
+        <div className="!mb-4 !text-center !font-bold !text-[#364152]">
+          공고 제목에서 <span className="!text-[#686FE8]">인공지능</span> 을 포함하고, 사업 구분은{' '}
+          <span className="!text-[#6CBAA2]">전체</span> 에 해당하는 공고를 찾습니다.
+        </div>
+      )}
+
+      <div className="!mb-4 !flex !items-center !justify-center !gap-2">
+        <span className="!text-sm !font-bold !text-[#A1A1A1]">검색 결과가 잘려 보이는 경우</span>
+        <div className="!inline-flex !h-[33px] !w-[80px]">
+          <Image
+            src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=96,h=40,f=auto,dpr=2,fit=contain/f1730798469659x614277621266592100/Group%205.png"
+            className="!mt-[-3px] !h-full !w-full !object-contain"
+            width={80}
+            height={33}
+            alt="Scroll indicator"
+          />
+        </div>
+        <span className="!text-sm !font-bold !text-[#A1A1A1]">해보세요!</span>
       </div>
 
       {/* Toast notifications */}

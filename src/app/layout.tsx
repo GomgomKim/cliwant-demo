@@ -19,11 +19,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="flex">
             <Sidebar />
-            <main className="flex-1 min-h-screen bg-gray-50">{children}</main>
+            <main className="min-h-screen flex-1 bg-gray-50">{children}</main>
           </div>
         </ThemeProvider>
       </body>
