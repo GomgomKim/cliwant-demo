@@ -292,8 +292,8 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   return (
-    <div className="!rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
-      <div className="!flex !items-center !justify-between !border-b !border-gray-200 !p-4">
+    <div className="!rounded-lg !bg-white !shadow-sm">
+      <div className="!flex !items-center !justify-between !p-4">
         <h3 className="!text-base !font-semibold !text-gray-800">검색 필터</h3>
         <div className="!flex !items-center">
           <span className="!text-sm !text-gray-600">검색 결과 개수</span>

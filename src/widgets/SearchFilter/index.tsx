@@ -773,7 +773,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       {/* 검색 설명 영역 */}
       {showDescription && (
         <div className="!mb-4 !flex !items-center !justify-between">
-          <div className="!text-sm !font-bold">
+          <div className="!text-[12px] !font-bold">
             검색 결과 <span className="!text-[#686fe8]">{searchResultCount}</span>개
           </div>
           <div className="!text-center !font-bold !text-[#364152]">
