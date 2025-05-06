@@ -1,11 +1,10 @@
-import { Plus, Trash2, CheckCircle } from 'lucide-react';
+import { Trash2, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/Select';
 import { Toast } from '@/shared/ui/Toast';
 
 import { REVIEW_STATUS_OPTIONS, TABLE_HEADERS } from '../model/constants';
@@ -191,7 +190,7 @@ export function FavoriteBidsTable({
                         <div className="!flex !flex-wrap !items-center !gap-4">
                           <button
                             onClick={() => handleAddTag(bid.id)}
-                            className="!flex !h-[35px] !w-[35px] !cursor-pointer !items-center !justify-center !rounded !bg-white !p-1.5"
+                            className="!cursor-pointer!rounded !flex !h-[35px] !w-[155px] !bg-white !p-1.5"
                           >
                             <Image src="/pencil.svg" alt="태그 추가" width={12} height={12} />
                           </button>
@@ -206,43 +205,136 @@ export function FavoriteBidsTable({
                             ))}
                           </div>
                           <div className="!flex !items-center !gap-1">
-                            <span className="!mr-2 !text-sm !text-gray-700">담당</span>
-                            <Input
-                              className="!w-32"
-                              value={memoData[bid.id]?.담당 || ''}
-                              onChange={e => handleChange(bid.id, '담당', e.target.value)}
-                            />
+                            <span className="!mr-2 !text-sm !text-[#999999]">담당</span>
+                            <div
+                              className="!clickable-element !bubble-element !Group !baUaZaFt !bubble-r-container !row !flex"
+                              style={{
+                                boxShadow: 'rgba(170, 170, 170, 0.8) 1px 1px 4px 0px',
+                                overflow: 'visible',
+                                justifyContent: 'center',
+                                gap: '0px',
+                                borderRadius: '35px',
+                                opacity: '1',
+                                cursor: 'pointer',
+                                alignSelf: 'center',
+                                minWidth: '90px',
+                                maxWidth: '90px',
+                                order: '2',
+                                minHeight: '50px',
+                                maxHeight: '50px',
+                                width: '90px',
+                                flexGrow: '1',
+                                height: '50px',
+                                margin: '0px',
+                                zIndex: '3',
+                              }}
+                            >
+                              <div
+                                className="!bubble-element !Group !baUaZaFz !bubble-r-container !column !flex"
+                                style={{
+                                  overflow: 'visible',
+                                  justifyContent: 'flex-start',
+                                  borderRadius: '0px',
+                                  opacity: '1',
+                                  alignSelf: 'flex-start',
+                                  minWidth: '0px',
+                                  order: '1',
+                                  minHeight: '0px',
+                                  width: 'max-content',
+                                  flexGrow: '0',
+                                  height: 'max-content',
+                                  margin: '0px',
+                                  zIndex: '5',
+                                }}
+                              ></div>
+                              <div
+                                className="!bubble-element !Image !baUaZaFx"
+                                style={{
+                                  borderRadius: '100px',
+                                  opacity: '1',
+                                  alignSelf: 'center',
+                                  minWidth: '30px',
+                                  maxWidth: '30px',
+                                  order: '2',
+                                  width: '30px',
+                                  flexGrow: '1',
+                                  height: '30px',
+                                  margin: '0px',
+                                  zIndex: '2',
+                                  position: 'relative',
+                                  overflow: 'hidden',
+                                }}
+                              >
+                                <Image
+                                  src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=2,fit=contain/f1704690014412x324776799943939100/blank-profile-picture-973460_960_720.webp"
+                                  alt="프로필"
+                                  width={30}
+                                  height={30}
+                                  className="!object-cover"
+                                  style={{
+                                    borderRadius: '100px',
+                                  }}
+                                />
+                              </div>
+                              <div
+                                className="!bubble-element !Text !baUaZaFy"
+                                style={{
+                                  whiteSpace: 'pre-wrap',
+                                  overflow: 'visible',
+                                  fontFamily: 'var(--font_default)',
+                                  fontSize: '10px',
+                                  fontWeight: '400',
+                                  color: 'var(--color_primary_contrast_default)',
+                                  textAlign: 'center',
+                                  lineHeight: '1.4',
+                                  borderRadius: '0px',
+                                  opacity: '1',
+                                  alignSelf: 'center',
+                                  minWidth: '40px',
+                                  maxWidth: '40px',
+                                  order: '3',
+                                  minHeight: '0px',
+                                  maxHeight: '48px',
+                                  width: '40px',
+                                  flexGrow: '1',
+                                  height: 'max-content',
+                                  margin: '0px 0px 0px 5px',
+                                  zIndex: '4',
+                                }}
+                              >
+                                <div>{memoData[bid.id]?.담당 || '과제클라이원트'}</div>
+                              </div>
+                            </div>
                           </div>
-                          <Select
-                            value={memoData[bid.id]?.reviewStatus || ''}
-                            onValueChange={val => handleChange(bid.id, 'reviewStatus', val)}
-                          >
-                            <SelectTrigger className="!w-40">
-                              <SelectValue placeholder="제안 상태" />
-                            </SelectTrigger>
-                            <SelectContent className="!border !border-gray-200 !bg-white !text-black !shadow-md">
+                          <div className="!flex !items-center !gap-1">
+                            <span className="!mr-2 !text-sm !text-[#999999]">제안 상태</span>
+                            <select
+                              className="!h-[30px] !w-[150px] !rounded !border !text-xs"
+                              value={memoData[bid.id]?.reviewStatus || ''}
+                              onChange={e => handleChange(bid.id, 'reviewStatus', e.target.value)}
+                            >
                               {REVIEW_STATUS_OPTIONS.map(opt => (
-                                <SelectItem key={opt} value={opt}>
+                                <option key={opt} value={opt}>
                                   {opt}
-                                </SelectItem>
+                                </option>
                               ))}
-                            </SelectContent>
-                          </Select>
+                            </select>
+                          </div>
                           <div className="!flex !flex-1 !items-center !gap-1">
                             <span className="!mr-2 !text-sm !text-gray-700">비고</span>
                             <Input
-                              className="!flex-1"
+                              className="!w-[150px] !flex-1 px-1"
                               value={memoData[bid.id]?.note || ''}
                               onChange={e => handleChange(bid.id, 'note', e.target.value)}
+                              placeholder="필요한 메모를 하세요.."
                             />
                           </div>
-                          <Button
+                          <button
                             onClick={() => handleEdit(bid.id)}
-                            className="!cursor-pointer !px-3 !py-1"
-                            variant="purple"
+                            className="!flex !h-[30px] !w-[50px] !cursor-pointer !items-center !justify-center !rounded-lg !bg-[#4D8076] !p-1.5"
                           >
-                            수정
-                          </Button>
+                            <span className="!text-xs !font-bold !text-white">수정</span>
+                          </button>
                         </div>
                       </td>
                     </tr>
