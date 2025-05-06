@@ -725,7 +725,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
           </div>
           <button
             onClick={handleSearch}
-            className="!absolute !top-1/2 !right-0 !flex !h-[45px] !w-[150px] !-translate-y-1/2 !items-center !rounded-md !bg-[#151663] !py-2 !pl-8 !font-bold !text-white"
+            className="!absolute !top-1/2 !right-0 !flex !h-[45px] !w-[150px] !-translate-y-1/2 !cursor-pointer !items-center !rounded-md !bg-[#151663] !py-2 !pl-8 !font-bold !text-white"
           >
             <Search size={16} strokeWidth={3} className="!mr-2" />
             검색하기
