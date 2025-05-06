@@ -79,18 +79,18 @@ export function FavoriteBidsView() {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="mb-6 flex items-center gap-6">
-        <div className="flex-1">
-          <h1 className="!mb-4 !inline-block !border-b-2 !border-[rgb(166,161,219)] !pb-2 !font-['Pretendard'] !text-xl !font-bold !text-[rgb(68,64,128)]">
+    <div className="!container !mx-auto !p-18">
+      <div className="!mb-6 !flex !items-center !gap-6">
+        <div className="!flex-1">
+          <h4 className="!z-[2] !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !max-w-[300px] !min-w-0 !flex-grow-0 !overflow-visible !rounded-none !border-b-4 !border-[#676FE7] !font-['Pretendard'] !text-[18px] !leading-none !font-bold !whitespace-pre-wrap !text-[#676FE7] !opacity-100">
             관심 공고
-          </h1>
+          </h4>
         </div>
       </div>
 
       <div className="!mt-6 !mr-5 !w-[95%] !rounded-lg !border !bg-white !p-6 !shadow-sm">
         {/* 상단 필터 */}
-        <div className="!mb-6 grid grid-cols-6 items-center gap-4">
+        <div className="!mb-6 !grid !grid-cols-6 !items-center !gap-4">
           <Select value={filterBidType} onValueChange={val => setFilterBidType(val)}>
             <SelectTrigger className="!px-3 !py-2">
               <SelectValue placeholder="공고 단계" />
