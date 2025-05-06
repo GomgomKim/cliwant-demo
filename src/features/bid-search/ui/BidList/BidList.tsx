@@ -193,7 +193,7 @@ export function BidList({ bids }: BidListProps) {
                   <td style={cellStyle('index')}>{index + 1}</td>
 
                   {/* Bid Type - now as plain text instead of badge */}
-                  <td style={cellStyle('bidType')}>{bid.bidType}</td>
+                  <td style={cellStyle('bidType')}>일반</td>
 
                   {/* Title */}
                   <td style={cellStyle('title')}>
@@ -201,10 +201,10 @@ export function BidList({ bids }: BidListProps) {
                   </td>
 
                   {/* Budget */}
-                  <td style={cellStyle('budget')}>{bid.budget}</td>
+                  <td style={cellStyle('budget')}></td>
 
                   {/* Status - all set to '일반' */}
-                  <td style={cellStyle('status')}>일반</td>
+                  <td style={cellStyle('status')}>{bid.status}</td>
 
                   {/* Other cells with appropriate widths */}
                   {['organization', 'publishedDate', 'deadline'].map(key => (
