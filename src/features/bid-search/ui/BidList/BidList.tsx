@@ -117,122 +117,132 @@ export function BidList({ bids }: BidListProps) {
         }
       }}
     >
-      <div className="min-w-max">
-        <table className="min-w-full divide-y divide-gray-200" style={{ tableLayout: 'fixed' }}>
-          <thead>
-            <tr
-              className={TABLE_HEADER_BG_CLASS}
-              style={{
-                background: 'rgb(104, 111, 232)',
-                overflow: 'visible',
-                justifyContent: 'space-between',
-                gap: '0px 20px',
-                padding: '10px 20px',
-                opacity: 1,
-                alignSelf: 'flex-start',
-                minWidth: '1850px',
-                order: 9,
-                minHeight: '0px',
-                height: 53.59,
-                flexGrow: 0,
-                flexShrink: 0,
-                width: 'calc(100% + 0px)',
-                margin: '0px',
-                zIndex: 3,
-              }}
-            >
-              {BID_TABLE_HEADERS.map(header => (
-                <th
-                  key={header.id}
-                  className={header.className}
-                  style={{
-                    backgroundColor: 'rgb(104, 111, 232)',
-                    overflow: 'visible',
-                    justifyContent: 'space-between',
-                    gap: '0px 20px',
-                    padding: '10px 20px',
-                    opacity: 1,
-                    alignSelf: 'flex-start',
-                    minHeight: '0px',
-                    height: 53.59,
-                    flexGrow: 0,
-                    flexShrink: 0,
-                    margin: '0px',
-                    zIndex: 3,
-                    width: columnWidths[header.id as keyof typeof columnWidths] || '120px',
-                    minWidth: columnWidths[header.id as keyof typeof columnWidths] || '120px',
-                  }}
-                >
-                  {header.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {bids.map((bid, index) => (
+      {bids.length === 0 ? (
+        <div className="flex h-40 w-full items-center justify-center text-gray-500">
+          검색 결과가 없습니다.
+        </div>
+      ) : (
+        <div className="min-w-max">
+          <table className="min-w-full divide-y divide-gray-200" style={{ tableLayout: 'fixed' }}>
+            <thead>
               <tr
-                key={bid.id}
-                className="cursor-pointer transition-colors duration-150 odd:bg-white even:bg-gray-50 hover:bg-gray-100"
-                onClick={() => handleBidClick(bid.id)}
+                className={TABLE_HEADER_BG_CLASS}
+                style={{
+                  background: 'rgb(104, 111, 232)',
+                  overflow: 'visible',
+                  justifyContent: 'space-between',
+                  gap: '0px 20px',
+                  padding: '10px 20px',
+                  opacity: 1,
+                  alignSelf: 'flex-start',
+                  minWidth: '1850px',
+                  order: 9,
+                  minHeight: '0px',
+                  height: 53.59,
+                  flexGrow: 0,
+                  flexShrink: 0,
+                  width: 'calc(100% + 0px)',
+                  margin: '0px',
+                  zIndex: 3,
+                }}
               >
-                {/* Favorite column */}
-                <td style={cellStyle('favorite')}>
-                  <Star
-                    className={`h-5 w-5 cursor-pointer ${isFavorite(bid.id) ? 'fill-yellow-500 text-yellow-500' : 'fill-gray-300 text-gray-300 hover:fill-yellow-300 hover:text-yellow-300'}`}
-                    onClick={e => handleFavoriteClick(e, bid.id)}
-                    aria-label={isFavorite(bid.id) ? '관심공고 해제' : '관심공고 등록'}
-                  />
-                </td>
-
-                {/* Index column */}
-                <td style={cellStyle('index')}>{index + 1}</td>
-
-                {/* Bid Type - now as plain text instead of badge */}
-                <td style={cellStyle('bidType')}>{bid.bidType}</td>
-
-                {/* Title */}
-                <td style={cellStyle('title')}>
-                  <div className="text-sm font-medium">{bid.title}</div>
-                </td>
-
-                {/* Budget */}
-                <td style={cellStyle('budget')}>{bid.budget}</td>
-
-                {/* Status - all set to '일반' */}
-                <td style={cellStyle('status')}>일반</td>
-
-                {/* Other cells with appropriate widths */}
-                {['organization', 'publishedDate', 'deadline'].map(key => (
-                  <td key={key} style={cellStyle(key)}>
-                    {bid[key as keyof BidItem]}
-                  </td>
+                {BID_TABLE_HEADERS.map(header => (
+                  <th
+                    key={header.id}
+                    className={header.className}
+                    style={{
+                      backgroundColor: 'rgb(104, 111, 232)',
+                      overflow: 'visible',
+                      justifyContent: 'space-between',
+                      gap: '0px 20px',
+                      padding: '10px 20px',
+                      opacity: 1,
+                      alignSelf: 'flex-start',
+                      minHeight: '0px',
+                      height: 53.59,
+                      flexGrow: 0,
+                      flexShrink: 0,
+                      margin: '0px',
+                      zIndex: 3,
+                      width: columnWidths[header.id as keyof typeof columnWidths] || '120px',
+                      minWidth: columnWidths[header.id as keyof typeof columnWidths] || '120px',
+                    }}
+                  >
+                    {header.label}
+                  </th>
                 ))}
-
-                {/* Checkbox columns */}
-                {[
-                  'industryCondition',
-                  'manufacturingItem',
-                  'supplyItem',
-                  'locationRestriction',
-                ].map(key => (
-                  <td key={key} style={cellStyle(key)}>
-                    {renderCheckbox()}
-                  </td>
-                ))}
-
-                {/* Reference columns */}
-                {['jointSupply', 'winnerSelection', 'businessRestriction', 'priceSelection'].map(
-                  (key, index) => (
-                    <td key={key} style={cellStyle(key)}>
-                      {index % 2 === 0 ? '문서 참조' : '공고서 참조'}
-                    </td>
-                  )
-                )}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {bids.map((bid, index) => (
+                <tr
+                  key={bid.id}
+                  className="cursor-pointer transition-colors duration-150 odd:bg-white even:bg-gray-50 hover:bg-gray-100"
+                  onClick={() => handleBidClick(bid.id)}
+                >
+                  {/* Favorite column */}
+                  <td style={cellStyle('favorite')}>
+                    <Star
+                      className={`h-5 w-5 cursor-pointer ${isFavorite(bid.id) ? 'fill-yellow-500 text-yellow-500' : 'fill-gray-300 text-gray-300 hover:fill-yellow-300 hover:text-yellow-300'}`}
+                      onClick={e => handleFavoriteClick(e, bid.id)}
+                      aria-label={isFavorite(bid.id) ? '관심공고 해제' : '관심공고 등록'}
+                    />
+                  </td>
+
+                  {/* Index column */}
+                  <td style={cellStyle('index')}>{index + 1}</td>
+
+                  {/* Bid Type - now as plain text instead of badge */}
+                  <td style={cellStyle('bidType')}>{bid.bidType}</td>
+
+                  {/* Title */}
+                  <td style={cellStyle('title')}>
+                    <div className="text-sm font-medium">{bid.title}</div>
+                  </td>
+
+                  {/* Budget */}
+                  <td style={cellStyle('budget')}>{bid.budget}</td>
+
+                  {/* Status - all set to '일반' */}
+                  <td style={cellStyle('status')}>일반</td>
+
+                  {/* Other cells with appropriate widths */}
+                  {['organization', 'publishedDate', 'deadline'].map(key => (
+                    <td key={key} style={cellStyle(key)}>
+                      {bid[key as keyof BidItem]}
+                    </td>
+                  ))}
+
+                  {/* Checkbox columns */}
+                  {[
+                    'industryCondition',
+                    'manufacturingItem',
+                    'supplyItem',
+                    'locationRestriction',
+                  ].map(key => (
+                    <td key={key} style={cellStyle(key)}>
+                      {renderCheckbox()}
+                    </td>
+                  ))}
+
+                  {/* Reference columns */}
+                  {['jointSupply', 'winnerSelection', 'businessRestriction', 'priceSelection'].map(
+                    (key, index) => (
+                      <td key={key} style={cellStyle(key)}>
+                        {index % 2 === 0 ? '문서 참조' : '공고서 참조'}
+                      </td>
+                    )
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="mt-3 pl-4 text-sm text-gray-600">
+            총 <span className="font-bold text-blue-600">{bids.length}</span>개의 공고가
+            검색되었습니다.
+          </div>
+        </div>
+      )}
     </div>
   );
 }
