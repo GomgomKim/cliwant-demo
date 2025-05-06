@@ -251,7 +251,7 @@ export function BidSearchView() {
   }, []);
 
   return (
-    <div className="container mx-auto py-4 font-['Pretendard']">
+    <div className="container mx-auto !bg-[#F3F6F7] !p-18 py-4 font-['Pretendard']">
       <SearchFilter onSearch={handleSearch} />
 
       {/* 선택된 키워드 세트 검색 결과 표시 - Only show when isSearched is true */}
@@ -260,13 +260,6 @@ export function BidSearchView() {
           {currentResults.length > 0 ? (
             <>
               <BidList bids={currentItems} />
-              <div className="border-t p-4">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                />
-              </div>
             </>
           ) : (
             <div className="p-10 text-center font-['Pretendard'] text-gray-500">

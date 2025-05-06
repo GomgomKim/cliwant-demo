@@ -315,7 +315,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   return (
     <div
       suppressHydrationWarning={true}
-      className="!flex !min-h-[500px] !w-full !flex-col !border !border-gray-200 !bg-[#F3F6F7] !p-18 !shadow-sm"
+      className="!flex !min-h-[500px] !w-full !flex-col !shadow-sm"
     >
       {/* 탭 헤더 영역 */}
       <div className="!mb-3 !flex !items-center !justify-between !border-b !border-gray-200 !pb-2">
@@ -752,9 +752,26 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
       {/* 검색 설명 영역 */}
       {showDescription && (
-        <div className="!mb-4 !text-center !font-bold !text-[#364152]">
-          공고 제목에서 <span className="!text-[#686FE8]">인공지능</span> 을 포함하고, 사업 구분은{' '}
-          <span className="!text-[#6CBAA2]">전체</span> 에 해당하는 공고를 찾습니다.
+        <div className="!mb-4 !flex !items-center !justify-between">
+          <div className="!text-sm !font-bold">
+            검색 결과 <span className="!text-[#686fe8]">0</span>개
+          </div>
+          <div className="!text-center !font-bold !text-[#364152]">
+            공고 제목에서 <span className="!text-[#686FE8]">인공지능</span> 을 포함하고, 사업 구분은{' '}
+            <span className="!text-[#6CBAA2]">전체</span> 에 해당하는 공고를 찾습니다.
+          </div>
+          <div className="!flex !items-center !gap-2">
+            <button className="!flex !cursor-pointer !items-center !gap-2 !rounded-md !py-1.5 !text-xs !text-[#343434]">
+              <Image
+                src="/download.svg"
+                alt="Download"
+                width={16}
+                height={16}
+                className="!size-4"
+              />
+              <span>EXCEL 다운로드</span>
+            </button>
+          </div>
         </div>
       )}
 
