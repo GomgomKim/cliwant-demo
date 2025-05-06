@@ -312,7 +312,10 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   return (
-    <div className="!flex !min-h-[500px] !w-full !flex-col !border !border-gray-200 !bg-[#F3F6F7] !p-18 !shadow-sm">
+    <div
+      suppressHydrationWarning
+      className="!flex !min-h-[500px] !w-full !flex-col !border !border-gray-200 !bg-[#F3F6F7] !p-18 !shadow-sm"
+    >
       {/* 탭 헤더 영역 */}
       <div className="!mb-3 !flex !items-center !justify-between !border-b !border-gray-200 !pb-2">
         <div className="!flex !gap-3">
