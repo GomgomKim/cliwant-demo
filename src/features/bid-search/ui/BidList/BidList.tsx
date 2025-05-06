@@ -1,6 +1,7 @@
 'use client';
 
 import { Check, Star } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
@@ -27,6 +28,11 @@ export function BidList({ bids }: BidListProps) {
   const handleFavoriteClick = (e: React.MouseEvent, bidId: number) => {
     e.stopPropagation();
     toggleFavorite(bidId);
+  };
+
+  const handleExcelDownload = () => {
+    // TODO: Implement Excel download functionality
+    console.log('Excel download clicked');
   };
 
   // Set up the horizontal scroll event listener
@@ -117,6 +123,21 @@ export function BidList({ bids }: BidListProps) {
         }
       }}
     >
+      <div className="flex items-center justify-between px-4 py-2">
+        <div className="text-sm">
+          검색 결과 <span className="text-[#686fe8]">{bids.length}</span>개
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExcelDownload}
+            className="flex items-center gap-2 rounded-md border border-[#6CBAA2] px-3 py-1.5 text-xs text-[#6CBAA2] hover:bg-[#6CBAA2] hover:text-white"
+          >
+            <Image src="download.svg" alt="Download" width={16} height={16} className="h-4 w-4" />
+            <span>EXCEL 다운로드</span>
+          </button>
+        </div>
+      </div>
+
       {bids.length === 0 ? (
         <div className="flex h-40 w-full items-center justify-center text-gray-500">
           검색 결과가 없습니다.
@@ -201,7 +222,7 @@ export function BidList({ bids }: BidListProps) {
                   </td>
 
                   {/* Budget */}
-                  <td style={cellStyle('budget')}></td>
+                  <td style={cellStyle('budget')}>공고문 참조</td>
 
                   {/* Status - all set to '일반' */}
                   <td style={cellStyle('status')}>{bid.status}</td>
