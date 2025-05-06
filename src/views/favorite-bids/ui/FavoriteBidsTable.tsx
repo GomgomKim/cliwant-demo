@@ -1,8 +1,7 @@
-import { Plus, Trash2, CheckCircle, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Trash2, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-import { Pagination } from '@/features/bid-search/ui';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/Select';
@@ -13,15 +12,12 @@ import { FavoriteBidsTableProps } from '../model/types';
 
 export function FavoriteBidsTable({
   bids,
-  currentPage,
-  totalPages,
-  onPageChange,
   sortKey,
   sortAsc,
   onSort,
   onDelete,
   showMemo,
-}: FavoriteBidsTableProps) {
+}: Omit<FavoriteBidsTableProps, 'currentPage' | 'totalPages' | 'onPageChange'>) {
   const router = useRouter();
   // memo data state
   const [memoData, setMemoData] = useState<
@@ -79,10 +75,10 @@ export function FavoriteBidsTable({
       />
 
       {bids.length > 0 ? (
-        <>
+        <div className="!max-h-[600px] !overflow-y-auto">
           <table className="!min-w-full !divide-y !divide-gray-200">
-            <thead className="!h-8">
-              <tr className="!bg-[#676FE7] !text-white">
+            <thead className="!sticky !top-0 !z-10 !h-8 !bg-[#676FE7]">
+              <tr className="!text-white">
                 {TABLE_HEADERS.map(header => (
                   <th
                     key={header.id}
@@ -255,14 +251,7 @@ export function FavoriteBidsTable({
               ))}
             </tbody>
           </table>
-          <div className="!mt-4">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={onPageChange}
-            />
-          </div>
-        </>
+        </div>
       ) : (
         <div className="!py-8 !text-center !text-gray-500">
           <div className="!mb-2">관심 공고가 없습니다.</div>
