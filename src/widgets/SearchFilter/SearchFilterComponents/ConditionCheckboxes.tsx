@@ -26,13 +26,13 @@ export function ConditionCheckboxes() {
         <div className="!w-[60px] !max-w-[60px] !min-w-[60px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
           조건
         </div>
-        <div className="!ml-[20px] !flex !flex-wrap !items-center">
+        <div className="!ml-[20px] !flex !flex-wrap !items-center !gap-3">
           <div className="!mr-1 !flex !items-center">
             <Checkbox
               id="industry-condition"
               className="!h-4 !w-4 !rounded !border !border-gray-300 !bg-white"
             />
-            <label htmlFor="industry-condition" className="!ml-1 !text-sm !text-gray-700">
+            <label htmlFor="industry-condition" className="!ml-1 !text-sm !text-[#999999]">
               업종조건 충족
             </label>
           </div>
@@ -42,7 +42,7 @@ export function ConditionCheckboxes() {
               id="goods-condition"
               className="!h-4 !w-4 !rounded !border !border-gray-300 !bg-white"
             />
-            <label htmlFor="goods-condition" className="!ml-1 !text-sm !text-gray-700">
+            <label htmlFor="goods-condition" className="!ml-1 !text-sm !text-[#999999]">
               물품조건 충족
             </label>
           </div>
@@ -52,7 +52,7 @@ export function ConditionCheckboxes() {
               id="joint-supply"
               className="!h-4 !w-4 !rounded !border !border-gray-300 !bg-white"
             />
-            <label htmlFor="joint-supply" className="!ml-1 !text-sm !text-gray-700">
+            <label htmlFor="joint-supply" className="!ml-1 !text-sm !text-[#999999]">
               공동수급 허용
             </label>
           </div>
@@ -62,7 +62,7 @@ export function ConditionCheckboxes() {
               id="no-performance-limit"
               className="!h-4 !w-4 !rounded !border !border-gray-300 !bg-white"
             />
-            <label htmlFor="no-performance-limit" className="!ml-1 !text-sm !text-gray-700">
+            <label htmlFor="no-performance-limit" className="!ml-1 !text-sm !text-[#999999]">
               실적제한 없음
             </label>
           </div>
@@ -72,7 +72,7 @@ export function ConditionCheckboxes() {
               id="no-human-limit"
               className="!h-4 !w-4 !rounded !border !border-gray-300 !bg-white"
             />
-            <label htmlFor="no-human-limit" className="!ml-1 !text-sm !text-gray-700">
+            <label htmlFor="no-human-limit" className="!ml-1 !text-sm !text-[#999999]">
               인적제한 없음
             </label>
           </div>

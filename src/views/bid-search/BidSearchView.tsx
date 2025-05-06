@@ -247,14 +247,6 @@ export function BidSearchView() {
 
   return (
     <div className="container mx-auto py-4 font-['Pretendard']">
-      <div className="mb-6 flex items-center gap-6">
-        <div className="flex-1">
-          <h1 className="!mb-4 !inline-block !border-b-2 !border-[rgb(166,161,219)] !pb-2 !font-['Pretendard'] !text-xl !font-bold !text-[rgb(68,64,128)]">
-            입찰 공고
-          </h1>
-        </div>
-      </div>
-
       <SearchFilter onSearch={handleSearch} />
 
       {/* 선택된 키워드 세트 검색 결과 표시 */}

@@ -20,7 +20,6 @@ import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/Select';
 import { Toast } from '@/shared/ui/Toast';
 
 // Sub-components
@@ -78,6 +77,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const [keywordTagsByRow, setKeywordTagsByRow] = useState<Record<string, string[]>>({});
   const [activeTab, setActiveTab] = useState('bid'); // 'bid', 'spec', 'plan', or 'failed'
   const [filterMode, setFilterMode] = useState('advanced'); // 'simple', 'ai', or 'advanced'
+  const [isAIToggleOn, setIsAIToggleOn] = useState(false);
 
   // 필터된 키워드 세트 배열
   const filteredKeywordSets = savedKeywordSets.filter(set =>
@@ -311,30 +311,30 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   return (
-    <div className="!flex !min-h-[500px] !w-full !flex-col !rounded-lg !border !border-gray-200 !bg-white !p-6 !shadow-sm">
+    <div className="!flex !min-h-[500px] !w-full !flex-col !border !border-gray-200 !bg-[#F3F6F7] !p-18 !shadow-sm">
       {/* 탭 헤더 영역 */}
       <div className="!mb-3 !flex !items-center !justify-between !border-b !border-gray-200 !pb-2">
         <div className="!flex !gap-3">
           <h4
-            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'bid' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'bid' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-[#999999]'}`}
             onClick={() => setActiveTab('bid')}
           >
             입찰 공고
           </h4>
           <h4
-            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'spec' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'spec' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-[#999999]'}`}
             onClick={() => setActiveTab('spec')}
           >
             사전 규격
           </h4>
           <h4
-            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'plan' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'plan' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-[#999999]'}`}
             onClick={() => setActiveTab('plan')}
           >
             발주 계획
           </h4>
           <h4
-            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'failed' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-gray-600'}`}
+            className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'failed' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-[#999999]'}`}
             onClick={() => setActiveTab('failed')}
           >
             유찰 공고
@@ -342,19 +342,17 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         <div className="!flex !items-center !gap-2">
-          <span className="!text-sm !font-semibold !text-gray-700">검색 결과 개수</span>
-          <Select defaultValue="20">
-            <SelectTrigger className="!w-16 !rounded !border !px-2 !py-1 !text-sm">
-              <SelectValue placeholder="항목 수" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="20">20</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-              <SelectItem value="200">200</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button className="!rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
+          <span className="!text-sm !font-semibold !text-[#111111]">검색 결과 개수</span>
+          <select
+            className="!h-[30px] !w-[50px] !rounded !border !border-[#ebebeb] !bg-white !py-1 !pl-2 !text-xs !font-bold"
+            defaultValue="20"
+          >
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+          </select>
+          <Button className="!h-[30px] !w-[50px] !cursor-pointer !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
             저장
           </Button>
         </div>
@@ -440,20 +438,27 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
             <select
               className="!w-60 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm"
-              defaultValue=""
+              value={selectedKeywordSetId || ''}
+              onChange={e => selectKeywordSet(e.target.value)}
             >
-              <option value="" disabled>
-                그룹을 선택하세요
-              </option>
-              <option>신규_그룹_공용_2025_04_09</option>
-              <option>신규_그룹_개인_2025_01_14</option>
+              {filteredKeywordSets.length === 0 ? (
+                <option value="" disabled>
+                  {filterType === 'shared' ? '공유 그룹 없음' : '개인 그룹 없음'}
+                </option>
+              ) : (
+                filteredKeywordSets.map(set => (
+                  <option key={set.id} value={set.id}>
+                    {set.name}
+                  </option>
+                ))
+              )}
             </select>
 
-            <Button className="!ml-1 !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
+            <Button className="!ml-1 !h-[30px] !w-[90px] !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
               현재 조건 저장
             </Button>
 
-            <Button className="!ml-1 !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
+            <Button className="!ml-1 !h-[30px] !w-[120px] !rounded-md !bg-[#686FE8] !px-3 !py-1 !text-xs !text-white hover:!bg-[#585CCE]">
               {filterType === 'shared' ? '개인 그룹으로 복사' : '공용 그룹으로 복사'}
             </Button>
 
@@ -471,74 +476,95 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
             <div className="!ml-auto !flex !items-center !gap-2">
               <span className="!text-sm !font-semibold !text-gray-500">AI 키워드 추천 받기</span>
-              <div className="!relative !h-5 !w-10 !rounded-full !bg-gray-200">
-                <div className="!absolute !top-0.5 !left-0.5 !h-4 !w-4 !rounded-full !bg-white"></div>
-              </div>
+              <label className="!relative !inline-block !h-[25px] !w-[45px]">
+                <input
+                  type="checkbox"
+                  className="!peer !sr-only"
+                  checked={isAIToggleOn}
+                  onChange={() => setIsAIToggleOn(!isAIToggleOn)}
+                />
+                <div
+                  className={`!absolute !inset-0 !cursor-pointer !rounded-full !transition-all !duration-300 after:!absolute after:!top-0.5 after:!left-0.5 after:!h-[21px] after:!w-[21px] after:!rounded-full after:!bg-[rgba(166,161,219,1)] after:!transition-all after:!duration-300 ${isAIToggleOn ? '!bg-[rgba(166,161,219,1)] after:!translate-x-5 after:!bg-white' : '!bg-[rgba(230,230,230,1)]'}`}
+                ></div>
+              </label>
             </div>
           </div>
         </div>
 
         {/* 키워드 행 필드 */}
         <div className="!mb-4 !space-y-2">
-          <div className="!flex !items-center !gap-2">
-            <select className="!w-24 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
-              <option value="title">공고 제목</option>
-              <option value="content">첨부파일 본문</option>
-            </select>
+          {keywordRows.map((row, index) => (
+            <div key={row.id} className="!flex !items-center !gap-2">
+              <select
+                className="!h-[30px] !w-[90px] !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
+                value={row.searchField || 'title'}
+                onChange={e =>
+                  updateKeywordRow(row.id, { searchField: e.target.value as 'title' | 'content' })
+                }
+              >
+                <option value="title" className="!bg-[#999999] !text-white hover:!bg-blue-600">
+                  공고 제목
+                </option>
+                <option value="content" className="!bg-[#999999] !text-white hover:!bg-blue-600">
+                  첨부파일 본문
+                </option>
+              </select>
 
-            <select className="!w-16 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
-              <option value="OR">OR</option>
-              <option value="AND">AND</option>
-            </select>
+              <select
+                className="!h-[30px] !w-[55px] !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
+                value={row.conjunction || 'AND'}
+                onChange={e =>
+                  updateKeywordRow(row.id, { conjunction: e.target.value as 'AND' | 'OR' })
+                }
+              >
+                <option value="AND" className="!bg-[#999999] !text-white hover:!bg-blue-600">
+                  AND
+                </option>
+                <option value="OR" className="!bg-[#999999] !text-white hover:!bg-blue-600">
+                  OR
+                </option>
+              </select>
 
-            <input
-              type="text"
-              className="!w-48 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
-              placeholder="키워드를 입력해보세요"
-            />
-
-            <button className="!h-8 !w-8 !overflow-hidden !rounded-md">
-              <img
-                src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705385303393x142142722905198800/Group%20187.png"
-                alt="Add"
-                className="!h-full !w-full !object-cover"
+              <input
+                type="text"
+                className="!h-[30px] !w-[179px] !rounded !border !border-[#EBEBEB] !px-3 !py-1 !text-xs !font-semibold !text-[#423F3F] placeholder:!text-gray-300"
+                placeholder="키워드를 입력해보세요"
+                value={row.keyword}
+                onChange={e => updateKeywordRow(row.id, { keyword: e.target.value })}
               />
-            </button>
 
-            <div className="!flex !gap-1">
-              <div className="!flex !items-center !rounded-full !bg-[#A6A1DB] !px-3 !py-1 !text-xs !text-white">
-                <span>인공지능</span>
-                <X size={14} className="!ml-1 !cursor-pointer" />
+              <button
+                className="!size-[30px] !cursor-pointer !overflow-hidden !rounded-md"
+                onClick={() => addKeywordTag(row.id)}
+              >
+                <Image
+                  src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705385303393x142142722905198800/Group%20187.png"
+                  alt="Add"
+                  width={30}
+                  height={30}
+                  className="!h-full !w-full !object-cover"
+                />
+              </button>
+
+              {/* Keyword Tags */}
+              <div className="!ml-2 !flex !flex-wrap !gap-1">
+                {(keywordTagsByRow[row.id] || []).map((tag, tagIndex) => (
+                  <div
+                    key={tagIndex}
+                    className="!flex !h-[30px] !w-[108px] !items-center !justify-between !rounded-full !bg-[#A6A1DB] !px-5 !py-1 !text-xs !text-white"
+                  >
+                    <span>{tag}</span>
+                    <X
+                      size={8}
+                      strokeWidth={5}
+                      className="!ml-1 !cursor-pointer"
+                      onClick={() => removeKeywordTag(row.id, tag)}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-
-          {/* 추가 키워드 행들... */}
-          <div className="!flex !items-center !gap-2">
-            <select className="!w-24 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
-              <option value="title">공고 제목</option>
-              <option value="content">첨부파일 본문</option>
-            </select>
-
-            <select className="!w-16 !rounded !border !border-gray-200 !px-2 !py-1 !text-sm">
-              <option value="OR">OR</option>
-              <option value="AND">AND</option>
-            </select>
-
-            <input
-              type="text"
-              className="!w-48 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
-              placeholder="키워드를 입력해보세요"
-            />
-
-            <button className="!h-8 !w-8 !overflow-hidden !rounded-md">
-              <img
-                src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705385319891x747155394626461700/Group%20187.png"
-                alt="Add"
-                className="!h-full !w-full !object-cover"
-              />
-            </button>
-          </div>
+          ))}
         </div>
 
         {/* 제외 키워드 영역 */}
@@ -550,19 +576,21 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
             <div className="!flex !items-center !gap-2">
               <input
                 type="text"
-                className="!w-56 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
+                className="!ml-[-5px] !h-[30px] !w-[225px] !rounded !border !border-[#EBEBEB] !px-3 !py-1 !text-xs !font-semibold !text-[#423F3F] placeholder:!text-gray-300"
                 placeholder="제목에서 제외할 키워드 입력"
                 value={excludeTitleInput}
                 onChange={e => setExcludeTitleInput(e.target.value)}
                 onKeyPress={e => handleKeyPress(e, 'title')}
               />
               <button
-                className="!h-8 !w-8 !overflow-hidden !rounded-md"
+                className="!size-[30px] !cursor-pointer !overflow-hidden !rounded-md"
                 onClick={handleAddExcludeTitleKeyword}
               >
-                <img
+                <Image
                   src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
                   alt="Add"
+                  width={30}
+                  height={30}
                   className="!h-full !w-full !object-cover"
                 />
               </button>
@@ -572,12 +600,13 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
               {excludeTitleKeywords.map((keyword, index) => (
                 <div
                   key={index}
-                  className="!flex !items-center !rounded-full !bg-[#F2989E] !px-3 !py-1 !text-xs !text-white"
+                  className="!flex !h-[30px] !w-[108px] !items-center !justify-between !rounded-full !bg-[#F2989E] !px-5 !py-1 !text-xs !text-white"
                 >
                   <span>{keyword}</span>
                   <X
-                    size={14}
-                    className="!ml-1 !cursor-pointer"
+                    size={8}
+                    strokeWidth={5}
+                    className="!cursor-pointer"
                     onClick={() => removeExcludeTitleKeyword(keyword)}
                   />
                 </div>
@@ -592,19 +621,21 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
             <div className="!flex !items-center !gap-2">
               <input
                 type="text"
-                className="!w-56 !rounded !border !border-gray-200 !px-3 !py-1 !text-sm"
+                className="!ml-[-5px] !h-[30px] !w-[225px] !rounded !border !border-[#EBEBEB] !px-3 !py-1 !text-xs !font-semibold !text-[#423F3F] placeholder:!text-gray-300"
                 placeholder="본문에서 제외할 키워드 입력"
                 value={excludeContentInput}
                 onChange={e => setExcludeContentInput(e.target.value)}
                 onKeyPress={e => handleKeyPress(e, 'content')}
               />
               <button
-                className="!h-8 !w-8 !overflow-hidden !rounded-md"
+                className="!size-[30px] !cursor-pointer !overflow-hidden !rounded-md"
                 onClick={handleAddExcludeContentKeyword}
               >
-                <img
+                <Image
                   src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
                   alt="Add"
+                  width={30}
+                  height={30}
                   className="!h-full !w-full !object-cover"
                 />
               </button>
@@ -614,12 +645,13 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
               {excludeContentKeywords.map((keyword, index) => (
                 <div
                   key={index}
-                  className="!flex !items-center !rounded-full !bg-[#F2989E] !px-3 !py-1 !text-xs !text-white"
+                  className="!flex !h-[30px] !w-[108px] !items-center !justify-between !rounded-full !bg-[#F2989E] !px-5 !py-1 !text-xs !text-white"
                 >
                   <span>{keyword}</span>
                   <X
-                    size={14}
-                    className="!ml-1 !cursor-pointer"
+                    size={8}
+                    strokeWidth={5}
+                    className="!cursor-pointer"
                     onClick={() => removeExcludeContentKeyword(keyword)}
                   />
                 </div>

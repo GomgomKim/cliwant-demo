@@ -18,7 +18,7 @@ export function AmountFilter({
   toggleExcludeAmount,
 }: AmountFilterProps) {
   return (
-    <div className="!mb-6 !flex !items-center !gap-0">
+    <div className="!mb-3 !flex !items-center !gap-0">
       <div className="!w-[80px] !max-w-[120px] !min-w-[80px] !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
         사업 금액
       </div>
