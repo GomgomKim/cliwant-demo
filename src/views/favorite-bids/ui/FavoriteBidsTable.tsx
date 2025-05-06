@@ -1,4 +1,4 @@
-import { Plus, Trash2, CheckCircle } from 'lucide-react';
+import { Plus, Trash2, CheckCircle, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -68,7 +68,7 @@ export function FavoriteBidsTable({
   };
 
   return (
-    <div className="!overflow-x-auto !rounded-lg !bg-white !p-6 !shadow-sm">
+    <div className="!overflow-x-auto !shadow-sm">
       <Toast
         title="수정되었습니다"
         icon={<CheckCircle className="!h-5 !w-5 !text-green-600" />}
@@ -82,17 +82,37 @@ export function FavoriteBidsTable({
         <>
           <table className="!min-w-full !divide-y !divide-gray-200">
             <thead className="!h-8">
-              <tr className="!bg-[rgb(166,161,219)] !text-white">
+              <tr className="!bg-[#676FE7] !text-white">
                 {TABLE_HEADERS.map(header => (
                   <th
                     key={header.id}
                     className={`!px-6 !py-3 !text-left !text-xs !font-medium !uppercase${
-                      header.sortable ? '!cursor-pointer' : ''
+                      header.sortable ? '!hover:bg-[#5A63D1] !cursor-pointer' : ''
                     }`}
-                    onClick={() => header.sortable && onSort(header.key!)}
                   >
-                    {header.label}
-                    {header.sortable && sortKey === header.key ? (sortAsc ? ' ▲' : ' ▼') : ''}
+                    <div className="!flex !items-center !gap-1">
+                      {header.label}
+                      {header.sortable && (
+                        <div className="!flex !flex-col !items-center">
+                          <button
+                            onClick={() => onSort(header.key!)}
+                            className={`!cursor-pointer !p-0.5 !text-white hover:!text-gray-200 ${
+                              sortKey === header.key && sortAsc ? '!text-gray-200' : ''
+                            }`}
+                          >
+                            <div className="!h-0 !w-0 !cursor-pointer !border-r-[3px] !border-b-[4px] !border-l-[3px] !border-r-transparent !border-b-white !border-l-transparent"></div>
+                          </button>
+                          <button
+                            onClick={() => onSort(header.key!)}
+                            className={`!cursor-pointer !p-0.5 !text-white hover:!text-gray-200 ${
+                              sortKey === header.key && !sortAsc ? '!text-gray-200' : ''
+                            }`}
+                          >
+                            <div className="!h-0 !w-0 !cursor-pointer !border-t-[4px] !border-r-[3px] !border-l-[3px] !border-t-white !border-r-transparent !border-l-transparent"></div>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </th>
                 ))}
               </tr>

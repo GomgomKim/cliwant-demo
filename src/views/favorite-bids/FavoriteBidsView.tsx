@@ -53,11 +53,19 @@ export function FavoriteBidsView() {
     if (!sortKey) return filteredBids;
     const bids = [...filteredBids];
     bids.sort((a, b) => {
-      const aVal = a[sortKey] || '';
-      const bVal = b[sortKey] || '';
-      // date or string compare
-      const compare = aVal.localeCompare(bVal);
-      return sortAsc ? compare : -compare;
+      let aVal, bVal;
+
+      if (sortKey === 'budget') {
+        // 금액 정렬: 숫자만 추출하여 비교
+        aVal = Number(a[sortKey].replace(/[^0-9]/g, ''));
+        bVal = Number(b[sortKey].replace(/[^0-9]/g, ''));
+        return sortAsc ? aVal - bVal : bVal - aVal;
+      } else {
+        // 날짜 정렬
+        aVal = a[sortKey];
+        bVal = b[sortKey];
+        return sortAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      }
     });
     return bids;
   }, [filteredBids, sortKey, sortAsc]);
