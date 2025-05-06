@@ -29,7 +29,7 @@ export function BusinessTypeFilter() {
         </select>
       </div>
 
-      <div className="!ml-[5px] !flex !items-center">
+      <div className="!ml-[20px] !flex !items-center">
         <span className="!w-[120px] !text-[14px] !font-bold !text-[#939393]">정렬 기준</span>
         <select
           className="!ml-[-40px] !h-[30px] !w-[140px] !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
