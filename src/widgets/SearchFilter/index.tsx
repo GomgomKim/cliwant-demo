@@ -75,9 +75,10 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   const [showCopyToast, setShowCopyToast] = useState(false);
   const [copyToastMessage, setCopyToastMessage] = useState('');
   const [keywordTagsByRow, setKeywordTagsByRow] = useState<Record<string, string[]>>({});
-  const [activeTab, setActiveTab] = useState('bid'); // 'bid', 'spec', 'plan', or 'failed'
-  const [filterMode, setFilterMode] = useState('advanced'); // 'simple', 'ai', or 'advanced'
+  const [activeTab, setActiveTab] = useState('bid');
+  const [filterMode, setFilterMode] = useState('advanced');
   const [isAIToggleOn, setIsAIToggleOn] = useState(false);
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
 
   // 필터된 키워드 세트 배열
   const filteredKeywordSets = savedKeywordSets.filter(set =>
@@ -493,7 +494,7 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
 
         {/* 키워드 행 필드 */}
         <div className="!mb-4 !space-y-2">
-          {keywordRows.map((row, index) => (
+          {keywordRows.slice(0, isFilterExpanded ? undefined : 2).map((row, index) => (
             <div key={row.id} className="!flex !items-center !gap-2">
               <select
                 className="!h-[30px] !w-[90px] !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
@@ -568,145 +569,161 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
         </div>
 
         {/* 제외 키워드 영역 */}
-        <div className="!mb-4 !space-y-2">
-          <div className="!flex !items-center">
-            <span className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
-              제목 제외 키워드
-            </span>
-            <div className="!flex !items-center !gap-2">
-              <input
-                type="text"
-                className="!ml-[-5px] !h-[30px] !w-[225px] !rounded !border !border-[#EBEBEB] !px-3 !py-1 !text-xs !font-semibold !text-[#423F3F] placeholder:!text-gray-300"
-                placeholder="제목에서 제외할 키워드 입력"
-                value={excludeTitleInput}
-                onChange={e => setExcludeTitleInput(e.target.value)}
-                onKeyPress={e => handleKeyPress(e, 'title')}
-              />
-              <button
-                className="!size-[30px] !cursor-pointer !overflow-hidden !rounded-md"
-                onClick={handleAddExcludeTitleKeyword}
-              >
-                <Image
-                  src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
-                  alt="Add"
-                  width={30}
-                  height={30}
-                  className="!h-full !w-full !object-cover"
+        {isFilterExpanded && (
+          <div className="!mb-4 !space-y-2">
+            <div className="!flex !items-center">
+              <span className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
+                제목 제외 키워드
+              </span>
+              <div className="!flex !items-center !gap-2">
+                <input
+                  type="text"
+                  className="!ml-[-5px] !h-[30px] !w-[225px] !rounded !border !border-[#EBEBEB] !px-3 !py-1 !text-xs !font-semibold !text-[#423F3F] placeholder:!text-gray-300"
+                  placeholder="제목에서 제외할 키워드 입력"
+                  value={excludeTitleInput}
+                  onChange={e => setExcludeTitleInput(e.target.value)}
+                  onKeyPress={e => handleKeyPress(e, 'title')}
                 />
-              </button>
+                <button
+                  className="!size-[30px] !cursor-pointer !overflow-hidden !rounded-md"
+                  onClick={handleAddExcludeTitleKeyword}
+                >
+                  <Image
+                    src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
+                    alt="Add"
+                    width={30}
+                    height={30}
+                    className="!h-full !w-full !object-cover"
+                  />
+                </button>
+              </div>
+
+              <div className="!ml-2 !flex !gap-1">
+                {excludeTitleKeywords.map((keyword, index) => (
+                  <div
+                    key={index}
+                    className="!flex !h-[30px] !w-[108px] !items-center !justify-between !rounded-full !bg-[#F2989E] !px-5 !py-1 !text-xs !text-white"
+                  >
+                    <span>{keyword}</span>
+                    <X
+                      size={8}
+                      strokeWidth={5}
+                      className="!cursor-pointer"
+                      onClick={() => removeExcludeTitleKeyword(keyword)}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="!ml-2 !flex !gap-1">
-              {excludeTitleKeywords.map((keyword, index) => (
-                <div
-                  key={index}
-                  className="!flex !h-[30px] !w-[108px] !items-center !justify-between !rounded-full !bg-[#F2989E] !px-5 !py-1 !text-xs !text-white"
+            <div className="!flex !items-center">
+              <span className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
+                본문 제외 키워드
+              </span>
+              <div className="!flex !items-center !gap-2">
+                <input
+                  type="text"
+                  className="!ml-[-5px] !h-[30px] !w-[225px] !rounded !border !border-[#EBEBEB] !px-3 !py-1 !text-xs !font-semibold !text-[#423F3F] placeholder:!text-gray-300"
+                  placeholder="본문에서 제외할 키워드 입력"
+                  value={excludeContentInput}
+                  onChange={e => setExcludeContentInput(e.target.value)}
+                  onKeyPress={e => handleKeyPress(e, 'content')}
+                />
+                <button
+                  className="!size-[30px] !cursor-pointer !overflow-hidden !rounded-md"
+                  onClick={handleAddExcludeContentKeyword}
                 >
-                  <span>{keyword}</span>
-                  <X
-                    size={8}
-                    strokeWidth={5}
-                    className="!cursor-pointer"
-                    onClick={() => removeExcludeTitleKeyword(keyword)}
+                  <Image
+                    src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
+                    alt="Add"
+                    width={30}
+                    height={30}
+                    className="!h-full !w-full !object-cover"
                   />
-                </div>
-              ))}
+                </button>
+              </div>
+
+              <div className="!ml-2 !flex !gap-1">
+                {excludeContentKeywords.map((keyword, index) => (
+                  <div
+                    key={index}
+                    className="!flex !h-[30px] !w-[108px] !items-center !justify-between !rounded-full !bg-[#F2989E] !px-5 !py-1 !text-xs !text-white"
+                  >
+                    <span>{keyword}</span>
+                    <X
+                      size={8}
+                      strokeWidth={5}
+                      className="!cursor-pointer"
+                      onClick={() => removeExcludeContentKeyword(keyword)}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-
-          <div className="!flex !items-center">
-            <span className="!w-[120px] !max-w-[120px] !min-w-[120px] !flex-grow-1 !overflow-visible !text-[14px] !leading-[1.4] !font-bold !whitespace-pre-wrap !text-[rgb(147,147,147)]">
-              본문 제외 키워드
-            </span>
-            <div className="!flex !items-center !gap-2">
-              <input
-                type="text"
-                className="!ml-[-5px] !h-[30px] !w-[225px] !rounded !border !border-[#EBEBEB] !px-3 !py-1 !text-xs !font-semibold !text-[#423F3F] placeholder:!text-gray-300"
-                placeholder="본문에서 제외할 키워드 입력"
-                value={excludeContentInput}
-                onChange={e => setExcludeContentInput(e.target.value)}
-                onKeyPress={e => handleKeyPress(e, 'content')}
-              />
-              <button
-                className="!size-[30px] !cursor-pointer !overflow-hidden !rounded-md"
-                onClick={handleAddExcludeContentKeyword}
-              >
-                <Image
-                  src="https://542682c8b17017789cc2e977902e8281.cdn.bubble.io/cdn-cgi/image/w=48,h=48,f=auto,dpr=1.5,fit=contain/f1705391588566x143885163104544580/Group%20187.png"
-                  alt="Add"
-                  width={30}
-                  height={30}
-                  className="!h-full !w-full !object-cover"
-                />
-              </button>
-            </div>
-
-            <div className="!ml-2 !flex !gap-1">
-              {excludeContentKeywords.map((keyword, index) => (
-                <div
-                  key={index}
-                  className="!flex !h-[30px] !w-[108px] !items-center !justify-between !rounded-full !bg-[#F2989E] !px-5 !py-1 !text-xs !text-white"
-                >
-                  <span>{keyword}</span>
-                  <X
-                    size={8}
-                    strokeWidth={5}
-                    className="!cursor-pointer"
-                    onClick={() => removeExcludeContentKeyword(keyword)}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* 금액 필터 */}
-        <AmountFilter
-          minAmount={minAmount}
-          maxAmount={maxAmount}
-          setAmountRange={setAmountRange}
-          excludeAmount={excludeAmount}
-          toggleExcludeAmount={toggleExcludeAmount}
-        />
+        {isFilterExpanded && (
+          <AmountFilter
+            minAmount={minAmount}
+            maxAmount={maxAmount}
+            setAmountRange={setAmountRange}
+            excludeAmount={excludeAmount}
+            toggleExcludeAmount={toggleExcludeAmount}
+          />
+        )}
 
         {/* 날짜 필터 */}
-        <DateFilter
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          setTimeFilter={setTimeFilter}
-          includeExpired={includeExpired}
-          toggleIncludeExpired={toggleIncludeExpired}
-          timeFilter={timeFilter}
-        />
+        {isFilterExpanded && (
+          <DateFilter
+            startDate={startDate}
+            endDate={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            setTimeFilter={setTimeFilter}
+            includeExpired={includeExpired}
+            toggleIncludeExpired={toggleIncludeExpired}
+            timeFilter={timeFilter}
+          />
+        )}
 
         {/* 시간 필터 */}
-        <TimeFilter
-          timeFilter={timeFilter}
-          setTimeFilter={setTimeFilter}
-          includeExpired={includeExpired}
-          toggleIncludeExpired={toggleIncludeExpired}
-        />
+        {isFilterExpanded && (
+          <TimeFilter
+            timeFilter={timeFilter}
+            setTimeFilter={setTimeFilter}
+            includeExpired={includeExpired}
+            toggleIncludeExpired={toggleIncludeExpired}
+          />
+        )}
 
         {/* 사업 구분 */}
-        <BusinessTypeFilter />
+        {isFilterExpanded && <BusinessTypeFilter />}
 
         {/* 조건 체크박스 */}
-        <ConditionCheckboxes />
+        {isFilterExpanded && <ConditionCheckboxes />}
 
         {/* 더보기/접기 & 검색 버튼 */}
-        <div className="!mt-4 !flex !items-center !justify-between">
-          <div className="!flex-1"></div>
-          <div className="!flex !cursor-pointer !items-center !text-blue-900">
-            <span className="!text-sm !font-semibold">상세 필터 접기</span>
-            <ChevronUp size={18} className="!ml-1" />
+        <div className="!relative !mt-4 !min-h-[45px]">
+          <div
+            className="!absolute !bottom-0 !left-1/2 !flex !-translate-x-1/2 !cursor-pointer !items-center !text-blue-900"
+            onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+          >
+            <span className="!text-sm !font-semibold">
+              {isFilterExpanded ? '상세 필터 접기' : '상세 필터 열기'}
+            </span>
+            {isFilterExpanded ? (
+              <ChevronUp size={18} className="!ml-1" />
+            ) : (
+              <ChevronDown size={18} className="!ml-1" />
+            )}
           </div>
           <button
             onClick={handleSearch}
-            className="!ml-auto !flex !items-center !rounded-md !bg-[#151663] !px-6 !py-2 !font-bold !text-white"
+            className="!absolute !top-1/2 !right-0 !flex !h-[45px] !w-[150px] !-translate-y-1/2 !items-center !rounded-md !bg-[#151663] !py-2 !pl-8 !font-bold !text-white"
           >
-            <Search size={16} className="!mr-2" />
+            <Search size={16} strokeWidth={3} className="!mr-2" />
             검색하기
           </button>
         </div>
