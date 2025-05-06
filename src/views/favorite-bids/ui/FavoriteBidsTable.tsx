@@ -1,4 +1,5 @@
 import { Plus, Trash2, CheckCircle } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -185,16 +186,15 @@ export function FavoriteBidsTable({
                     })}
                   </tr>
                   {showMemo && (
-                    <tr className="!bg-gray-100">
+                    <tr>
                       <td colSpan={TABLE_HEADERS.length} className="!px-6 !py-4">
                         <div className="!flex !flex-wrap !items-center !gap-4">
-                          <Button
-                            variant="unstyled"
+                          <button
                             onClick={() => handleAddTag(bid.id)}
-                            className="!flex !items-center !gap-1 !text-blue-600"
+                            className="!flex !h-[35px] !w-[35px] !cursor-pointer !items-center !justify-center !rounded !bg-white !p-1.5"
                           >
-                            <Plus className="!h-4 !w-4 !cursor-pointer" /> 태그 추가
-                          </Button>
+                            <Image src="/pencil.svg" alt="태그 추가" width={12} height={12} />
+                          </button>
                           <div className="!flex !min-w-[180px] !gap-2">
                             {memoData[bid.id]?.tags.map((tag, idx) => (
                               <span
