@@ -21,7 +21,7 @@ export function Sidebar({ className }: SidebarProps) {
         {/* 입찰 검색 메뉴 */}
         <div>
           <button
-            className="!flex !w-full !items-center !justify-between !rounded-lg !bg-[#151663] !p-3 !text-lg !font-semibold !text-white !transition-colors hover:!bg-indigo-700 focus:!ring-2 focus:!ring-indigo-400 focus:!outline-none"
+            className="!flex !w-full !cursor-pointer !items-center !justify-between !rounded-lg !bg-[#151663] !p-3 !text-lg !font-semibold !text-white !transition-colors"
             onClick={() => setSearchMenuOpen(!searchMenuOpen)}
           >
             <div className="!flex !items-center !gap-3">
@@ -42,9 +42,7 @@ export function Sidebar({ className }: SidebarProps) {
                 href="/bids"
                 className={cn(
                   '!flex !items-center !gap-2 !rounded-md !px-4 !py-2 !text-base !font-medium !transition-colors',
-                  pathname === '/bids'
-                    ? '!bg-[#151663] !text-white'
-                    : '!bg-white !text-[#666666] hover:!bg-gray-100 hover:!text-[#151663]'
+                  pathname === '/bids' ? '!bg-[#151663] !text-white' : '!bg-white !text-[#666666]'
                 )}
               >
                 <List className="!h-5 !w-5" />
@@ -56,7 +54,7 @@ export function Sidebar({ className }: SidebarProps) {
                   '!flex !items-center !gap-2 !rounded-md !px-4 !py-2 !text-base !font-medium !transition-colors',
                   pathname === '/favorites'
                     ? '!bg-[#151663] !text-white'
-                    : '!bg-white !text-[#666666] hover:!bg-gray-100 hover:!text-[#151663]'
+                    : '!bg-white !text-[#666666]'
                 )}
               >
                 <Bookmark className="!h-5 !w-5" />

@@ -7,7 +7,6 @@ import { BidItem } from '@/features/bid-search/model/types';
 import { useFavoriteStore } from '@/features/favorites/model/favoriteStore';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/shared/ui/Select';
 
 import { BID_TYPE_OPTIONS, BUDGET_OPTIONS, STATUS_OPTIONS } from './model/constants';
 import { FavoriteBidsTable } from './ui/FavoriteBidsTable';
@@ -24,6 +23,7 @@ export function FavoriteBidsView() {
   const [filterOrg, setFilterOrg] = useState<string>('');
   const [filterBudget, setFilterBudget] = useState<number>(0);
   const [filterStatus, setFilterStatus] = useState<string>('');
+  const [filterBusinessType, setFilterBusinessType] = useState<string>('all');
 
   const favorites = useFavoriteStore(state => state.favorites);
   const toggleFavorite = useFavoriteStore(state => state.toggleFavorite);
@@ -41,6 +41,7 @@ export function FavoriteBidsView() {
     .filter(bid => !filterOrg || bid.organization.includes(filterOrg))
     .filter(bid => !filterBudget || Number(bid.budget.replace(/[^0-9]/g, '')) >= filterBudget)
     .filter(bid => !filterStatus || bid.status === filterStatus)
+    .filter(bid => filterBusinessType === 'all' || bid.status === filterBusinessType)
     .filter(
       bid =>
         bid.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -79,7 +80,7 @@ export function FavoriteBidsView() {
   };
 
   return (
-    <div className="!container !mx-auto !p-18">
+    <div className="!container !mx-auto !pl-18">
       <div className="!mb-6 !flex !items-center !gap-6">
         <div className="!flex-1">
           <h4 className="!z-[2] !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !max-w-[300px] !min-w-0 !flex-grow-0 !overflow-visible !rounded-none !border-b-4 !border-[#676FE7] !font-['Pretendard'] !text-[18px] !leading-none !font-bold !whitespace-pre-wrap !text-[#676FE7] !opacity-100">
@@ -90,62 +91,71 @@ export function FavoriteBidsView() {
 
       <div className="!mt-6 !mr-5 !w-[95%] !rounded-lg !border !bg-white !p-6 !shadow-sm">
         {/* 상단 필터 */}
-        <div className="!mb-6 !grid !grid-cols-6 !items-center !gap-4">
-          <Select value={filterBidType} onValueChange={val => setFilterBidType(val)}>
-            <SelectTrigger className="!px-3 !py-2">
-              <SelectValue placeholder="공고 단계" />
-            </SelectTrigger>
-            <SelectContent className="!border !border-gray-200 !bg-white !shadow-md">
-              {BID_TYPE_OPTIONS.map(opt => (
-                <SelectItem key={opt} value={opt}>
-                  {opt}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="!mb-6 !grid !grid-cols-7 !items-center !gap-2">
+          <select
+            value={filterBidType}
+            onChange={e => setFilterBidType(e.target.value)}
+            className="!h-[35px] !w-full !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
+          >
+            <option value="">공고 단계</option>
+            {BID_TYPE_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
           <Input
             type="text"
-            placeholder="공고명"
-            className="!px-3 !py-2"
+            placeholder="공고명 검색"
+            className="!h-[35px] !w-full !rounded !border !border-[#EBEBEB]"
             value={filterTitle}
             onChange={e => setFilterTitle(e.target.value)}
           />
           <Input
             type="text"
-            placeholder="기관"
-            className="!px-3 !py-2"
+            placeholder="기관 검색"
+            className="!h-[35px] !w-full !rounded !border !border-[#EBEBEB]"
             value={filterOrg}
             onChange={e => setFilterOrg(e.target.value)}
           />
-          <Select
-            value={filterBudget.toString()}
-            onValueChange={val => setFilterBudget(Number(val))}
+          <select
+            value={filterBusinessType}
+            onChange={e => setFilterBusinessType(e.target.value)}
+            className="!h-[35px] !w-full !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
           >
-            <SelectTrigger className="!px-3 !py-2">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="!border !border-gray-200 !bg-white !shadow-md">
-              {BUDGET_OPTIONS.map(opt => (
-                <SelectItem key={opt.value} value={String(opt.value)}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={filterStatus} onValueChange={val => setFilterStatus(val)}>
-            <SelectTrigger className="!px-3 !py-2">
-              <SelectValue placeholder="구분" />
-            </SelectTrigger>
-            <SelectContent className="!border !border-gray-200 !bg-white !shadow-md">
-              {STATUS_OPTIONS.map(opt => (
-                <SelectItem key={opt} value={opt}>
-                  {opt}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <option value="all">전체</option>
+            <option value="용역">용역</option>
+            <option value="물품">물품</option>
+            <option value="공사">공사</option>
+            <option value="외자">외자</option>
+            <option value="기타">기타</option>
+          </select>
+          <select
+            value={filterBudget.toString()}
+            onChange={e => setFilterBudget(Number(e.target.value))}
+            className="!h-[35px] !w-full !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
+          >
+            <option value="0">예산</option>
+            {BUDGET_OPTIONS.map(opt => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filterStatus}
+            onChange={e => setFilterStatus(e.target.value)}
+            className="!h-[35px] !w-full !rounded !border !border-[#EBEBEB] !py-1 !text-left !text-xs !font-semibold !text-[var(--color_primary_contrast_default)]"
+          >
+            <option value="">구분</option>
+            {STATUS_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
           {/* 메모 표시 토글 */}
-          <div className="!flex !items-center !gap-2">
+          <div className="!flex !items-center !justify-center !gap-2">
             <Checkbox
               id="show-memo"
               checked={showMemo}
