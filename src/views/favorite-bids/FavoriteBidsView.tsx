@@ -102,7 +102,7 @@ export function FavoriteBidsView() {
         </div>
       </div>
 
-      <div className="!mt-6 !mr-5 !w-[95%] !rounded-lg !border !bg-white !p-6 !shadow-sm">
+      <div className="!mt-6 !mr-5 !w-[95%] !rounded-lg !bg-white !p-6 !shadow-sm">
         {/* 상단 필터 */}
         <div className="!mb-6 !flex !items-center !justify-between">
           <div className="!grid !grid-cols-7 !items-center !gap-2">
@@ -174,7 +174,7 @@ export function FavoriteBidsView() {
                 id="show-memo"
                 checked={showMemo}
                 onCheckedChange={val => setShowMemo(!!val)}
-                className="!h-4 !w-4 !rounded !border !border-gray-700"
+                className="!size-[14px] !rounded !border !border-gray-700 data-[state=checked]:!border-[#0175FF] data-[state=checked]:!bg-[#0175FF] data-[state=checked]:!text-white"
               />
               <label htmlFor="show-memo" className="!text-sm !text-gray-700">
                 메모 표시

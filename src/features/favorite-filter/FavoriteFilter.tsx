@@ -83,7 +83,7 @@ export function FavoriteFilter({
           id="show-memo"
           checked={showMemo}
           onCheckedChange={val => onToggleMemo(!!val)}
-          className="h-4 w-4 rounded border border-gray-300"
+          className="!bg-[#0175FF]"
         />
         <label htmlFor="show-memo" className="text-sm text-gray-700">
           메모 표시

@@ -64,7 +64,7 @@ export function FavoriteBidsTable({
   };
 
   return (
-    <div className="!overflow-x-auto !shadow-sm">
+    <div className="!overflow-x-auto">
       <Toast
         title="수정되었습니다"
         icon={<CheckCircle className="!h-5 !w-5 !text-green-600" />}
