@@ -237,10 +237,6 @@ export function BidList({ bids }: BidListProps) {
               ))}
             </tbody>
           </table>
-          <div className="mt-3 pl-4 text-sm text-gray-600">
-            총 <span className="font-bold text-blue-600">{bids.length}</span>개의 공고가
-            검색되었습니다.
-          </div>
         </div>
       )}
     </div>
