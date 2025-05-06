@@ -733,9 +733,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
       </div>
 
       {/* 검색 설명 영역 */}
-      <div className="!mb-4 !text-center !text-gray-700">
-        공고 제목에서 <span className="!text-[#686FE8]">인공지능</span>을 포함하고, 사업 구분은{' '}
-        <span className="!text-[#6CBAA2]">전체</span>에 해당하는 공고를 찾습니다.
+      <div className="!mb-4 !text-center !text-[#364152]">
+        공고 제목에서 <span className="!text-[#686FE8]">인공지능</span> 을 포함하고, 사업 구분은{' '}
+        <span className="!text-[#6CBAA2]">전체</span> 에 해당하는 공고를 찾습니다.
       </div>
 
       {/* Toast notifications */}

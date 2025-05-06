@@ -1,7 +1,8 @@
 export const TABLE_HEADER_DEFAULT_CLASS =
-  'px-6 py-4 text-left text-xs font-medium tracking-wider text-white uppercase h-8';
-export const TABLE_HEADER_BG_CLASS = 'bg-[rgb(166,161,219)]';
-export const TABLE_DATA_CLASS = 'px-6 py-4 text-sm whitespace-nowrap text-gray-700';
+  'background-color: rgb(104, 111, 232); overflow: visible; justify-content: space-between; gap: 0px 20px; padding: 10px 20px; opacity: 1; align-self: flex-start; min-width: 1850px; order: 9; min-height: 0px; height: 53.59px; flex-grow: 0; flex-shrink: 0; width: calc(100% + 0px); margin: 0px; z-index: 3; text-left text-xs font-medium tracking-wider text-white uppercase';
+export const TABLE_HEADER_BG_CLASS = 'bg-[rgb(104,111,232)]';
+export const TABLE_DATA_CLASS =
+  'white-space: pre-wrap; overflow: visible; font-family: var(--font_default); font-size: 14px; font-weight: 400; color: #202020; line-height: 1.4; opacity: 1; align-self: center; min-width: 35px; max-width: 35px; order: 8; min-height: 24px; max-height: 24px; width: 35px; flex-grow: 1; height: 24px; margin: 0px; z-index: 2; padding: 10px 20px';
 
 export interface BidTableHeader {
   id: string;

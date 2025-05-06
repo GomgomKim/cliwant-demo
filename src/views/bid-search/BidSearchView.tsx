@@ -245,20 +245,18 @@ export function BidSearchView() {
     }
   }, [timeFilter]);
 
+  useEffect(() => {
+    // Clear the isSearched state on component mount to ensure table is hidden initially
+    setIsSearched(false);
+  }, []);
+
   return (
     <div className="container mx-auto py-4 font-['Pretendard']">
       <SearchFilter onSearch={handleSearch} />
 
-      {/* 선택된 키워드 세트 검색 결과 표시 */}
-      {isSearched && currentSet && (
-        <div key={currentSet.id} className="mt-6 rounded-lg border bg-white shadow-sm">
-          <div className="flex items-center justify-between border-b p-4">
-            <div className="font-['Pretendard'] text-sm text-gray-500">
-              총{' '}
-              <span className="font-semibold text-[rgb(166,161,219)]">{currentResults.length}</span>
-              개의 입찰 공고
-            </div>
-          </div>
+      {/* 선택된 키워드 세트 검색 결과 표시 - Only show when isSearched is true */}
+      {isSearched && (
+        <div className="mt-6 bg-white !shadow-sm">
           {currentResults.length > 0 ? (
             <>
               <BidList bids={currentItems} />
