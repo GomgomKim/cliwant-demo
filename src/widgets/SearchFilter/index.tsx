@@ -328,12 +328,9 @@ export function SearchFilter({ onSearch }: SearchFilterProps) {
   };
 
   return (
-    <div
-      suppressHydrationWarning={true}
-      className="!flex !min-h-[500px] !w-full !flex-col !shadow-sm"
-    >
+    <div suppressHydrationWarning={true} className="!flex !w-full !flex-col">
       {/* 탭 헤더 영역 */}
-      <div className="!mb-3 !flex !items-center !justify-between !border-b !border-gray-200 !pb-2">
+      <div className="!mb-3 !flex !items-center !justify-between !pb-2">
         <div className="!flex !gap-3">
           <h4
             className={`!cursor-pointer !text-lg !font-bold ${activeTab === 'bid' ? '!border-b-4 !border-[#686FE8] !text-[#686FE8]' : '!border-b-4 !border-transparent !text-[#999999]'}`}
