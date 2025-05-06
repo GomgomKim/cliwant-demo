@@ -177,17 +177,19 @@ export function FavoriteBidsView() {
         </div>
 
         {/* 관심 공고 목록 */}
-        <FavoriteBidsTable
-          bids={currentItems}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          sortKey={sortKey}
-          sortAsc={sortAsc}
-          onSort={handleSort}
-          onDelete={toggleFavorite}
-          showMemo={showMemo}
-        />
+        <div className="!-mx-6">
+          <FavoriteBidsTable
+            bids={currentItems}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            sortKey={sortKey}
+            sortAsc={sortAsc}
+            onSort={handleSort}
+            onDelete={toggleFavorite}
+            showMemo={showMemo}
+          />
+        </div>
       </div>
     </div>
   );
