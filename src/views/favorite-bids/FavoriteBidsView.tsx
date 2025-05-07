@@ -93,7 +93,7 @@ export function FavoriteBidsView() {
   };
 
   return (
-    <div className="!container !mx-auto !pl-18">
+    <div className="!container !mx-auto !px-4 !pt-6 sm:!px-6 md:!px-8">
       <div className="!mb-6 !flex !items-center !gap-6">
         <div className="!flex-1">
           <h4 className="!z-[2] !h-[30px] !max-h-[30px] !min-h-[30px] !w-max !max-w-[300px] !min-w-0 !flex-grow-0 !overflow-visible !rounded-none !border-b-4 !border-[#676FE7] !font-['Pretendard'] !text-[18px] !leading-none !font-bold !whitespace-pre-wrap !text-[#676FE7] !opacity-100">

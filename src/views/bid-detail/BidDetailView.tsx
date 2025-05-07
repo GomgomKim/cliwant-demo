@@ -82,7 +82,7 @@ export function BidDetailView() {
           border-radius: 4px;
         }
       `}</style>
-      <div className="!container !mx-auto !p-18 !py-10">
+      <div className="!container !mx-auto !px-4 !py-10 sm:!px-6 md:!px-8">
         <h4
           onClick={() => router.back()}
           className="!bubble-element !Text !baTbzaS !clickable-element !bubble-r-vertical-center !z-[2] !order-1 !m-0 !mb-4 !flex !h-[30px] !max-h-[30px] !min-h-[30px] !w-[100px] !max-w-[100px] !min-w-[100px] !flex-grow !cursor-pointer !items-center !justify-center !self-start !overflow-visible !rounded-[20px] !border-2 !border-[rgb(235,235,235)] !bg-white !text-center !text-base !leading-none !font-[var(--font_default)] !font-medium !whitespace-pre-wrap !text-[#676FE7] !opacity-100"
