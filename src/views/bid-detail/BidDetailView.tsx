@@ -27,7 +27,8 @@ export function BidDetailView() {
 
   const [qualificationNote, setQualificationNote] = useState('');
   const [isFavorite, setIsFavorite] = useState(bid?.isFavorite ?? false);
-  const [scope, setScope] = useState<string>('본 공고');
+  const [scope1, setScope1] = useState<string>('본 공고');
+  const [scope2, setScope2] = useState<string>('본 공고');
   const [showSaveToast, setShowSaveToast] = useState(false);
   const [showUCToast, setShowUCToast] = useState(false);
   const [showLinkToast, setShowLinkToast] = useState(false);
@@ -59,7 +60,7 @@ export function BidDetailView() {
   const infoItems: InfoItem[] = [
     { label: '공고 유형', value: bid.bidType },
     { label: '수요 기관', value: bid.organization },
-    { label: '금액', value: `${bid.cost.toLocaleString('ko-KR')}원` },
+    { label: '금액', value: bid.cost ? `${bid.cost.toLocaleString('ko-KR')}원` : '0원' },
     { label: '시작일', value: bid.publishedDate },
     { label: '마감일', value: bid.deadline },
   ];
@@ -320,48 +321,146 @@ export function BidDetailView() {
             </div>
           </div>
 
-          {restrictionItems.map((r, i) => (
-            <div
-              key={i}
-              className="!col-span-1 !flex !flex-col !rounded-lg !border !border-gray-200 !bg-white !p-6 !shadow-sm"
-            >
-              <div className="!mb-4 flex items-center justify-between">
-                <span className="font-semibold !text-[#5851A8]">{r.title}</span>
-                <Select defaultValue={scope} onValueChange={val => setScope(val)}>
-                  <SelectTrigger className="!w-48 !rounded-md !border !border-gray-200 !bg-gray-50 !px-4 !py-2 !text-sm !text-gray-900 !shadow-sm hover:!border-[rgb(166,161,219)]">
-                    <SelectValue className="!text-gray-900" />
-                  </SelectTrigger>
-                  <SelectContent className="!rounded-md !border !border-gray-200 !bg-white !shadow-md">
-                    <SelectItem value="본 공고" className="!px-4 !py-2.5 !text-gray-900">
-                      본 공고
-                    </SelectItem>
-                    <SelectItem value="우리 회사" className="!px-4 !py-2.5 !text-gray-900">
-                      우리 회사
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+          {/* First industry restriction div */}
+          <div className="!col-span-1 !h-[320px] !rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
+            <div className="mb-2 !inline-block !w-full font-semibold !text-[#111111]">
+              <div className="!flex !w-full !flex-col !items-start !py-2 !pr-5 !pl-[18px]">
+                <div className="!flex !w-full !items-center !justify-between">
+                  <div className="flex items-center gap-2">
+                    <Image
+                      src="/industry-icon.jpg"
+                      alt={restrictionItems[0].title}
+                      width={30}
+                      height={30}
+                    />
+                    {restrictionItems[0].title}
+                  </div>
+                  <select
+                    className="!h-[30px] !w-[75px] !rounded-md !border !border-gray-200 !bg-gray-50 !text-sm !text-gray-900"
+                    value={scope1}
+                    onChange={e => setScope1(e.target.value)}
+                  >
+                    <option value="본 공고">본 공고</option>
+                    <option value="우리 회사">우리 회사</option>
+                  </select>
+                </div>
               </div>
-              <div className="!mb-10 !text-sm !text-gray-600">
-                {`${r.certificationLabel} (${r.certificationCount})`}
-              </div>
-              <div className="!mb-4 !flex justify-center font-medium !text-green-400">
-                {r.statusText}
-              </div>
-              <div className="!mt-7 !flex !flex-wrap !justify-center gap-2">
-                {r.guideButtons.map(btn => (
+            </div>
+            <div className="flex h-[calc(100%-80px)] flex-col">
+              <div className="!relative !w-full !flex-grow !border-x-0 !border-t !border-b-0 !border-t-gray-200 !p-5">
+                <div className="!mb-2 !flex !items-center !justify-between">
+                  <div className="flex items-center">
+                    <span className="!text-[14px] !text-[#111111]">
+                      {restrictionItems[0].certificationLabel}
+                    </span>
+                    <span className="!ml-1 !text-[14px] !text-[#111111]">
+                      ({restrictionItems[0].certificationCount})
+                    </span>
+                  </div>
+                  <span className="!text-[12px] !text-[#000000]">충족여부</span>
+                </div>
+                <div className="!mt-10 !mb-4 !flex !justify-center !text-[18px] !font-medium !text-[#6CBAA2]">
+                  {restrictionItems[0].statusText}
+                </div>
+
+                {/* Main button for 업종 제한 */}
+                <div className="!mt-auto !flex !justify-center !pb-[12px]">
                   <Button
-                    key={btn}
                     variant="unstyled"
                     size="none"
                     onClick={() => setShowUCToast(true)}
-                    className="!hover:opacity-90 !flex !cursor-pointer !items-center !gap-1 !rounded !bg-[#5851A8] !px-4 !py-2 !text-sm !text-white"
+                    className="!hover:opacity-90 !mt-[90px] !flex !w-[85%] !cursor-pointer !items-center !justify-center !gap-1 !rounded-[20px] !bg-[#A6A1DB] !px-4 !py-2 !text-sm !text-white"
                   >
-                    {btn} <ArrowRight size={14} />
+                    업종 등록 가이드
+                    <div className="!flex !size-3 !items-center !justify-center !rounded-full !bg-white">
+                      <ArrowRight size={10} strokeWidth={5} className="!text-[#A6A1DB]" />
+                    </div>
                   </Button>
-                ))}
+                </div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Second industry restriction div */}
+          <div className="!col-span-1 !h-[320px] !rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
+            <div className="mb-2 !inline-block !w-full font-semibold !text-[#111111]">
+              <div className="!flex !w-full !flex-col !items-start !py-2 !pr-5 !pl-[18px]">
+                <div className="!flex !w-full !items-center !justify-between">
+                  <div className="flex w-full flex-col items-start gap-2">
+                    <div className="flex w-full items-center justify-between">
+                      <div>
+                        <Image
+                          src="/production-icon.jpg"
+                          alt={restrictionItems[1].title}
+                          width={30}
+                          height={30}
+                        />
+                      </div>
+                      <select
+                        className="!h-[30px] !w-[75px] !rounded-md !border !border-gray-200 !bg-gray-50 !text-sm !text-gray-900"
+                        value={scope2}
+                        onChange={e => setScope2(e.target.value)}
+                      >
+                        <option value="본 공고">본 공고</option>
+                        <option value="우리 회사">우리 회사</option>
+                      </select>
+                    </div>
+                    <span>{restrictionItems[1].title}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex h-[calc(100%-80px)] flex-col">
+              <div className="!relative !w-full !flex-grow !border-x-0 !border-t !border-b-0 !border-t-gray-200 !p-5">
+                <div className="!mb-2 !flex !items-center !justify-between">
+                  <div className="flex items-center">
+                    <span className="!text-[14px] !text-[#111111]">
+                      {restrictionItems[1].certificationLabel}
+                    </span>
+                    <span className="!ml-1 !text-[14px] !text-[#111111]">
+                      ({restrictionItems[1].certificationCount})
+                    </span>
+                  </div>
+                  <span className="!text-[12px] !text-[#000000]">충족여부</span>
+                </div>
+                <div className="!mt-10 !mb-4 !flex !justify-center !text-[18px] !font-medium !text-[#6CBAA2]">
+                  {restrictionItems[1].statusText}
+                </div>
+
+                {/* Side buttons for 직접생산 분석 only - no main button */}
+                <div className="!absolute !right-0 !bottom-[20px] !left-0 !flex !justify-between !px-3">
+                  <Button
+                    variant="unstyled"
+                    size="none"
+                    onClick={() => setShowUCToast(true)}
+                    className="!hover:opacity-90 !flex !w-[48%] !cursor-pointer !items-center !justify-center !gap-1 !rounded-[20px] !bg-[#A6A1DB] !px-4 !py-2 !text-sm !text-white"
+                  >
+                    직접 생산 절차
+                    <div className="!flex !size-3 !items-center !justify-center !rounded-full !bg-white">
+                      <ArrowRight size={10} strokeWidth={5} className="!text-[#A6A1DB]" />
+                    </div>
+                  </Button>
+                  <Button
+                    variant="unstyled"
+                    size="none"
+                    onClick={() => setShowUCToast(true)}
+                    className="!hover:opacity-90 !flex !w-[48%] !cursor-pointer !items-center !justify-center !rounded-[20px] !bg-[#A6A1DB] !px-4 !py-2 !text-sm !text-white"
+                  >
+                    상세 요건
+                    <div className="!ml-1 !flex !size-5 !items-center !justify-center !rounded-full !bg-[#A6A1DB]">
+                      <Image
+                        src="/link-white.svg"
+                        alt="링크"
+                        width={14}
+                        height={14}
+                        className="!font-bold"
+                      />
+                    </div>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <Toast

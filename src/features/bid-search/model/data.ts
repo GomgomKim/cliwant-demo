@@ -1123,7 +1123,18 @@ export const DUMMY_BID_DATA: BidItem[] = [
 ];
 
 // 임시 cost
-export const DUMMY_BID_DATA_WITH_COST: (BidItem & { cost: number })[] = DUMMY_BID_DATA.map(bid => ({
-  ...bid,
-  cost: [100000000, 300000000, 500000000, 1000000000][Math.floor(Math.random() * 4)],
-}));
+export const DUMMY_BID_DATA_WITH_COST: (BidItem & { cost: number })[] = DUMMY_BID_DATA.map(bid => {
+  // 각 ID에 고정된 금액 할당
+  let fixedCost = 500000000; // 기본값
+
+  // ID에 따라 다른 금액 할당 (패턴 생성)
+  if (bid.id % 4 === 0) fixedCost = 1000000000;
+  else if (bid.id % 4 === 1) fixedCost = 500000000;
+  else if (bid.id % 4 === 2) fixedCost = 300000000;
+  else if (bid.id % 4 === 3) fixedCost = 100000000;
+
+  return {
+    ...bid,
+    cost: fixedCost,
+  };
+});

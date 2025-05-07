@@ -30,7 +30,7 @@ export const RESTRICTION_ITEMS: RestrictionItem[] = [
     guideButtons: [GUIDE_BUTTON_LABELS[0]],
   },
   {
-    title: '직접생산 분석',
+    title: '직접생산 분석 [제한 기준: 제조물품]',
     certificationLabel: '입찰 요구 직접생산',
     certificationCount: 0,
     statusText: '참여 제한 없음',
