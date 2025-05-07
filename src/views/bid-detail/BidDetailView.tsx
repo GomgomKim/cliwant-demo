@@ -232,7 +232,7 @@ export function BidDetailView() {
       </div>
 
       <div className="!mb-10 !grid !grid-cols-2 !gap-8">
-        <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
+        <div className="!col-span-1 !h-[330px] !rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
           <div className="mb-2 !inline-block font-semibold !text-[#FAB513]">
             <div className="!flex !items-center !gap-2 !px-[18px] !py-4">
               <Image src="/note-icon.jpg" alt="자격 분석 노트" width={30} height={30} />
@@ -259,18 +259,23 @@ export function BidDetailView() {
           </div>
         </div>
 
-        <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !p-8 !shadow-sm">
-          <div className="!mb-4 !inline-block !border-b-2 !border-[#5851A8] !pb-2 font-semibold !text-[#5851A8]">
-            프로젝트 정보
+        <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
+          <div className="mb-2 !inline-block font-semibold !text-[#111111]">
+            <div className="!flex !items-center !gap-2 !px-[18px] !py-4">
+              <Image src="/project-info-icon.jpg" alt="프로젝트 정보" width={30} height={30} />
+              프로젝트 정보
+            </div>
           </div>
-          <ul>
-            {infoItems.map(item => (
-              <li key={item.label} className="!flex !justify-between !py-2">
-                <span className="font-medium !text-[#5851A8]">{item.label}</span>
-                <span>{item.value}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="flex h-[calc(100%-70px)] flex-col">
+            <div className="!w-full !flex-grow !border-x-0 !border-t !border-b-0 !border-t-gray-200 !p-5">
+              {infoItems.map(item => (
+                <div key={item.label} className="!mb-4 !flex !items-center !gap-0">
+                  <span className="!w-[100px] !text-[14px] !text-[#999999]">{item.label}</span>
+                  <span className="!text-[14px] !text-[#111111]">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
