@@ -232,24 +232,30 @@ export function BidDetailView() {
       </div>
 
       <div className="!mb-10 !grid !grid-cols-2 !gap-8">
-        <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !p-8 !shadow-sm">
-          <div className="mb-4 !inline-block !border-b-2 !border-[#5851A8] !pb-2 font-semibold !text-[#5851A8]">
-            자격 분석 노트
+        <div className="!col-span-1 !rounded-lg !border !border-gray-200 !bg-white !shadow-sm">
+          <div className="mb-2 !inline-block font-semibold !text-[#FAB513]">
+            <div className="!flex !items-center !gap-2 !px-[18px] !py-4">
+              <Image src="/note-icon.jpg" alt="자격 분석 노트" width={30} height={30} />
+              자격 분석 노트
+            </div>
           </div>
-          <textarea
-            className="!my-4 !h-32 !w-full !rounded-lg !border !border-gray-200 !p-4"
-            value={qualificationNote}
-            onChange={e => setQualificationNote(e.target.value)}
-          />
-          <div className="mt-2 flex justify-end">
-            <Button
-              variant="unstyled"
-              size="none"
-              onClick={handleSave}
-              className="!hover:opacity-90 !w-full !cursor-pointer !rounded !bg-[#5851A8] !px-6 !py-2 !text-white"
-            >
-              저장
-            </Button>
+          <div className="flex h-[calc(100%-70px)] flex-col">
+            <textarea
+              className="!w-full !flex-grow !border-x-0 !border-t !border-b-0 !border-t-gray-200 !bg-transparent !p-5 !text-[14px] !leading-[1.5] !font-medium !text-[var(--color_primary_contrast_default)] placeholder:!text-[#DADADA] focus:!border-t-gray-200 focus:!ring-0 focus:!outline-none"
+              value={qualificationNote}
+              onChange={e => setQualificationNote(e.target.value)}
+              placeholder="필요한 메모를 하세요.."
+            />
+            <div className="mb-3 flex justify-end">
+              <Button
+                variant="unstyled"
+                size="none"
+                onClick={handleSave}
+                className="!hover:opacity-90 !mx-3 !mb-3 !w-full !cursor-pointer !rounded !bg-[#999999] !py-2 !text-white"
+              >
+                저장
+              </Button>
+            </div>
           </div>
         </div>
 
